@@ -27,9 +27,9 @@ namespace AutoServiceBE.Models
 
         //Relations
         [ForeignKey("CreatorID")]
-        public virtual Employee Creator { get; set; }
+        public virtual Employee? Creator { get; set; }
         [ForeignKey("UserTypeID")]
         public virtual UserType? UserType { get; set; }
-        public virtual ICollection<UserCoupon> UserCoupons { get; set; }
+        public virtual ICollection<UserCoupon>? UserCoupons { get; set; }
     }
 }

@@ -18,6 +18,6 @@ namespace AutoServiceBE.Models
 
         //Relations
         [ForeignKey("UserID")]
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
     }
 }

@@ -12,6 +12,6 @@ namespace AutoServiceBE.Models
         public string RoleName { get; set; }
 
         //Relations
-        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Employee>? Employees { get; set; }
     }
 }

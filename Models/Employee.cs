@@ -13,9 +13,13 @@ namespace AutoServiceBE.Models
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
 
-        //Relation
-        public virtual ICollection<Role> Roles { get; set; }
-        public virtual ICollection<Order> CreatedOrders { get; set; }
-        public virtual ICollection<Coupon> CreatedCoupons { get; set; }
+        //Foreign Keys
+        public int RoleID { get; set; }
+
+        //Relations
+        [ForeignKey("RoleID")]
+        public virtual Role? Role { get; set; }
+        public virtual ICollection<Order>? CreatedOrders { get; set; }
+        public virtual ICollection<Coupon>? CreatedCoupons { get; set; }
     }
 }

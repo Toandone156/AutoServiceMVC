@@ -14,8 +14,8 @@ namespace AutoServiceBE.Models
 
         //Relations
         [ForeignKey("UserID")]
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
         [ForeignKey("CouponID")]
-        public virtual Coupon Coupon { get; set; }
+        public virtual Coupon? Coupon { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace AutoServiceBE.Models
         public string TableCode { get; set; }
 
         //Relations
-        public virtual Order Order { get; set; }
+        public virtual Order? Order { get; set; }
     }
 }

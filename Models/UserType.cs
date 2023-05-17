@@ -13,7 +13,7 @@ namespace AutoServiceBE.Models
         public int MinAmount { get; set; }
 
         //Relations
-        public virtual ICollection<User> Users { get; set; }
-        public virtual ICollection<Coupon> Coupons { get; set; }
+        public virtual ICollection<User>? Users { get; set; }
+        public virtual ICollection<Coupon>? Coupons { get; set; }
     }
 }

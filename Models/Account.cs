@@ -10,7 +10,8 @@ namespace AutoServiceBE.Models
         [StringLength(100)]
         public string Username { get; set; }
         [StringLength(255)]
-        public string Password { get; set; }
+        [DataType(DataType.Password)]
+        public string HashPassword { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         public string FullName { get; set; }
         [DataType(DataType.EmailAddress)]

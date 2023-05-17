@@ -117,13 +117,16 @@ namespace AutoServiceMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("HashPassword")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("PhoneNum")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -134,6 +137,8 @@ namespace AutoServiceMVC.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("EmployeeID");
+
+                    b.HasIndex("RoleID");
 
                     b.ToTable("Employees");
                 });
@@ -453,7 +458,7 @@ namespace AutoServiceMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("HashPassword")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -520,21 +525,6 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("UserTypes");
                 });
 
-            modelBuilder.Entity("EmployeeRole", b =>
-                {
-                    b.Property<int>("EmployeesEmployeeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RolesRoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeesEmployeeID", "RolesRoleId");
-
-                    b.HasIndex("RolesRoleId");
-
-                    b.ToTable("EmployeeRole");
-                });
-
             modelBuilder.Entity("AutoServiceBE.Models.Coupon", b =>
                 {
                     b.HasOne("AutoServiceBE.Models.Employee", "Creator")
@@ -550,6 +540,17 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("Creator");
 
                     b.Navigation("UserType");
+                });
+
+            modelBuilder.Entity("AutoServiceBE.Models.Employee", b =>
+                {
+                    b.HasOne("AutoServiceBE.Models.Role", "Role")
+                        .WithMany("Employees")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("AutoServiceBE.Models.Order", b =>
@@ -715,21 +716,6 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EmployeeRole", b =>
-                {
-                    b.HasOne("AutoServiceBE.Models.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesEmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AutoServiceBE.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("AutoServiceBE.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -766,6 +752,11 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("ProductFeedbacks");
                 });
 
+            modelBuilder.Entity("AutoServiceBE.Models.Role", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
             modelBuilder.Entity("AutoServiceBE.Models.Status", b =>
                 {
                     b.Navigation("OrderStatuses");
@@ -773,8 +764,7 @@ namespace AutoServiceMVC.Migrations
 
             modelBuilder.Entity("AutoServiceBE.Models.Table", b =>
                 {
-                    b.Navigation("Order")
-                        .IsRequired();
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("AutoServiceBE.Models.User", b =>

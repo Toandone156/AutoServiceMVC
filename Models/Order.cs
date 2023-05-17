@@ -27,12 +27,12 @@ namespace AutoServiceBE.Models
         [ForeignKey("EmployeeID")]
         public virtual Employee? Employee { get; set; }
         [ForeignKey("TableID")]
-        public virtual Table Table { get; set; }
+        public virtual Table? Table { get; set; }
         [ForeignKey("ApplyCouponID")]
         public virtual Coupon? ApplyCoupon { get; set; }
         [ForeignKey("PaymentMethodID")]
-        public virtual PaymentMethod PaymentMethod { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<OrderStatus> OrderStatuses { get; set; }
+        public virtual PaymentMethod? PaymentMethod { get; set; }
+        public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
+        public virtual ICollection<OrderStatus>? OrderStatuses { get; set; }
     }
 }
