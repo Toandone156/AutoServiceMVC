@@ -9,7 +9,7 @@ namespace AutoServiceBE.Models
         //Attributes
         [Key]
         public int UserId { get; set; }
-        public int Point { get; set; }
+        public int Point { get; set; } = 0;
 
         //Foreign Keys
         public int UserTypeID { get; set; }

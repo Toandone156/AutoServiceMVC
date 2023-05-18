@@ -1,4 +1,8 @@
+using AutoServiceBE.Models;
 using AutoServiceMVC.Data;
+using AutoServiceMVC.Models.System;
+using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -15,6 +19,26 @@ services.AddDbContext<AppDbContext>(options =>
         .AddConsole();
     }));
 });
+
+//Add service
+services.AddScoped<IAuthenticateService<User>, UserRepository>();
+services.AddScoped<IAuthenticateService<Employee>, EmployeeRepository>();
+services.AddScoped<ICommonRepository<Category>, CategoryRepository>();
+services.AddScoped<ICommonRepository<Coupon>, CouponRepository>();
+services.AddScoped<ICommonRepository<Order>, OrderRepository>();
+services.AddScoped<ICommonRepository<Product>, ProductRepository>();
+services.AddScoped<ICommonRepository<OrderDetail>, OrderDetailRepository>();
+services.AddScoped<ICommonRepository<OrderStatus>, OrderStatusRepository>();
+services.AddScoped<ICommonRepository<PaymentMethod>, PaymentMethodRepository>();
+services.AddScoped<ICommonRepository<PointTrading>, PointTradingRepository>();
+services.AddScoped<ICommonRepository<ProductFeedback>, ProductFeedbackRepository>();
+services.AddScoped<ICommonRepository<ServiceFeedback>, ServiceFeedbackRepository>();
+services.AddScoped<ICommonRepository<Status>, StatusRepository>();
+services.AddScoped<ICommonRepository<Table>, TableRepository>();
+services.AddScoped<ICommonRepository<UserCoupon>, UserCouponRepository>();
+
+//Add enviroment variable
+services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
