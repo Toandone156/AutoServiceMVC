@@ -3,6 +3,7 @@ using AutoServiceMVC.Data;
 using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
+using AutoServiceMVC.Services.System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -36,6 +37,8 @@ services.AddScoped<ICommonRepository<ServiceFeedback>, ServiceFeedbackRepository
 services.AddScoped<ICommonRepository<Status>, StatusRepository>();
 services.AddScoped<ICommonRepository<Table>, TableRepository>();
 services.AddScoped<ICommonRepository<UserCoupon>, UserCouponRepository>();
+
+services.AddScoped<IHashPassword, HashPassword>();
 
 //Add enviroment variable
 services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));

@@ -2,8 +2,10 @@
 using AutoServiceMVC.Data;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using static Humanizer.On;
 
 namespace AutoServiceMVC.Services.Implement
 {
@@ -18,7 +20,7 @@ namespace AutoServiceMVC.Services.Implement
             Page_Size = monitor.CurrentValue.PageSize;
         }
 
-        public async Task<StatusMessage> Add(Table entity)
+        public async Task<StatusMessage> CreateAsync(Table? entity)
         {
             if(entity == null)
             {
@@ -40,7 +42,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> DeleteById(int id)
+        public async Task<StatusMessage> DeleteByIdAsync(int? id)
         {
             if (id == null)
             {
@@ -69,7 +71,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetAll(string? search, int page)
+        public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic tables = null;
 
@@ -106,7 +108,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetById(int id)
+        public async Task<StatusMessage> GetByIdAsync(int? id)
         {
             if(id == null)
             {
@@ -137,7 +139,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> Update(Table entity)
+        public async Task<StatusMessage> UpdateAsync(Table? entity)
         {
             if(entity == null)
             {
@@ -165,6 +167,29 @@ namespace AutoServiceMVC.Services.Implement
             {
                 IsSuccess = true,
                 Message = Message.UPDATE_SUCCESS
+            };
+        }
+
+        public async Task<StatusMessage> GetAllAsync()
+        {
+            var result = await _context.Tables
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
             };
         }
     }

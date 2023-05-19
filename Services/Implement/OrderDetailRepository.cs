@@ -2,6 +2,7 @@
 using AutoServiceMVC.Data;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
@@ -19,7 +20,7 @@ namespace AutoServiceMVC.Services.Implement
             Page_Size = monitor.CurrentValue.PageSize;
         }
 
-        public async Task<StatusMessage> Add(OrderDetail entity)
+        public async Task<StatusMessage> CreateAsync(OrderDetail? entity)
         {
             if(entity == null)
             {
@@ -41,7 +42,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
         
-        public async Task<StatusMessage> DeleteById(int id)
+        public async Task<StatusMessage> DeleteByIdAsync(int? id)
         {
             return new StatusMessage()
             {
@@ -50,36 +51,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetAll(string? search, int page)
-        {
-            dynamic orderDetails =  await _context.OrderDetails
-                    .Include(o => o.Order)
-                    .Include(o => o.Product)
-                    .AsNoTracking()
-                    .ToListAsync();
-
-            var result = PaginatedList<OrderDetail>.Create(orderDetails, page, Page_Size);
-
-            if (result == null)
-            {
-                return new StatusMessage()
-                {
-                    IsSuccess = false,
-                    Message = Message.LIST_EMPTY
-                };
-            }
-            else
-            {
-                return new StatusMessage()
-                {
-                    IsSuccess = true,
-                    Message = Message.GET_SUCCESS,
-                    Data = result
-                };
-            }
-        }
-
-        public async Task<StatusMessage> GetById(int id)
+        public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             return new StatusMessage()
             {
@@ -88,7 +60,16 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> Update(OrderDetail entity)
+        public async Task<StatusMessage> GetByIdAsync(int? id)
+        {
+            return new StatusMessage()
+            {
+                IsSuccess = false,
+                Message = Message.METHOD_NOT_DEFINED
+            };
+        }
+
+        public async Task<StatusMessage> UpdateAsync(OrderDetail? entity)
         {
             if (entity == null)
             {
@@ -121,7 +102,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetByOrderID(int orderID)
+        public async Task<StatusMessage> GetByOrderIDAsync(int? orderID)
         {
             if (orderID == null)
             {
@@ -154,6 +135,35 @@ namespace AutoServiceMVC.Services.Implement
                 Message = Message.GET_SUCCESS,
                 Data = orderDetails
             };
+        }
+
+        public async Task<StatusMessage> GetAllAsync()
+        {
+            var result = await _context.OrderDetails
+                    .Include(o => o.Order)
+                    .Include(o => o.Product)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+            else
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = Message.GET_SUCCESS,
+                    Data = result
+                };
+            }
+
+            public Task<StatusMessage> Delete
         }
     }
 }

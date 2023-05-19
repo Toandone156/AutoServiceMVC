@@ -19,7 +19,7 @@ namespace AutoServiceMVC.Services.Implement
             Page_Size = monitor.CurrentValue.PageSize;
         }
 
-        public async Task<StatusMessage> Add(Status entity)
+        public async Task<StatusMessage> CreateAsync(Status? entity)
         {
             return new StatusMessage()
             {
@@ -28,7 +28,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> DeleteById(int id)
+        public async Task<StatusMessage> DeleteByIdAsync(int? id)
         {
             return new StatusMessage()
             {
@@ -37,13 +37,40 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetAll(string? search, int page)
+        public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
-            var statuses = await _context.Status
+            return new StatusMessage()
+            {
+                IsSuccess = false,
+                Message = Message.METHOD_NOT_DEFINED
+            };
+        }
+
+        public async Task<StatusMessage> GetByIdAsync(int? id)
+        {
+            return new StatusMessage()
+            {
+                IsSuccess = false,
+                Message = Message.METHOD_NOT_DEFINED
+            };
+        }
+
+        public async Task<StatusMessage> UpdateAsync(Status? entity)
+        {
+            return new StatusMessage()
+            {
+                IsSuccess = false,
+                Message = Message.METHOD_NOT_DEFINED
+            };
+        }
+
+        public async Task<StatusMessage> GetAllAsync()
+        {
+            var result = await _context.Status
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (statuses == null)
+            if (result == null)
             {
                 return new StatusMessage()
                 {
@@ -56,25 +83,7 @@ namespace AutoServiceMVC.Services.Implement
             {
                 IsSuccess = true,
                 Message = Message.GET_SUCCESS,
-                Data = statuses
-            };
-        }
-
-        public async Task<StatusMessage> GetById(int id)
-        {
-            return new StatusMessage()
-            {
-                IsSuccess = false,
-                Message = Message.METHOD_NOT_DEFINED
-            };
-        }
-
-        public async Task<StatusMessage> Update(Status entity)
-        {
-            return new StatusMessage()
-            {
-                IsSuccess = false,
-                Message = Message.METHOD_NOT_DEFINED
+                Data = result
             };
         }
     }

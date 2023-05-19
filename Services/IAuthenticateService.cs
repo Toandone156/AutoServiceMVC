@@ -5,7 +5,7 @@ namespace AutoServiceMVC.Services
 {
     public interface IAuthenticateService<T>
     {
-        public Task<StatusMessage> ValidateLogin(Login login);
-        public Task<StatusMessage> Register(Register register);
+        public Task<StatusMessage> ValidateLoginAsync(Login login);
+        public Task<StatusMessage> RegisterAsync(Register register);
     }
 }

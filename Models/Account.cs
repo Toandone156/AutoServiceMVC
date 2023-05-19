@@ -9,8 +9,11 @@ namespace AutoServiceBE.Models
     {
         //Common Attributes
         [StringLength(100)]
+        [RegularExpression("^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{0,29}$", ErrorMessage = "Username is not valid")]
         public string Username { get; set; }
         [StringLength(255)]
+        [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()\\-=_+{}[\\]:;|\"',<.>/?]).{8,32}$",
+            ErrorMessage = "Password is not valid")]
         [DataType(DataType.Password)]
         public string HashPassword { get; set; }
         [Column(TypeName = "nvarchar(100)")]

@@ -3,9 +3,13 @@ using AutoServiceMVC.Data;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
+using AutoServiceMVC.Services.System;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
+using System.Security.Policy;
+using static Humanizer.On;
 
 namespace AutoServiceMVC.Services.Implement
 {
@@ -13,14 +17,41 @@ namespace AutoServiceMVC.Services.Implement
     {
         private readonly AppDbContext _context;
         private readonly int Page_Size;
+        private readonly IHashPassword _hash;
 
-        public EmployeeRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor)
+        public EmployeeRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor, IHashPassword hash)
         {
             _context = context;
             Page_Size = monitor.CurrentValue.PageSize;
+            _hash = hash;
         }
 
-        public async Task<StatusMessage> GetAll(string? search, int page)
+        public async Task<StatusMessage> GetAllAsync()
+        {
+
+            var result = await _context.Employees
+                    .Include(e => e.Role)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
+            };
+        }
+
+        public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic employees = null;
 
@@ -59,7 +90,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<Employee>.Add(Employee entity)
+        async Task<StatusMessage> ICommonRepository<Employee>.CreateAsync(Employee? entity)
         {
             return new StatusMessage
             {
@@ -68,7 +99,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<Employee>.DeleteById(int id)
+        async Task<StatusMessage> ICommonRepository<Employee>.DeleteByIdAsync(int? id)
         {
             return new StatusMessage
             {
@@ -77,7 +108,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<Employee>.GetById(int id)
+        async Task<StatusMessage> ICommonRepository<Employee>.GetByIdAsync(int?  id)
         {
             var Employee = await _context.Employees
                     .Include(e => e.Role)
@@ -102,7 +133,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> IAuthenticateService<Employee>.Register(Register register)
+        async Task<StatusMessage> IAuthenticateService<Employee>.RegisterAsync(Register register)
         {
             if (register.Password != register.AgainPassword)
             {
@@ -116,7 +147,7 @@ namespace AutoServiceMVC.Services.Implement
             var employee = new Employee()
             {
                 Username = register.Username,
-                HashPassword = register.Password,
+                HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
                 Email = register.Email,
                 PhoneNum = register.PhoneNum,
@@ -133,7 +164,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<Employee>.Update(Employee entity)
+        async Task<StatusMessage> ICommonRepository<Employee>.UpdateAsync(Employee? entity)
         {
             if (entity == null)
             {
@@ -155,7 +186,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> IAuthenticateService<Employee>.ValidateLogin(Login login)
+        async Task<StatusMessage> IAuthenticateService<Employee>.ValidateLoginAsync(Login login)
         {
             var employee = await _context.Employees.FirstOrDefaultAsync(u => u.Username == login.Username);
             if (employee == null)
@@ -167,7 +198,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
             
-            if (employee.HashPassword != login.Password)
+            if (employee.HashPassword != _hash.GetHashPassword(login.Password))
             {
                 return new StatusMessage()
                 {

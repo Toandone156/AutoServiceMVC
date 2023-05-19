@@ -2,6 +2,7 @@
 using AutoServiceMVC.Data;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
@@ -19,7 +20,7 @@ namespace AutoServiceMVC.Services.Implement
             Page_Size = monitor.CurrentValue.PageSize;
         }
 
-        public async Task<StatusMessage> Add(UserCoupon entity)
+        public async Task<StatusMessage> CreateAsync(UserCoupon? entity)
         {
             if(entity == null)
             {
@@ -41,7 +42,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
         
-        public async Task<StatusMessage> DeleteById(int id)
+        public async Task<StatusMessage> DeleteByIdAsync(int? id)
         {
             return new StatusMessage()
             {
@@ -50,7 +51,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetAll(string? search, int page)
+        public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic userCoupons =  await _context.UserCoupons
                     .Include(uc => uc.User)
@@ -79,7 +80,7 @@ namespace AutoServiceMVC.Services.Implement
             }
         }
 
-        public async Task<StatusMessage> GetById(int id)
+        public async Task<StatusMessage> GetByIdAsync(int? id)
         {
             return new StatusMessage()
             {
@@ -88,7 +89,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> Update(UserCoupon entity)
+        public async Task<StatusMessage> UpdateAsync(UserCoupon? entity)
         {
             if (entity == null)
             {
@@ -121,7 +122,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetByUserID(int userID)
+        public async Task<StatusMessage> GetByUserIDAsync(int userID)
         {
             if (userID == null)
             {
@@ -154,6 +155,33 @@ namespace AutoServiceMVC.Services.Implement
                 Message = Message.GET_SUCCESS,
                 Data = userCoupons
             };
+        }
+
+        public async Task<StatusMessage> GetAllAsync()
+        {
+            var result = await _context.UserCoupons
+                    .Include(uc => uc.User)
+                    .Include(uc => uc.Coupon)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+            else
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = Message.GET_SUCCESS,
+                    Data = result
+                };
+            }
         }
     }
 }

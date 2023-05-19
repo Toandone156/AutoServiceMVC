@@ -3,8 +3,11 @@ using AutoServiceMVC.Data;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
+using AutoServiceMVC.Services.System;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using static Humanizer.On;
 
 namespace AutoServiceMVC.Services.Implement
 {
@@ -12,14 +15,40 @@ namespace AutoServiceMVC.Services.Implement
     {
         private readonly AppDbContext _context;
         private readonly int Page_Size;
+        private readonly IHashPassword _hash;
 
-        public UserRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor) 
+        public UserRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor, IHashPassword hash) 
         {
             _context = context;
             Page_Size = monitor.CurrentValue.PageSize;
+            _hash = hash;
         }
 
-        public async Task<StatusMessage> GetAll(string? search, int page)
+        public async Task<StatusMessage> GetAllAsync()
+        {
+            var result = await _context.Users
+                    .Include(u => u.UserType)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
+            };
+        }
+
+        public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic users = null;
 
@@ -58,7 +87,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<User>.Add(User entity)
+        async Task<StatusMessage> ICommonRepository<User>.CreateAsync(User? entity)
         {
             return new StatusMessage
             {
@@ -68,7 +97,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<User>.DeleteById(int id)
+        async Task<StatusMessage> ICommonRepository<User>.DeleteByIdAsync(int? id)
         {
             return new StatusMessage
             {
@@ -78,7 +107,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<User>.GetById(int id)
+        async Task<StatusMessage> ICommonRepository<User>.GetByIdAsync(int? id)
         {
             var user = await _context.Users
                     .Include(u => u.UserType)
@@ -103,7 +132,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> IAuthenticateService<User>.Register(Register register)
+        async Task<StatusMessage> IAuthenticateService<User>.RegisterAsync(Register register)
         {
             if (register.Password != register.AgainPassword)
             {
@@ -117,7 +146,7 @@ namespace AutoServiceMVC.Services.Implement
             var user = new User()
             {
                 Username = register.Username,
-                HashPassword = register.Password,
+                HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
                 Email = register.Email,
                 PhoneNum = register.PhoneNum
@@ -133,7 +162,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> ICommonRepository<User>.Update(User entity)
+        async Task<StatusMessage> ICommonRepository<User>.UpdateAsync(User? entity)
         {
             if (entity == null)
             {
@@ -155,7 +184,7 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        async Task<StatusMessage> IAuthenticateService<User>.ValidateLogin(Login login)
+        async Task<StatusMessage> IAuthenticateService<User>.ValidateLoginAsync(Login login)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
             if(user == null)
@@ -167,7 +196,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
             
-            if(user.HashPassword != login.Password)
+            if(user.HashPassword != _hash.GetHashPassword(login.Password))
             {
                 return new StatusMessage()
                 {
