@@ -11,6 +11,6 @@ namespace AutoServiceBE.Models
         public string CategoryName { get; set; }
 
         //Relations
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Product>? Products { get; set; }
     }
 }

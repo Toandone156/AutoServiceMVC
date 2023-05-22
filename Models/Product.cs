@@ -23,8 +23,8 @@ namespace AutoServiceBE.Models
 
         //Relations
         [ForeignKey("CategoryID")]
-        public virtual Category Category { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<ProductFeedback> ProductFeedbacks { get; set; }
+        public virtual Category? Category { get; set; }
+        public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
+        public virtual ICollection<ProductFeedback>? ProductFeedbacks { get; set; }
     }
 }

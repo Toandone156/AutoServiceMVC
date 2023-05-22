@@ -16,8 +16,8 @@ namespace AutoServiceBE.Models
         public int? EmployeeID { get; set; }
 
         //Relations
-        public virtual Order Order { get; set; }
-        public virtual Status Status { get; set; }
+        public virtual Order? Order { get; set; }
+        public virtual Status? Status { get; set; }
         public virtual Employee? Employee { get; set; }
     }
 }

@@ -12,6 +12,6 @@ namespace AutoServiceBE.Models
         public string StatusName { get; set; }
 
         //Relations
-        public virtual ICollection<OrderStatus> OrderStatuses { get; set;}
+        public virtual ICollection<OrderStatus>? OrderStatuses { get; set;}
     }
 }

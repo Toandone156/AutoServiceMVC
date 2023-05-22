@@ -29,13 +29,6 @@ namespace AutoServiceMVC.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Add m-m relations
-            modelBuilder.Entity<Employee>(e =>
-            {
-                e.HasMany(empl => empl.Roles)
-                .WithMany(r => r.Employees);
-            });
-
             //Add mutilple key
             modelBuilder.Entity<OrderDetail>(e =>
             {

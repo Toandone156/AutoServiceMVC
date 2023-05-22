@@ -12,6 +12,6 @@ namespace AutoServiceBE.Models
         public string PaymentMethodName { get; set;}
 
         //Relations
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
     }
 }

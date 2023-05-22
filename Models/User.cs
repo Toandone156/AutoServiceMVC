@@ -16,11 +16,11 @@ namespace AutoServiceBE.Models
 
         //Relations
         [ForeignKey("UserTypeID")]
-        public virtual UserType UserType { get; set; }
-        public virtual ICollection<ServiceFeedback> ServiceFeedbacks { get; set; }
-        public virtual ICollection<PointTrading> PointTradings { get; set; }
-        public virtual ICollection<ProductFeedback> ProductFeedbacks { get; set; }
-        public virtual ICollection<UserCoupon> UserCoupons { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual UserType? UserType { get; set; }
+        public virtual ICollection<ServiceFeedback>? ServiceFeedbacks { get; set; }
+        public virtual ICollection<PointTrading>? PointTradings { get; set; }
+        public virtual ICollection<ProductFeedback>? ProductFeedbacks { get; set; }
+        public virtual ICollection<UserCoupon>? UserCoupons { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
     }
 }
