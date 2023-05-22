@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var paymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(c => c.PaymentMethodId == id);
+            var paymentMethod = await _context.PaymentMethods.AsNoTracking().FirstOrDefaultAsync(c => c.PaymentMethodId == id);
 
             if(paymentMethod == null)
             {
@@ -64,6 +64,9 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.PaymentMethods.Remove(paymentMethod);
+            await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {
@@ -122,7 +125,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var paymentMethod = await _context.PaymentMethods
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.PaymentMethodId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.PaymentMethodId == id);
             if(paymentMethod == null)
             {
                 return new StatusMessage()
@@ -151,7 +154,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var paymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(c => c.PaymentMethodId == c.PaymentMethodId);
+            var paymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(c => c.PaymentMethodId == entity.PaymentMethodId);
             if(paymentMethod == null)
             {
                 return new StatusMessage()
@@ -161,7 +164,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.PaymentMethods.Update(entity);
+            paymentMethod.PaymentMethodName = entity.PaymentMethodName;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

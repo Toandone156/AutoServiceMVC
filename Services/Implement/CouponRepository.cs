@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponID == id);
+            var coupon = await _context.Coupons.AsNoTracking().FirstOrDefaultAsync(c => c.CouponId == id);
 
             if(coupon == null)
             {
@@ -131,7 +131,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(c => c.Creator)
                 .Include(c => c.UserType)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CouponID == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.CouponId == id);
             if(coupon == null)
             {
                 return new StatusMessage()
@@ -160,7 +160,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             } 
 
-            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponID == entity.CouponID);
+            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponId == entity.CouponId);
             if(coupon == null)
             {
                 return new StatusMessage()
@@ -170,7 +170,17 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Coupons.Update(entity);
+            coupon.CouponCode = entity.CouponCode;
+            coupon.DiscountPercentage = entity.DiscountPercentage;
+            coupon.DiscountValue = entity.DiscountValue;
+            coupon.MinimumOrderAmount = entity.MinimumOrderAmount;
+            coupon.MaximumDiscountAmount = entity.MaximumDiscountAmount;
+            coupon.isForNewUser = entity.isForNewUser;
+            coupon.Quantity = entity.Quantity;
+            coupon.PointAmount = entity.PointAmount;
+            coupon.StartAt = entity.StartAt;
+            coupon.EndAt = entity.EndAt;
+
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
@@ -195,7 +205,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(c => c.Creator)
                 .Include(c => c.UserType)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CouponCode == code);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.CouponCode == code);
 
             if (coupon == null)
             {

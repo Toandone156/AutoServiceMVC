@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -101,7 +101,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var userCoupon = await _context.UserCoupons.FirstOrDefaultAsync(
-                uc => uc.UserID == entity.UserID && uc.CouponID == entity.CouponID && uc.IsUsed == false);
+                uc => uc.UserId == entity.UserId && uc.CouponId == entity.CouponId && uc.IsUsed == false);
 
             if (userCoupon == null)
             {
@@ -112,7 +112,8 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Update<UserCoupon>(userCoupon);
+            userCoupon.IsUsed = entity.IsUsed;
+            userCoupon.ExpireAt = entity.ExpireAt;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
@@ -122,22 +123,13 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetByUserIDAsync(int userID)
+        public async Task<StatusMessage> GetByUserIdAsync(int userId)
         {
-            if (userID == null)
-            {
-                return new StatusMessage()
-                {
-                    IsSuccess = false,
-                    Message = Message.INPUT_EMPTY
-                };
-            }
-
             var userCoupons = await _context.UserCoupons
                 .Include(p => p.User)
                 .Include(p => p.Coupon)
                 .AsNoTracking()
-                .Where(c => c.UserID == userID)
+                .Where(c => c.UserId == userId)
                 .ToListAsync();
 
             if (userCoupons == null)
@@ -182,6 +174,27 @@ namespace AutoServiceMVC.Services.Implement
                     Data = result
                 };
             }
+        }
+
+        public async Task<StatusMessage> DeleteByEntityAsync(UserCoupon entity)
+        {
+            if (entity == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.INPUT_EMPTY
+                };
+            }
+
+            _context.UserCoupons.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.DELETE_SUCCESS
+            };
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class Role
     {

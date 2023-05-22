@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -53,7 +53,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var orderStatus = await _context.OrderStatus.FirstOrDefaultAsync(c => c.OrderStatusId == id);
+            var orderStatus = await _context.OrderStatus.AsNoTracking().FirstOrDefaultAsync(c => c.OrderStatusId == id);
 
             if(orderStatus == null)
             {
@@ -112,7 +112,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var orderStatus = await _context.OrderStatus
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.OrderStatusId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.OrderStatusId == id);
             if(orderStatus == null)
             {
                 return new StatusMessage()
@@ -151,8 +151,8 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
-
-            _context.OrderStatus.Update(entity);
+            
+            orderStatus.StatusId = entity.OrderStatusId;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
@@ -186,6 +186,27 @@ namespace AutoServiceMVC.Services.Implement
                 IsSuccess = true,
                 Message = Message.GET_SUCCESS,
                 Data = result
+            };
+        }
+
+        public async Task<StatusMessage> DeleteByEntityAsync(OrderStatus entity)
+        {
+            if (entity == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.INPUT_EMPTY
+                };
+            }
+
+            _context.OrderStatus.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.DELETE_SUCCESS
             };
         }
     }

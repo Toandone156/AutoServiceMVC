@@ -1,5 +1,4 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
@@ -148,8 +147,7 @@ namespace AutoServiceMVC.Services.Implement
                 Username = register.Username,
                 HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
-                Email = register.Email,
-                PhoneNum = register.PhoneNum
+                Email = register.Email
             };
 
             await _context.AddAsync<User>(user);
@@ -173,9 +171,22 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var user = _context.Users.FirstOrDefaultAsync(u => u.UserId == u.UserId);
-            _context.Users.Update(entity);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == entity.UserId);
+
+            if(user == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.ID_NOT_FOUND
+                };
+            }
+
+            user.FullName = entity.FullName;
+            user.Email = entity.Email;
+            user.Point = entity.Point;
             await _context.SaveChangesAsync();
+
             return new StatusMessage()
             {
                 IsSuccess = true,
@@ -186,7 +197,7 @@ namespace AutoServiceMVC.Services.Implement
 
         async Task<StatusMessage> IAuthenticateService<User>.ValidateLoginAsync(Login login)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == login.Username);
             if(user == null)
             {
                 return new StatusMessage()

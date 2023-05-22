@@ -1,5 +1,4 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
@@ -113,7 +112,7 @@ namespace AutoServiceMVC.Services.Implement
             var Employee = await _context.Employees
                     .Include(e => e.Role)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(u => u.EmployeeID == id);
+                    .SingleOrDefaultAsync(u => u.EmployeeId == id);
 
             if (Employee == null)
             {
@@ -150,8 +149,7 @@ namespace AutoServiceMVC.Services.Implement
                 HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
                 Email = register.Email,
-                PhoneNum = register.PhoneNum,
-                RoleID = register.Role?.RoleId ?? 0
+                RoleId = register.RoleId
             };
 
             await _context.AddAsync<Employee>(employee);
@@ -175,20 +173,34 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var Employee = _context.Employees.FirstOrDefaultAsync(u => u.EmployeeID == u.EmployeeID);
-            _context.Employees.Update(entity);
+            var employee = await _context.Employees.FirstOrDefaultAsync(u => u.EmployeeId == entity.EmployeeId);
+
+            if(employee == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.ID_NOT_FOUND
+                };
+            }
+
+            employee.FullName = entity.FullName;
+            employee.Email = entity.Email;
+            employee.RoleId = entity.RoleId;
+            employee.EndDate = entity.EndDate;
+
             await _context.SaveChangesAsync();
             return new StatusMessage()
             {
                 IsSuccess = true,
                 Message = Message.UPDATE_SUCCESS,
-                Data = Employee
+                Data = entity
             };
         }
 
         async Task<StatusMessage> IAuthenticateService<Employee>.ValidateLoginAsync(Login login)
         {
-            var employee = await _context.Employees.FirstOrDefaultAsync(u => u.Username == login.Username);
+            var employee = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(u => u.Username == login.Username);
             if (employee == null)
             {
                 return new StatusMessage()
@@ -207,7 +219,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
             
-            if ((employee.EndDate ?? DateTime.Now) <= DateTime.Now)
+            if (employee.EndDate != null && employee.EndDate < DateTime.Now)
             {
                 return new StatusMessage()
                 {

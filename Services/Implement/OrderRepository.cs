@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -52,7 +52,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+            var order = await _context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
             {
@@ -62,6 +62,10 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+
 
             return new StatusMessage()
             {
@@ -118,7 +122,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(p => p.ApplyCoupon)
                 .Include(p => p.PaymentMethod)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.OrderId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.OrderId == id);
 
             if (order == null)
             {
@@ -148,7 +152,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var order = await _context.Orders.FirstOrDefaultAsync(c => c.OrderId == c.OrderId);
+            var order = await _context.Orders.FirstOrDefaultAsync(c => c.OrderId == entity.OrderId);
 
             if (order == null)
             {
@@ -159,7 +163,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Orders.Update(entity);
+            //order.Note = entity.Note;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

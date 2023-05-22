@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -45,33 +45,10 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> DeleteByIdAsync(int? id)
         {
-            if (id == null)
-            {
-                return new StatusMessage()
-                {
-                    IsSuccess = false,
-                    Message = Message.INPUT_EMPTY
-                };
-            }
-
-            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == id);
-
-            if(product == null)
-            {
-                return new StatusMessage()
-                {
-                    IsSuccess = false,
-                    Message = Message.ID_NOT_FOUND
-                };
-            }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-
             return new StatusMessage()
             {
-                IsSuccess = true,
-                Message = Message.DELETE_SUCCESS
+                IsSuccess = false,
+                Message = Message.METHOD_NOT_DEFINED
             };
         }
 
@@ -128,7 +105,7 @@ namespace AutoServiceMVC.Services.Implement
             var product = await _context.Products
                 .Include(p => p.Category)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.ProductId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.ProductId == id);
 
             if(product == null)
             {
@@ -158,7 +135,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == c.ProductId);
+            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == entity.ProductId);
             if(product == null)
             {
                 return new StatusMessage()
@@ -168,20 +145,33 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            if(product.Price != entity.Price)
+            if (product.Price == entity.Price)
             {
                 //If price not change => update data entity
-                _context.Products.Update(entity);
+                product.ProductName = entity.ProductName;
+                product.ProductDescription = entity.ProductDescription;
+                product.ProductImage = entity.ProductImage;
+                product.IsAvailable = entity.IsAvailable;
+                product.IsOutOfStock = entity.IsOutOfStock;
+                product.CategoryId = entity.CategoryId;
                 await _context.SaveChangesAsync();
             }
             else
             {
                 //If price change => Remove and create new product
                 product.IsAvailable = false;
-                _context.Products.Update(product);
                 await _context.SaveChangesAsync();
 
-                _context.Add<Product>(entity);
+                product.ProductId = 0;
+                product.Price = entity.Price;
+
+                product.ProductName = entity.ProductName;
+                product.ProductDescription = entity.ProductDescription;
+                product.ProductImage = entity.ProductImage;
+                product.IsAvailable = entity.IsAvailable;
+                product.IsOutOfStock = entity.IsOutOfStock;
+                product.CategoryId = entity.CategoryId;
+                await _context.AddAsync(product);
             }
 
             return new StatusMessage()

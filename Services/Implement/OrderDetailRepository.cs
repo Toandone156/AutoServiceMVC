@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -81,7 +81,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(
-                od => od.OrderID == entity.OrderID && od.ProductID == entity.ProductID);
+                od => od.OrderId == entity.OrderId && od.ProductId == entity.ProductId);
 
             if (orderDetail == null)
             {
@@ -92,7 +92,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Update<OrderDetail>(entity);
+            orderDetail.Quantity = entity.Quantity;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
@@ -102,9 +102,9 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> GetByOrderIDAsync(int? orderID)
+        public async Task<StatusMessage> GetByOrderIdAsync(int? orderId)
         {
-            if (orderID == null)
+            if (orderId == null)
             {
                 return new StatusMessage()
                 {
@@ -117,7 +117,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(o => o.Order)
                 .Include(o => o.Product)
                 .AsNoTracking()
-                .Where(c => c.OrderID == orderID)
+                .Where(c => c.OrderId == orderId)
                 .ToListAsync();
 
             if (orderDetails == null)
@@ -162,8 +162,27 @@ namespace AutoServiceMVC.Services.Implement
                     Data = result
                 };
             }
+        }
 
-            public Task<StatusMessage> Delete
+        public async Task<StatusMessage> DeleteByEntityAsync(OrderDetail entity)
+        {
+            if (entity == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.INPUT_EMPTY
+                };
+            }
+
+            _context.OrderDetails.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.DELETE_SUCCESS
+            };
         }
     }
 }

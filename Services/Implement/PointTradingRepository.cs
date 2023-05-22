@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var pointtrading = await _context.PointTrading.FirstOrDefaultAsync(c => c.PointTradingId == id);
+            var pointtrading = await _context.PointTrading.AsNoTracking().FirstOrDefaultAsync(c => c.PointTradingId == id);
 
             if(pointtrading == null)
             {
@@ -64,6 +64,9 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.PointTrading.Remove(pointtrading);
+            await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {
@@ -125,7 +128,7 @@ namespace AutoServiceMVC.Services.Implement
             var pointtrading = await _context.PointTrading
                 .Include(p => p.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.PointTradingId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.PointTradingId == id);
             if(pointtrading == null)
             {
                 return new StatusMessage()
@@ -154,7 +157,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var pointtrading = await _context.PointTrading.FirstOrDefaultAsync(c => c.PointTradingId == c.PointTradingId);
+            var pointtrading = await _context.PointTrading.FirstOrDefaultAsync(c => c.PointTradingId == entity.PointTradingId);
             if(pointtrading == null)
             {
                 return new StatusMessage()
@@ -164,7 +167,8 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.PointTrading.Update(entity);
+            pointtrading.TradeDescription = entity.TradeDescription;
+            pointtrading.Point = entity.Point;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

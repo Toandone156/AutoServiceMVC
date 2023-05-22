@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -53,7 +53,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var table = await _context.Tables.FirstOrDefaultAsync(c => c.TableId == id);
+            var table = await _context.Tables.AsNoTracking().FirstOrDefaultAsync(c => c.TableId == id);
 
             if(table == null)
             {
@@ -63,6 +63,9 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.Tables.Remove(table);
+            await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {
@@ -121,7 +124,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var table = await _context.Tables
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.TableId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.TableId == id);
             if(table == null)
             {
                 return new StatusMessage()
@@ -150,7 +153,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var table = await _context.Tables.FirstOrDefaultAsync(c => c.TableId == c.TableId);
+            var table = await _context.Tables.FirstOrDefaultAsync(c => c.TableId == entity.TableId);
             if(table == null)
             {
                 return new StatusMessage()
@@ -160,7 +163,8 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Tables.Update(entity);
+            table.TableName = entity.TableName;
+            table.TableCode = entity.TableCode;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

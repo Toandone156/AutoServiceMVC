@@ -1,5 +1,4 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Models;
+﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -17,12 +16,8 @@ namespace AutoServiceMVC.Controllers
             _categoryRepo = categoryRepo;
         }
 
+        [Route("")]
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Privacy()
         {
             return View();
         }

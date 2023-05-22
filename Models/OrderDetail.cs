@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class OrderDetail
     {
         //Attributes
-        public int OrderID { get; set; }
-        public int ProductID { get; set; }
+        public int OrderId { get; set; }
+        public int ProductId { get; set; }
         public int Quantity { get; set; }
 
         //Relations

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class OrderStatus
     {
@@ -11,9 +11,9 @@ namespace AutoServiceBE.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //Foreign Key
-        public int OrderID { get; set; }
-        public int StatusID { get; set; }
-        public int? EmployeeID { get; set; }
+        public int OrderId { get; set; }
+        public int StatusId { get; set; }
+        public int? EmployeeId { get; set; }
 
         //Relations
         public virtual Order? Order { get; set; }

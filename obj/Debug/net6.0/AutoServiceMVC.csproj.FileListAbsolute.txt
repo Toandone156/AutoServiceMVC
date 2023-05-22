@@ -269,3 +269,4 @@ D:\CN5\SWP391\_AutoService\Code\AutoServiceMVC\AutoServiceMVC\bin\Debug\net6.0\r
 D:\CN5\SWP391\_AutoService\Code\AutoServiceMVC\AutoServiceMVC\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 D:\CN5\SWP391\_AutoService\Code\AutoServiceMVC\AutoServiceMVC\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\CN5\SWP391\_AutoService\Code\AutoServiceMVC\AutoServiceMVC\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+D:\CN5\SWP391\_AutoService\Code\AutoServiceMVC\AutoServiceMVC\obj\Debug\net6.0\scopedcss\Areas\Admin\Views\Shared\_Layout.cshtml.rz.scp.css

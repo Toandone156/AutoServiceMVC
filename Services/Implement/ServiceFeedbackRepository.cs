@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var serviceFeedback = await _context.ServiceFeedbacks.FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
+            var serviceFeedback = await _context.ServiceFeedbacks.AsNoTracking().FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
 
             if(serviceFeedback == null)
             {
@@ -64,6 +64,9 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.ServiceFeedbacks.Remove(serviceFeedback);
+            await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {
@@ -125,7 +128,7 @@ namespace AutoServiceMVC.Services.Implement
             var serviceFeedback = await _context.ServiceFeedbacks
                 .Include(p => p.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
             if(serviceFeedback == null)
             {
                 return new StatusMessage()
@@ -154,7 +157,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var serviceFeedback = await _context.ServiceFeedbacks.FirstOrDefaultAsync(c => c.ServiceFeedbackId == c.ServiceFeedbackId);
+            var serviceFeedback = await _context.ServiceFeedbacks.FirstOrDefaultAsync(c => c.ServiceFeedbackId == entity.ServiceFeedbackId);
             if(serviceFeedback == null)
             {
                 return new StatusMessage()
@@ -164,7 +167,8 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.ServiceFeedbacks.Update(entity);
+            serviceFeedback.Comment = entity.Comment;
+            serviceFeedback.Image = entity.Image;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

@@ -1,0 +1,56 @@
+﻿@model AutoServiceMVC.Models.Employee
+
+@{
+    ViewData["Title"] = "Edit Employee";
+    var selectList = new SelectList(ViewBag.RoleList, "RoleId", "RoleName");
+}
+
+<div class="row">
+    <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="tm-block-title d-inline-block">Detail Employee</h2>
+                </div>
+            </div>
+            <form asp-action="Edit" class="tm-edit-product-form">
+                <div asp-validation-summary="ModelOnly" class="text-white"></div>
+                <input type="hidden" asp-for="EmployeeId" />
+                <div class="row tm-edit-product-row">
+                    <div class="col-xl-6 col-lg-6 col-md-12">
+                        <div class="form-group mb-3">
+                            <label asp-for="FullName"></label>
+                            <input asp-for="FullName" class="form-control validate">
+                            <span asp-validation-for="FullName" class="text-white"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control validate">
+                            <span asp-validation-for="Email" class="text-white"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RoleId"></label>
+                            <select asp-for="RoleId"
+                                    asp-items="selectList"
+                                    class="custom-select tm-select-accounts">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartDate"></label>
+                            <input asp-for="StartDate" class="form-control validate" disabled>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
+                    </div>
+                    <div class="col-12">
+                        <button asp-action="LayOff" asp-route-id="@Model.EmployeeId"
+                            class="btn btn-danger btn-block text-uppercase">
+                            Lay Off</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

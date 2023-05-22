@@ -1,5 +1,5 @@
-using AutoServiceBE.Models;
 using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
@@ -21,6 +21,14 @@ services.AddDbContext<AppDbContext>(options =>
     }));
 });
 
+services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "vi-VN", "en-US" };
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
+
 //Add service
 services.AddScoped<IAuthenticateService<User>, UserRepository>();
 services.AddScoped<IAuthenticateService<Employee>, EmployeeRepository>();
@@ -36,9 +44,16 @@ services.AddScoped<ICommonRepository<ProductFeedback>, ProductFeedbackRepository
 services.AddScoped<ICommonRepository<ServiceFeedback>, ServiceFeedbackRepository>();
 services.AddScoped<ICommonRepository<Status>, StatusRepository>();
 services.AddScoped<ICommonRepository<Table>, TableRepository>();
+services.AddScoped<ICommonRepository<Role>, RoleRepository>();
 services.AddScoped<ICommonRepository<UserCoupon>, UserCouponRepository>();
+services.AddScoped<ICommonRepository<UserType>, UserTypeRepository>();
+services.AddScoped<ICommonRepository<Employee>, EmployeeRepository>();
+services.AddScoped<ICommonRepository<User>, UserRepository>();
 
 services.AddScoped<IHashPassword, HashPassword>();
+
+services.AddHttpContextAccessor();
+services.AddScoped<IImageUploadService, ImageUploadService>();
 
 //Add enviroment variable
 services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -61,10 +76,27 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+#region currency
+var supportedCultures = new[] { "vi-VN", "en-US" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+#endregion
+
+
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "areaRoute",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();

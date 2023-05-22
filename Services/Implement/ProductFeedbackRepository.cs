@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var productFeedback = await _context.ProductFeedbacks.FirstOrDefaultAsync(c => c.ProductFeedbackID == id);
+            var productFeedback = await _context.ProductFeedbacks.AsNoTracking().FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
 
             if(productFeedback == null)
             {
@@ -64,6 +64,9 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.ProductFeedbacks.Remove(productFeedback);
+            await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {
@@ -128,7 +131,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(p => p.Product)
                 .Include(p => p.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.ProductFeedbackID == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
 
             if(productFeedback == null)
             {
@@ -158,7 +161,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var productFeedback = await _context.ProductFeedbacks.FirstOrDefaultAsync(c => c.ProductFeedbackID == c.ProductFeedbackID);
+            var productFeedback = await _context.ProductFeedbacks.FirstOrDefaultAsync(c => c.ProductFeedbackId == entity.ProductFeedbackId);
             if(productFeedback == null)
             {
                 return new StatusMessage()
@@ -168,7 +171,9 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.ProductFeedbacks.Update(entity);
+            productFeedback.Comment = entity.Comment;
+            productFeedback.Image = entity.Image;
+            productFeedback.Rating = entity.Rating;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

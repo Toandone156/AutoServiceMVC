@@ -1,4 +1,4 @@
-﻿using AutoServiceBE.Models;
+﻿using AutoServiceMVC.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoServiceMVC.Data
@@ -34,8 +34,8 @@ namespace AutoServiceMVC.Data
             {
                 e.HasKey(p => new
                 {
-                    p.OrderID,
-                    p.ProductID
+                    p.OrderId,
+                    p.ProductId
                 });
             });
 
@@ -43,8 +43,8 @@ namespace AutoServiceMVC.Data
             {
                 e.HasKey(p => new
                 {
-                    p.UserID,
-                    p.CouponID
+                    p.UserId,
+                    p.CouponId
                 });
             });
         }

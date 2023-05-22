@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Table>
+@{
+    ViewData["Title"] = "Table";
+}
+
+<div class="row tm-content-row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+        <div class="tm-bg-primary-dark tm-block tm-block-products">
+            <div class="tm-product-table-container">
+                <table class="table table-hover tm-table-small tm-product-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TableName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TableCode)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td scope="col">
+                                    <a asp-action="Details" asp-route-id="@item.TableId"
+                                       class="text-reset text-decoration-none">
+                                        @Html.DisplayFor(modelItem => item.TableName)
+                                    </a>
+                                </td>
+                                <td scope="col">
+                                    @Html.DisplayFor(modelItem => item.TableCode)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- table container -->
+            <a asp-action="Create"
+               class="btn btn-primary btn-block text-uppercase mb-3">Add new table</a>
+        </div>
+    </div>
+</div>

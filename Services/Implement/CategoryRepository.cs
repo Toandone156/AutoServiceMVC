@@ -1,5 +1,5 @@
-﻿using AutoServiceBE.Models;
-using AutoServiceMVC.Data;
+﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.Constants;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == id);
 
             if(category == null)
             {
@@ -124,8 +124,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var category = await _context.Categories
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CategoryId == id);
+                .AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == id);
             if(category == null)
             {
                 return new StatusMessage()
@@ -165,7 +164,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Categories.Update(entity);
+            category.CategoryName = entity.CategoryName;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
