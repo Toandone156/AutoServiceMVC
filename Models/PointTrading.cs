@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class PointTrading
     {
@@ -16,10 +16,10 @@ namespace AutoServiceBE.Models
         public DateTime TradedAt { get; set; } = DateTime.Now;
 
         //Foreign Keys
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
         //Relations
-        [ForeignKey("UserID")]
+        [ForeignKey("UserId")]
         public virtual User? User { get; set; }
     }
 }

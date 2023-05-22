@@ -1,21 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class UserCoupon
     {
         //Attributes
-        public int UserID { get; set; }
-        public int CouponID { get; set; }
+        public int UserId { get; set; }
+        public int CouponId { get; set; }
         public bool IsUsed { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime? ExpireAt { get; set;}
 
         //Relations
-        [ForeignKey("UserID")]
+        [ForeignKey("UserId")]
         public virtual User? User { get; set; }
-        [ForeignKey("CouponID")]
+        [ForeignKey("CouponId")]
         public virtual Coupon? Coupon { get; set; }
     }
 }

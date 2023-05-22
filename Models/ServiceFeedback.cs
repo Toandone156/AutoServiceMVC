@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class ServiceFeedback
     {
@@ -14,10 +14,10 @@ namespace AutoServiceBE.Models
         public string? Image { get; set; }
 
         //Foreign Keys
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
         //Relations
-        [ForeignKey("UserID")]
+        [ForeignKey("UserId")]
         public virtual User? User { get; set; }
     }
 }

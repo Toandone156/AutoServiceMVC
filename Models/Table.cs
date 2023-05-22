@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class Table
     {
@@ -11,6 +11,7 @@ namespace AutoServiceBE.Models
         [Column(TypeName = "nvarchar(100)")]
         public string TableName { get; set; }
         [StringLength(100)]
+        [RegularExpression("^[a-zA-Z0-9]{6,}$")]
         public string TableCode { get; set; }
 
         //Relations

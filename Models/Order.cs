@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class Order
     {
@@ -15,22 +15,22 @@ namespace AutoServiceBE.Models
         public string Note { get; set; }
 
         //Foreign Keys
-        public int? UserID { get; set; }
-        public int? EmployeeID { get; set; }
-        public int TableID { get; set; }
-        public int? ApplyCouponID { get; set; }
-        public int PaymentMethodID { get; set; }
+        public int? UserId { get; set; }
+        public int? EmployeeId { get; set; }
+        public int TableId { get; set; }
+        public int? ApplyCouponId { get; set; }
+        public int PaymentMethodId { get; set; }
 
         //Relations
-        [ForeignKey("UserID")]
+        [ForeignKey("UserId")]
         public virtual User? User { get; set; }
-        [ForeignKey("EmployeeID")]
+        [ForeignKey("EmployeeId")]
         public virtual Employee? Employee { get; set; }
-        [ForeignKey("TableID")]
+        [ForeignKey("TableId")]
         public virtual Table? Table { get; set; }
-        [ForeignKey("ApplyCouponID")]
+        [ForeignKey("ApplyCouponId")]
         public virtual Coupon? ApplyCoupon { get; set; }
-        [ForeignKey("PaymentMethodID")]
+        [ForeignKey("PaymentMethodId")]
         public virtual PaymentMethod? PaymentMethod { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
         public virtual ICollection<OrderStatus>? OrderStatuses { get; set; }

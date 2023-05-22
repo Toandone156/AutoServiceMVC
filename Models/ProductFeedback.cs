@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class ProductFeedback
     {
         //Attributes
         [Key]
-        public int ProductFeedbackID { get; set; }
+        public int ProductFeedbackId { get; set; }
         [Column(TypeName = "ntext")]
         public string Comment { get; set; }
         [DataType(DataType.ImageUrl)]
@@ -16,8 +16,8 @@ namespace AutoServiceBE.Models
         public int Rating { get; set; }
 
         //Foreign keys
-        public int ProductID { get; set; }
-        public int UserID { get; set; }
+        public int ProductId { get; set; }
+        public int UserId { get; set; }
 
         //Relations
         public virtual Product? Product { get; set; }

@@ -22,7 +22,7 @@ namespace AutoServiceMVC.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AutoServiceBE.Models.Category", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -40,19 +40,19 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Coupon", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>
                 {
-                    b.Property<int>("CouponID")
+                    b.Property<int>("CouponId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CouponID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CouponId"), 1L, 1);
 
                     b.Property<string>("CouponCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CreatorID")
+                    b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
                     b.Property<int?>("DiscountPercentage")
@@ -79,35 +79,31 @@ namespace AutoServiceMVC.Migrations
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserTypeID")
+                    b.Property<int?>("UserTypeId")
                         .HasColumnType("int");
 
                     b.Property<bool>("isForNewUser")
                         .HasColumnType("bit");
 
-                    b.HasKey("CouponID");
+                    b.HasKey("CouponId");
 
-                    b.HasIndex("CreatorID");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("UserTypeID");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Coupons");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Employee", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Employee", b =>
                 {
-                    b.Property<int>("EmployeeID")
+                    b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeID"), 1L, 1);
-
-                    b.Property<string>("Avatar")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"), 1L, 1);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("EndDate")
@@ -122,10 +118,7 @@ namespace AutoServiceMVC.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("PhoneNum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleID")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -136,14 +129,14 @@ namespace AutoServiceMVC.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("EmployeeID");
+                    b.HasKey("EmployeeId");
 
-                    b.HasIndex("RoleID");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Order", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Order", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
@@ -154,63 +147,63 @@ namespace AutoServiceMVC.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplyCouponID")
+                    b.Property<int?>("ApplyCouponId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeID")
+                    b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("ntext");
 
-                    b.Property<int>("PaymentMethodID")
+                    b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TableID")
+                    b.Property<int>("TableId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("ApplyCouponID");
+                    b.HasIndex("ApplyCouponId");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("PaymentMethodID");
+                    b.HasIndex("PaymentMethodId");
 
-                    b.HasIndex("TableID")
+                    b.HasIndex("TableId")
                         .IsUnique();
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.OrderDetail", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.OrderDetail", b =>
                 {
-                    b.Property<int>("OrderID")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderID", "ProductID");
+                    b.HasKey("OrderId", "ProductId");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetails");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.OrderStatus", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.OrderStatus", b =>
                 {
                     b.Property<int>("OrderStatusId")
                         .ValueGeneratedOnAdd()
@@ -221,27 +214,27 @@ namespace AutoServiceMVC.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeID")
+                    b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderID")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusID")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.HasKey("OrderStatusId");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("OrderID");
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex("StatusID");
+                    b.HasIndex("StatusId");
 
                     b.ToTable("OrderStatus");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.PaymentMethod", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.PaymentMethod", b =>
                 {
                     b.Property<int>("PaymentMethodId")
                         .ValueGeneratedOnAdd()
@@ -258,7 +251,7 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("PaymentMethods");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.PointTrading", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.PointTrading", b =>
                 {
                     b.Property<int>("PointTradingId")
                         .ValueGeneratedOnAdd()
@@ -276,17 +269,17 @@ namespace AutoServiceMVC.Migrations
                     b.Property<DateTime>("TradedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("PointTradingId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("PointTrading");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Product", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -294,7 +287,7 @@ namespace AutoServiceMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAvailable")
@@ -310,6 +303,10 @@ namespace AutoServiceMVC.Migrations
                         .IsRequired()
                         .HasColumnType("ntext");
 
+                    b.Property<string>("ProductImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)");
@@ -319,18 +316,18 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.ProductFeedback", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.ProductFeedback", b =>
                 {
-                    b.Property<int>("ProductFeedbackID")
+                    b.Property<int>("ProductFeedbackId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductFeedbackID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductFeedbackId"), 1L, 1);
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -339,25 +336,25 @@ namespace AutoServiceMVC.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<byte>("Rating")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductFeedbackID");
+                    b.HasKey("ProductFeedbackId");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProductFeedbacks");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Role", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Role", b =>
                 {
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -374,7 +371,7 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.ServiceFeedback", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.ServiceFeedback", b =>
                 {
                     b.Property<int>("ServiceFeedbackId")
                         .ValueGeneratedOnAdd()
@@ -389,17 +386,17 @@ namespace AutoServiceMVC.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ServiceFeedbackId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ServiceFeedbacks");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Status", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Status", b =>
                 {
                     b.Property<int>("StatusId")
                         .ValueGeneratedOnAdd()
@@ -416,7 +413,7 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("Status");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Table", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Table", b =>
                 {
                     b.Property<int>("TableId")
                         .ValueGeneratedOnAdd()
@@ -438,7 +435,7 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("Tables");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.User", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -446,12 +443,8 @@ namespace AutoServiceMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
-                    b.Property<string>("Avatar")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -463,13 +456,10 @@ namespace AutoServiceMVC.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("PhoneNum")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Point")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserTypeID")
+                    b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -479,17 +469,17 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("UserTypeID");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.UserCoupon", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.UserCoupon", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CouponID")
+                    b.Property<int>("CouponId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ExpireAt")
@@ -498,14 +488,14 @@ namespace AutoServiceMVC.Migrations
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
-                    b.HasKey("UserID", "CouponID");
+                    b.HasKey("UserId", "CouponId");
 
-                    b.HasIndex("CouponID");
+                    b.HasIndex("CouponId");
 
                     b.ToTable("UserCoupons");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.UserType", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.UserType", b =>
                 {
                     b.Property<int>("UserTypeId")
                         .ValueGeneratedOnAdd()
@@ -525,59 +515,59 @@ namespace AutoServiceMVC.Migrations
                     b.ToTable("UserTypes");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Coupon", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Employee", "Creator")
+                    b.HasOne("AutoServiceMVC.Models.Employee", "Creator")
                         .WithMany("CreatedCoupons")
-                        .HasForeignKey("CreatorID")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.UserType", "UserType")
+                    b.HasOne("AutoServiceMVC.Models.UserType", "UserType")
                         .WithMany("Coupons")
-                        .HasForeignKey("UserTypeID");
+                        .HasForeignKey("UserTypeId");
 
                     b.Navigation("Creator");
 
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Employee", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Employee", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Role", "Role")
+                    b.HasOne("AutoServiceMVC.Models.Role", "Role")
                         .WithMany("Employees")
-                        .HasForeignKey("RoleID")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Order", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Order", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Coupon", "ApplyCoupon")
+                    b.HasOne("AutoServiceMVC.Models.Coupon", "ApplyCoupon")
                         .WithMany()
-                        .HasForeignKey("ApplyCouponID");
+                        .HasForeignKey("ApplyCouponId");
 
-                    b.HasOne("AutoServiceBE.Models.Employee", "Employee")
+                    b.HasOne("AutoServiceMVC.Models.Employee", "Employee")
                         .WithMany("CreatedOrders")
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId");
 
-                    b.HasOne("AutoServiceBE.Models.PaymentMethod", "PaymentMethod")
+                    b.HasOne("AutoServiceMVC.Models.PaymentMethod", "PaymentMethod")
                         .WithMany("Orders")
-                        .HasForeignKey("PaymentMethodID")
+                        .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.Table", "Table")
+                    b.HasOne("AutoServiceMVC.Models.Table", "Table")
                         .WithOne("Order")
-                        .HasForeignKey("AutoServiceBE.Models.Order", "TableID")
+                        .HasForeignKey("AutoServiceMVC.Models.Order", "TableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.User", "User")
+                    b.HasOne("AutoServiceMVC.Models.User", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ApplyCoupon");
 
@@ -590,17 +580,17 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.OrderDetail", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.OrderDetail", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Order", "Order")
+                    b.HasOne("AutoServiceMVC.Models.Order", "Order")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("OrderID")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.Product", "Product")
+                    b.HasOne("AutoServiceMVC.Models.Product", "Product")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("ProductID")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -609,21 +599,21 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.OrderStatus", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.OrderStatus", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Employee", "Employee")
+                    b.HasOne("AutoServiceMVC.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId");
 
-                    b.HasOne("AutoServiceBE.Models.Order", "Order")
+                    b.HasOne("AutoServiceMVC.Models.Order", "Order")
                         .WithMany("OrderStatuses")
-                        .HasForeignKey("OrderID")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.Status", "Status")
+                    b.HasOne("AutoServiceMVC.Models.Status", "Status")
                         .WithMany("OrderStatuses")
-                        .HasForeignKey("StatusID")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -634,39 +624,39 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.PointTrading", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.PointTrading", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.User", "User")
+                    b.HasOne("AutoServiceMVC.Models.User", "User")
                         .WithMany("PointTradings")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Product", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Product", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Category", "Category")
+                    b.HasOne("AutoServiceMVC.Models.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.ProductFeedback", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.ProductFeedback", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Product", "Product")
+                    b.HasOne("AutoServiceMVC.Models.Product", "Product")
                         .WithMany("ProductFeedbacks")
-                        .HasForeignKey("ProductID")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.User", "User")
+                    b.HasOne("AutoServiceMVC.Models.User", "User")
                         .WithMany("ProductFeedbacks")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -675,39 +665,39 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.ServiceFeedback", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.ServiceFeedback", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.User", "User")
+                    b.HasOne("AutoServiceMVC.Models.User", "User")
                         .WithMany("ServiceFeedbacks")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.User", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.User", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.UserType", "UserType")
+                    b.HasOne("AutoServiceMVC.Models.UserType", "UserType")
                         .WithMany("Users")
-                        .HasForeignKey("UserTypeID")
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.UserCoupon", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.UserCoupon", b =>
                 {
-                    b.HasOne("AutoServiceBE.Models.Coupon", "Coupon")
+                    b.HasOne("AutoServiceMVC.Models.Coupon", "Coupon")
                         .WithMany("UserCoupons")
-                        .HasForeignKey("CouponID")
+                        .HasForeignKey("CouponId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AutoServiceBE.Models.User", "User")
+                    b.HasOne("AutoServiceMVC.Models.User", "User")
                         .WithMany("UserCoupons")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -716,58 +706,58 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Category", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Category", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Coupon", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>
                 {
                     b.Navigation("UserCoupons");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Employee", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Employee", b =>
                 {
                     b.Navigation("CreatedCoupons");
 
                     b.Navigation("CreatedOrders");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Order", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
 
                     b.Navigation("OrderStatuses");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.PaymentMethod", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.PaymentMethod", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Product", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Product", b =>
                 {
                     b.Navigation("OrderDetails");
 
                     b.Navigation("ProductFeedbacks");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Role", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Role", b =>
                 {
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Status", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Status", b =>
                 {
                     b.Navigation("OrderStatuses");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.Table", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.Table", b =>
                 {
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.User", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.User", b =>
                 {
                     b.Navigation("Orders");
 
@@ -780,7 +770,7 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("UserCoupons");
                 });
 
-            modelBuilder.Entity("AutoServiceBE.Models.UserType", b =>
+            modelBuilder.Entity("AutoServiceMVC.Models.UserType", b =>
                 {
                     b.Navigation("Coupons");
 

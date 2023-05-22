@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AutoServiceBE.Models
+namespace AutoServiceMVC.Models
 {
     public class Category
     {
