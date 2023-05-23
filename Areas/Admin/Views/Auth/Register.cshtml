@@ -1,9 +1,10 @@
 ﻿@model AutoServiceMVC.Models.Register
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject ICommonRepository<Role> roleService
 @{
     ViewData["Title"] = "Register";
     Layout = "_AuthenLayout";
-    var dropdownlist = new SelectList(ViewBag.RoleList, "RoleId", "RoleName");
+    var result = await roleService.GetAllAsync();
+    var dropdownlist = new SelectList((IEnumerable<Role>)result.Data, "RoleId", "RoleName");
 }
 
 <div class="row">

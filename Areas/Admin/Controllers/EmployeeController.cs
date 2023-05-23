@@ -1,20 +1,21 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
     public class EmployeeController : Controller
     {
         private readonly ICommonRepository<Employee> _employeeRepo;
-        private readonly ICommonRepository<Role> _roleRepo;
 
-        public EmployeeController(ICommonRepository<Employee> employeeRepo, ICommonRepository<Role> roleRepo)
+        public EmployeeController(ICommonRepository<Employee> employeeRepo)
         {
             _employeeRepo = employeeRepo;
-            _roleRepo = roleRepo;
         }
 
         public async Task<IActionResult> Index()
@@ -33,8 +34,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _employeeRepo.GetByIdAsync(id);
             if (result.IsSuccess)
             {
-                var roleResult = await _roleRepo.GetAllAsync();
-                ViewBag.RoleList = roleResult.Data;
                 return View(result.Data);
             }
 
@@ -44,6 +43,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("EmployeeId,FullName,Email,RoleId")] Employee employee)
         {
@@ -53,10 +53,12 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Details", employee.EmployeeId);
+            return View("Details", employee.EmployeeId);
         }
 
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> LayOff(int id)
         {
             var result = await _employeeRepo.GetByIdAsync(id);
@@ -74,7 +76,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 }
             }
 
-            return RedirectToAction("Detail", new {id = id });
+            return View("Detail", id);
         }
     }
 }

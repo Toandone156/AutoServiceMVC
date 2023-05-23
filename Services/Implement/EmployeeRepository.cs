@@ -18,7 +18,9 @@ namespace AutoServiceMVC.Services.Implement
         private readonly int Page_Size;
         private readonly IHashPassword _hash;
 
-        public EmployeeRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor, IHashPassword hash)
+        public EmployeeRepository(AppDbContext context, 
+            IOptionsMonitor<AppSettings> monitor, 
+            IHashPassword hash)
         {
             _context = context;
             Page_Size = monitor.CurrentValue.PageSize;
@@ -200,7 +202,8 @@ namespace AutoServiceMVC.Services.Implement
 
         async Task<StatusMessage> IAuthenticateService<Employee>.ValidateLoginAsync(Login login)
         {
-            var employee = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(u => u.Username == login.Username);
+            var employee = await _context.Employees.Include(e => e.Role)
+                .AsNoTracking().FirstOrDefaultAsync(u => u.Username == login.Username);
             if (employee == null)
             {
                 return new StatusMessage()

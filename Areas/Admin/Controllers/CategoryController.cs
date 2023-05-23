@@ -1,11 +1,13 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
     public class CategoryController : Controller
     {
         private readonly ICommonRepository<Category> _categoryRepo;
@@ -43,6 +45,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin",AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Create(
             [Bind("CategoryName")] Category category)
         {
@@ -52,12 +55,13 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Create");
+            return View();
         }
 
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("CategoryId,CategoryName")] Category category)
         {
@@ -67,11 +71,12 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Details", category.CategoryId);
+            return View("Details", category.CategoryId);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Delete(int id)
         {
             try

@@ -1,8 +1,9 @@
 ﻿@model AutoServiceMVC.Models.Employee
-
+@inject ICommonRepository<Role> roleService
 @{
     ViewData["Title"] = "Edit Employee";
-    var selectList = new SelectList(ViewBag.RoleList, "RoleId", "RoleName");
+    var result = await roleService.GetAllAsync();
+    var dropdownlist = new SelectList((IEnumerable<Role>)result.Data, "RoleId", "RoleName");
 }
 
 <div class="row">
@@ -31,7 +32,7 @@
                         <div class="form-group">
                             <label asp-for="RoleId"></label>
                             <select asp-for="RoleId"
-                                    asp-items="selectList"
+                                    asp-items="dropdownlist"
                                     class="custom-select tm-select-accounts">
                             </select>
                         </div>

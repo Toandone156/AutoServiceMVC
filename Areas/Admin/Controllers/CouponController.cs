@@ -9,13 +9,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
     public class CouponController : Controller
     {
         private readonly ICommonRepository<Coupon> _couponRepo;
-        private readonly ICommonRepository<UserType> _userTypeRepo;
 
-        public CouponController(ICommonRepository<Coupon> couponRepo,
-            ICommonRepository<UserType> userTypeRepo)
+        public CouponController(ICommonRepository<Coupon> couponRepo)
         {
             _couponRepo = couponRepo;
-            _userTypeRepo = userTypeRepo;
         }
 
         public async Task<IActionResult> Index()
@@ -34,18 +31,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _couponRepo.GetByIdAsync(id);
             if (result.IsSuccess)
             {
-                var userTypeRs = await _userTypeRepo.GetAllAsync();
-                ViewBag.UserTypeList = userTypeRs.Data;
                 return View(result.Data);
             }
 
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            var result = await _userTypeRepo.GetAllAsync();
-            ViewBag.UserTypeList = result.Data;
             return View();
         }
 
@@ -62,7 +55,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Create");
+            return View();
         }
 
         // POST: CategoryControler/Edit/5
@@ -78,7 +71,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Details", coupon.CouponId);
+            return View("Details", coupon.CouponId);
         }
     }
 }
