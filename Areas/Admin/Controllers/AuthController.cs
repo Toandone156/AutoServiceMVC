@@ -31,7 +31,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin" ,AuthenticationSchemes = "Admin_Scheme")]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
             return View();
         }
@@ -49,6 +49,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                     _auth.SignInAsync(status.Data, HttpContext);
                     return RedirectToAction("Index", "Home", new {area = "Admin"});
                 }
+
+                ModelState.AddModelError(String.Empty, status.Message);
             }
 
             return View();
@@ -67,6 +69,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 {
                     return RedirectToAction("Index", "Employee", new {area = "Admin"});
                 }
+
+                ModelState.AddModelError(String.Empty, status.Message);
             }
 
             return View();

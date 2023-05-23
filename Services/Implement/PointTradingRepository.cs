@@ -128,7 +128,7 @@ namespace AutoServiceMVC.Services.Implement
             var pointtrading = await _context.PointTrading
                 .Include(p => p.User)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.PointTradingId == id);
+                .FirstOrDefaultAsync(c => c.PointTradingId == id);
             if(pointtrading == null)
             {
                 return new StatusMessage()

@@ -131,7 +131,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(c => c.Creator)
                 .Include(c => c.UserType)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.CouponId == id);
+                .FirstOrDefaultAsync(c => c.CouponId == id);
             if(coupon == null)
             {
                 return new StatusMessage()

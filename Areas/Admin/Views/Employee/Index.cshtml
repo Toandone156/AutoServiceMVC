@@ -43,10 +43,10 @@
                                 <td scope="col">
                                     @if (item.EndDate < DateTime.Now)
                                     {
-                                        <div class="tm-status-circle cancelled"></div>
+                                        <div class="tm-status-circle ended"></div>
                                         <span>Ended</span>
                                     }else{
-                                        <div class="tm-status-circle moving"></div>
+                                        <div class="tm-status-circle working"></div>
                                         <span>On Working</span>
                                     }
                                 </td>

@@ -36,22 +36,59 @@
                                     class="custom-select tm-select-accounts">
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label asp-for="StartDate"></label>
                             <input asp-for="StartDate" class="form-control validate" disabled>
                         </div>
+                        
+                        @if(Model.EndDate < DateTime.Now)
+                        {
+                            <div class="form-group">
+                                <label asp-for="EndDate"></label>
+                                <input asp-for="EndDate" class="form-control validate" disabled>
+                            </div>
+                        }
+
                     </div>
-                    <div class="col-12 mb-3">
-                        <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
-                    </div>
-                    <div class="col-12">
-                        <button asp-action="LayOff" asp-route-id="@Model.EmployeeId"
-                            class="btn btn-danger btn-block text-uppercase">
-                            Lay Off</button>
+                    @if (Model.EndDate > DateTime.Now)
+                    {
+                        <div class="col-12 mb-3">
+                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-danger btn-block text-uppercase"
+                                    data-toggle="modal" data-target="#deleteModal">
+                                Lay Off
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Are you sure?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                You want to lay off <b>@Model.FullName</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button asp-action="LayOff" asp-route-id="@Model.EmployeeId"
+                                        class="btn btn-danger">
+                                    Sure, lay off
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
 </div>

@@ -122,7 +122,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(p => p.ApplyCoupon)
                 .Include(p => p.PaymentMethod)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.OrderId == id);
+                .FirstOrDefaultAsync(c => c.OrderId == id);
 
             if (order == null)
             {
@@ -132,6 +132,8 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            order.Status = await GetRecentOrderStatus(order.OrderId);
 
             return new StatusMessage()
             {
@@ -185,6 +187,11 @@ namespace AutoServiceMVC.Services.Implement
                 .AsNoTracking()
                 .ToListAsync();
 
+            foreach(var order in result)
+            {
+                order.Status = await GetRecentOrderStatus(order.OrderId);
+            }
+
             if (result == null)
             {
                 return new StatusMessage()
@@ -200,6 +207,18 @@ namespace AutoServiceMVC.Services.Implement
                 Message = Message.GET_SUCCESS,
                 Data = result
             };
+        }
+
+        async Task<Status?> GetRecentOrderStatus(int orderId)
+        {
+            var recentStatus = await _context.OrderStatus
+                .Include(s => s.Status)
+                .AsNoTracking()
+                .Where(s => s.OrderId == orderId)
+                .OrderByDescending(s => s.StatusId)
+                .FirstOrDefaultAsync();
+
+            return recentStatus?.Status;
         }
     }
 }

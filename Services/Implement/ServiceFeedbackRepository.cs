@@ -128,7 +128,7 @@ namespace AutoServiceMVC.Services.Implement
             var serviceFeedback = await _context.ServiceFeedbacks
                 .Include(p => p.User)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
+                .FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
             if(serviceFeedback == null)
             {
                 return new StatusMessage()

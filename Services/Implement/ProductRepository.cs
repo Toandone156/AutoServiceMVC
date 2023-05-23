@@ -105,7 +105,7 @@ namespace AutoServiceMVC.Services.Implement
             var product = await _context.Products
                 .Include(p => p.Category)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.ProductId == id);
+                .FirstOrDefaultAsync(c => c.ProductId == id);
 
             if (product == null)
             {

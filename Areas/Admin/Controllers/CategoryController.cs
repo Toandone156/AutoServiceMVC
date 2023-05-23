@@ -49,10 +49,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Create(
             [Bind("CategoryName")] Category category)
         {
-            var result = await _categoryRepo.CreateAsync(category);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _categoryRepo.CreateAsync(category);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View();
@@ -65,10 +70,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(
             [Bind("CategoryId,CategoryName")] Category category)
         {
-            var result = await _categoryRepo.UpdateAsync(category);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _categoryRepo.UpdateAsync(category);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View("Details", category.CategoryId);
@@ -79,19 +89,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _categoryRepo.DeleteByIdAsync(id);
-
-                if (result.IsSuccess)
-                {
-                    return RedirectToAction("Index");
-                }
-            }catch(Exception ex)
-            {
-
-            }
-
+            var result = await _categoryRepo.DeleteByIdAsync(id);
             return RedirectToAction("Index");
         }
     }

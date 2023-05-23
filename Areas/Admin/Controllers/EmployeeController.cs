@@ -47,10 +47,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(
             [Bind("EmployeeId,FullName,Email,RoleId")] Employee employee)
         {
-            var result = await _employeeRepo.UpdateAsync(employee);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _employeeRepo.UpdateAsync(employee);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View("Details", employee.EmployeeId);

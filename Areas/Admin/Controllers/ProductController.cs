@@ -69,10 +69,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 product.ProductImage = imageLink;
             }
 
-            var result = await _productRepo.CreateAsync(product);
-            if (result.IsSuccess)
+            if(ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _productRepo.CreateAsync(product);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View();
@@ -91,10 +96,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 product.ProductImage = imageLink;
             }
 
-            var result = await _productRepo.UpdateAsync(product);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _productRepo.UpdateAsync(product);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View("Details",product.ProductId);

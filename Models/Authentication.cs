@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace AutoServiceMVC.Models
 {
@@ -30,6 +31,8 @@ namespace AutoServiceMVC.Models
         [DataType(DataType.Password)]
         [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()\\-=_+{}[\\]:;|\"',<.>/?]).{8,32}$",
                 ErrorMessage = "Password is not valid")]
+        [Compare("Password", ErrorMessage = "Again password not match")]
+        [DisplayName("Again Password")]
         public string AgainPassword { get; set; }
         [Required]
         [StringLength(255)]
@@ -37,6 +40,7 @@ namespace AutoServiceMVC.Models
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
         [DataType(DataType.PhoneNumber)]
+        [DisplayName("Phone Number")]
         public string? PhoneNum { get; set; }
         public int RoleId { get; set; }
     }

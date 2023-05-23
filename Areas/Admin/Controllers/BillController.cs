@@ -8,11 +8,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(AuthenticationSchemes = "Admin_Scheme")]
-    public class BillConroller : Controller
+    public class BillController : Controller
     {
         private readonly ICommonRepository<Order> _orderRepo;
 
-        public BillConroller(ICommonRepository<Order> orderRepo)
+        public BillController(ICommonRepository<Order> orderRepo)
         {
             _orderRepo = orderRepo;
         }

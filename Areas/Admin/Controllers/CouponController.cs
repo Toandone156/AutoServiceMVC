@@ -1,11 +1,14 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
     public class CouponController : Controller
     {
         private readonly ICommonRepository<Coupon> _couponRepo;
@@ -48,11 +51,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             [Bind("CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
             "isForNewUser,Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
-            //Remove CreatorId => using save user
-            var result = await _couponRepo.CreateAsync(coupon);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _couponRepo.CreateAsync(coupon);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View();
@@ -65,10 +72,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             [Bind("CouponId,CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
             "isForNewUser,Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
-            var result = await _couponRepo.UpdateAsync(coupon);
-            if (result.IsSuccess)
+            if(ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _couponRepo.UpdateAsync(coupon);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
             return View("Details", coupon.CouponId);
