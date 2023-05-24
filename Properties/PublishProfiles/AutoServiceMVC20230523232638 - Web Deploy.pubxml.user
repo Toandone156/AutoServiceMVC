@@ -7,12 +7,17 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA8ex+xxmAKU+yCtpc1H0XXwAAAAACAAAAAAAQZgAAAAEAACAAAADyRmy/a6ndbJbuo4V3VqAKRYBS0y7uVxwvQQruSFeARwAAAAAOgAAAAAIAACAAAADJ/WrEPsiPS5foh/aWTK8tT4ilLuILdcKo+k1/DcYabIAAAADq+gQr5T+swbPfvSj03+tH3az7+ZKckOFZE1z0zOf8QFzVKET7NMgGrgbpGUmQgg+U/D6L9v5i7MUw9k3CMbvnaHb/gLEAJVmc+79e7GERWmVkmSbCDvwjyrExU3p7amdXKcSaYI6D7TidB05CNBi+n+CjdNvrCtRQqECjBoOIvUAAAAAcDhYr9DQQfbGtqw3TcsUtLaF3Hy3fHd1Tus/k3ool15uDgI/MRyMBt2cgyHG7QjpFtSAU+iJAUwZgP681XlrU</EncryptedPassword>
-    <History>True|2023-05-23T16:54:43.0734759Z;False|2023-05-23T23:52:03.6679167+07:00;True|2023-05-23T23:51:28.7329058+07:00;False|2023-05-23T23:49:41.2681683+07:00;False|2023-05-23T23:47:02.1723780+07:00;False|2023-05-23T23:46:32.7100807+07:00;True|2023-05-23T23:39:21.3061957+07:00;True|2023-05-23T23:35:47.7468297+07:00;</History>
+    <History>False|2023-05-24T05:44:47.9923747Z;False|2023-05-24T12:41:22.7557851+07:00;False|2023-05-24T12:36:41.6314352+07:00;True|2023-05-23T23:54:43.0734759+07:00;False|2023-05-23T23:52:03.6679167+07:00;True|2023-05-23T23:51:28.7329058+07:00;False|2023-05-23T23:49:41.2681683+07:00;False|2023-05-23T23:47:02.1723780+07:00;False|2023-05-23T23:46:32.7100807+07:00;True|2023-05-23T23:39:21.3061957+07:00;True|2023-05-23T23:35:47.7468297+07:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
     <DestinationConnectionStrings Include="MSSQL">
-      <Value>ConnectionStrings:MSSQL</Value>
+      <Value>Server=%28localdb%29\mssqllocaldb%3bDatabase=AutoServiceDB%3bUID=sa%3bPWD=1234%3bTrustServerCertificate=True</Value>
     </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="AutoServiceMVC.Data.AppDbContext">
+      <Value>Server=%28localdb%29\mssqllocaldb%3bDatabase=AutoServiceDB%3bUID=sa%3bPWD=1234%3bTrustServerCertificate=True</Value>
+    </EFMigrations>
   </ItemGroup>
 </Project>

@@ -52,7 +52,7 @@ services.AddSingleton<ICookieAuthentication, CookieAuthentication>();
 
 services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[] { "en-GB" };
+    var supportedCultures = new[] { "vi-VN" };
     options.SetDefaultCulture(supportedCultures[0])
         .AddSupportedCultures(supportedCultures)
         .AddSupportedUICultures(supportedCultures);
@@ -103,7 +103,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 #region currency
-var supportedCultures = new[] { "en-GB" };
+var supportedCultures = new[] { "vi-VN" };
 var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);

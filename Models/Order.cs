@@ -10,6 +10,7 @@ namespace AutoServiceMVC.Models
         public int OrderId { get; set; }
         public int Amount { get; set; }
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Column(TypeName = "ntext")]
         public string Note { get; set; }

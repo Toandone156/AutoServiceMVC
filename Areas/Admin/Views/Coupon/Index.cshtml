@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.Coupon>
+@using System.Security.Claims
+
 @{
     ViewData["Title"] = "Coupon";
+    var role = User.FindFirstValue(ClaimTypes.Role);
 }
 
 <div class="row tm-content-row">
@@ -74,8 +77,11 @@
                 </table>
             </div>
             <!-- table container -->
-            <a asp-action="Create"
-               class="btn btn-primary btn-block text-uppercase mb-3">Add new coupon</a>
+            @if(role == "Admin")
+            {
+                <a asp-action="Create"
+                   class="btn btn-primary btn-block text-uppercase mb-3">Add new coupon</a>
+            }
         </div>
     </div>
 </div>

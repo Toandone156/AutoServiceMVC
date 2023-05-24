@@ -29,6 +29,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Details(int id)
         {
             var result = await _couponRepo.GetByIdAsync(id);
@@ -40,6 +41,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public IActionResult Create()
         {
             return View();
@@ -47,9 +49,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Create(
             [Bind("CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
-            "isForNewUser,Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
+            "Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
             if (ModelState.IsValid)
             {
@@ -68,9 +71,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("CouponId,CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
-            "isForNewUser,Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
+            "Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
             if(ModelState.IsValid)
             {

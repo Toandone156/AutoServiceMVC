@@ -8,7 +8,7 @@ using System.Data;
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
+    [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
     public class EmployeeController : Controller
     {
         private readonly ICommonRepository<Employee> _employeeRepo;
@@ -43,7 +43,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("EmployeeId,FullName,Email,RoleId")] Employee employee)
         {
@@ -63,7 +62,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> LayOff(int id)
         {
             var result = await _employeeRepo.GetByIdAsync(id);

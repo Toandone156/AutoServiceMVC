@@ -175,7 +175,6 @@ namespace AutoServiceMVC.Services.Implement
             coupon.DiscountValue = entity.DiscountValue;
             coupon.MinimumOrderAmount = entity.MinimumOrderAmount;
             coupon.MaximumDiscountAmount = entity.MaximumDiscountAmount;
-            coupon.isForNewUser = entity.isForNewUser;
             coupon.Quantity = entity.Quantity;
             coupon.PointAmount = entity.PointAmount;
             coupon.StartAt = entity.StartAt;

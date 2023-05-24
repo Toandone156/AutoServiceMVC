@@ -26,9 +26,6 @@ namespace AutoServiceMVC.Models
         [DataType(DataType.Currency)]
         [DisplayName("Maximum discount")]
         public int? MaximumDiscountAmount { get; set; }
-        [DisplayName("For new user")]
-        public bool isForNewUser { get; set; }
-        [RegularExpression("^\\d+$", ErrorMessage = "Quantity must a unsign number")]
         public int? Quantity { get; set; }
         [RegularExpression("^\\d+$", ErrorMessage = "PointAmount must a unsign number")]
         [DisplayName("Point amount")]

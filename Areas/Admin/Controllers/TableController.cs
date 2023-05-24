@@ -8,7 +8,7 @@ using System.Data;
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
+    [Authorize(Roles = "Admin",AuthenticationSchemes = "Admin_Scheme")]
     public class TableController : Controller
     {
         private readonly ICommonRepository<Table> _tableRepo;
@@ -40,7 +40,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public IActionResult Create()
         {
             return View();
@@ -48,7 +47,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Create(
             [Bind("TableName,TableCode")] Table table)
         {
@@ -69,7 +67,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("TableId,TableName,TableCode")] Table table)
         {
@@ -89,7 +86,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _tableRepo.DeleteByIdAsync(id);
