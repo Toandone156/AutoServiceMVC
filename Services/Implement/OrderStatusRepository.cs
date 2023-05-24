@@ -53,7 +53,9 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var orderStatus = await _context.OrderStatus.AsNoTracking().FirstOrDefaultAsync(c => c.OrderStatusId == id);
+            var orderStatus = await _context.OrderStatus
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.OrderStatusId == id);
 
             if(orderStatus == null)
             {
@@ -63,6 +65,9 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.ID_NOT_FOUND
                 };
             }
+
+            _context.Remove(orderStatus);
+            await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {
@@ -112,7 +117,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var orderStatus = await _context.OrderStatus
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.OrderStatusId == id);
+                .FirstOrDefaultAsync(c => c.OrderStatusId == id);
             if(orderStatus == null)
             {
                 return new StatusMessage()

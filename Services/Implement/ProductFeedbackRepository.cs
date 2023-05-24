@@ -131,7 +131,7 @@ namespace AutoServiceMVC.Services.Implement
                 .Include(p => p.Product)
                 .Include(p => p.User)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
+                .FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
 
             if(productFeedback == null)
             {

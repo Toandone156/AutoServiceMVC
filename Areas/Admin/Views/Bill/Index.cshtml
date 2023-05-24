@@ -1,6 +1,9 @@
-﻿@model IEnumerable<AutoServiceMVC.Models.Coupon>
+﻿@model IEnumerable<AutoServiceMVC.Models.Order>
+@inject ICommonRepository<Status> statusService
 @{
-    ViewData["Title"] = "Coupon";
+    ViewData["Title"] = "Order";
+    var result = await statusService.GetAllAsync();
+    var dropdownlist = new SelectList((IEnumerable<Status>)result.Data, "StatusId", "StatusName");
 }
 
 <div class="row tm-content-row">
@@ -9,10 +12,9 @@
             <div class="form-group mb-3">
                 <label for="statusDropdown">Status</label>
                 <select id="statusDropdown"
+                        asp-items="@dropdownlist"
                         class="custom-select tm-select-accounts">
-                    <option value="All">All coupon</option>
-                    <option value="using">On using</option>
-                    <option value="ended">Ended</option>
+                    <option value="All">All order</option>
                 </select>
             </div>
             <div class="tm-product-table-container">
@@ -20,16 +22,19 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.CouponCode)
+                                @Html.DisplayNameFor(model => model.CreatedAt)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Quantity)
+                                @Html.DisplayNameFor(model => model.Table)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PointAmount)
+                                @Html.DisplayNameFor(model => model.User)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.StartAt)
+                                @Html.DisplayNameFor(model => model.Employee)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Amount)
                             </th>
                             <th>
                                 Status
@@ -39,43 +44,34 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr class="item"
-                                data-status="@((item.StartAt > DateTime.Now || item.EndAt < DateTime.Now) ? "ended" : "using")">
+                            <tr class="item" data-status="@item.Status.StatusId">
                                 <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.CouponId"
+                                    <a asp-action="Details" asp-route-id="@item.OrderId"
                                        class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.CouponCode)
+                                        @Html.DisplayFor(modelItem => item.CreatedAt)
                                     </a>
                                 </td>
                                 <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                    @Html.DisplayFor(modelItem => item.Table.TableName)
                                 </td>
                                 <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.PointAmount)
+                                    @Html.DisplayFor(modelItem => item.User.FullName)
                                 </td>
                                 <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.StartAt)
+                                    @Html.DisplayFor(modelItem => item.Employee.FullName)
                                 </td>
                                 <td scope="col">
-                                    @if (item.StartAt > DateTime.Now || item.EndAt < DateTime.Now)
-                                    {
-                                        <div class="tm-status-circle cancelled"></div>
-                                        <span>Ended</span>
-                                    }
-                                    else
-                                    {
-                                        <div class="tm-status-circle done"></div>
-                                        <span>On Using</span>
-                                    }
+                                    @Html.DisplayFor(modelItem => item.Amount)
+                                </td>
+                                <td scope="col">
+                                    <div class="tm-status-circle @item.Status.StatusName.ToLower()"></div>
+                                    <span>@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            <!-- table container -->
-            <a asp-action="Create"
-               class="btn btn-primary btn-block text-uppercase mb-3">Add new coupon</a>
         </div>
     </div>
 </div>

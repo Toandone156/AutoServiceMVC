@@ -4,12 +4,19 @@ using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
-//Add database context
+
+//Add enviroment variable
+services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+#region DbContext
 services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
@@ -20,10 +27,32 @@ services.AddDbContext<AppDbContext>(options =>
         .AddConsole();
     }));
 });
+#endregion
+
+#region Authentication
+services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Admin_Scheme";
+})
+    .AddCookie("Admin_Scheme", options =>
+    {
+        options.LoginPath = "/Admin/Auth/Login";
+        options.AccessDeniedPath = "/Admin/";
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+    })
+    .AddCookie("User_Scheme", options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    });
+
+services.AddSingleton<ICookieAuthentication, CookieAuthentication>();
+#endregion
 
 services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[] { "vi-VN", "en-US" };
+    var supportedCultures = new[] { "en-GB" };
     options.SetDefaultCulture(supportedCultures[0])
         .AddSupportedCultures(supportedCultures)
         .AddSupportedUICultures(supportedCultures);
@@ -55,9 +84,6 @@ services.AddScoped<IHashPassword, HashPassword>();
 services.AddHttpContextAccessor();
 services.AddScoped<IImageUploadService, ImageUploadService>();
 
-//Add enviroment variable
-services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -77,7 +103,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 #region currency
-var supportedCultures = new[] { "vi-VN", "en-US" };
+var supportedCultures = new[] { "en-GB" };
 var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
@@ -85,7 +111,7 @@ var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(sup
 app.UseRequestLocalization(localizationOptions);
 #endregion
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>

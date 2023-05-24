@@ -1,8 +1,9 @@
 ﻿@model AutoServiceMVC.Models.Product
-
+@inject ICommonRepository<Category> categoryService
 @{
     ViewData["Title"] = "Create Product";
-    var selectList = new SelectList(ViewBag.CategoryList, "CategoryId", "CategoryName");
+    var result = await categoryService.GetAllAsync();
+    var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
 }
 
 <div class="row">
@@ -35,7 +36,7 @@
                                 <div class="form-group mb-3">
                                     <label asp-for="CategoryId">Category</label>
                                     <select asp-for="CategoryId" 
-                                            asp-items="@selectList"
+                                            asp-items="@dropdownlist"
                                             class="custom-select tm-select-accounts">
                                     </select>
                                 </div>

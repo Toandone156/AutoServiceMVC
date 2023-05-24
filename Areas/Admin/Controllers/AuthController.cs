@@ -1,7 +1,14 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Net.Http;
+using System.Security.Claims;
+using AutoServiceMVC.Services.System;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
@@ -9,12 +16,13 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthenticateService<Employee> _emplService;
-        private readonly ICommonRepository<Role> _roleRepo;
+        private readonly ICookieAuthentication _auth;
 
-        public AuthController(IAuthenticateService<Employee> emplService, ICommonRepository<Role> roleRepo)
+        public AuthController(IAuthenticateService<Employee> emplService,
+            ICookieAuthentication auth)
         {
             _emplService = emplService;
-            _roleRepo = roleRepo;
+            _auth = auth;
         }
 
         public ActionResult Login()
@@ -22,10 +30,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Register()
+        [Authorize(Roles = "Admin" ,AuthenticationSchemes = "Admin_Scheme")]
+        public IActionResult Register()
         {
-            var status = await _roleRepo.GetAllAsync();
-            ViewBag.RoleList = status.Data;
             return View();
         }
 
@@ -39,15 +46,18 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
                 if (status.IsSuccess)
                 {
+                    _auth.SignInAsync(status.Data, HttpContext);
                     return RedirectToAction("Index", "Home", new {area = "Admin"});
                 }
+
+                ModelState.AddModelError(String.Empty, status.Message);
             }
 
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Register([Bind("Username,Password,AgainPassword,FullName,Email,RoleId")]
                                 Register register)
         {
@@ -59,13 +69,17 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 {
                     return RedirectToAction("Index", "Employee", new {area = "Admin"});
                 }
+
+                ModelState.AddModelError(String.Empty, status.Message);
             }
 
-            return RedirectToAction("Register");
+            return View();
         }
 
-        public IActionResult Logout()
+        [Authorize(AuthenticationSchemes = "Admin_Scheme")]
+        public async Task<IActionResult> Logout()
         {
+            await _auth.SignOutAsync(HttpContext, false);
             return RedirectToAction("Login");
         }
     }

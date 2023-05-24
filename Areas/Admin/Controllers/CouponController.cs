@@ -1,21 +1,21 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
     public class CouponController : Controller
     {
         private readonly ICommonRepository<Coupon> _couponRepo;
-        private readonly ICommonRepository<UserType> _userTypeRepo;
 
-        public CouponController(ICommonRepository<Coupon> couponRepo,
-            ICommonRepository<UserType> userTypeRepo)
+        public CouponController(ICommonRepository<Coupon> couponRepo)
         {
             _couponRepo = couponRepo;
-            _userTypeRepo = userTypeRepo;
         }
 
         public async Task<IActionResult> Index()
@@ -34,18 +34,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _couponRepo.GetByIdAsync(id);
             if (result.IsSuccess)
             {
-                var userTypeRs = await _userTypeRepo.GetAllAsync();
-                ViewBag.UserTypeList = userTypeRs.Data;
                 return View(result.Data);
             }
 
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            var result = await _userTypeRepo.GetAllAsync();
-            ViewBag.UserTypeList = result.Data;
             return View();
         }
 
@@ -55,14 +51,18 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             [Bind("CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
             "isForNewUser,Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
-            //Remove CreatorId => using save user
-            var result = await _couponRepo.CreateAsync(coupon);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _couponRepo.CreateAsync(coupon);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
-            return RedirectToAction("Create");
+            return View();
         }
 
         // POST: CategoryControler/Edit/5
@@ -72,13 +72,18 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             [Bind("CouponId,CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
             "isForNewUser,Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
-            var result = await _couponRepo.UpdateAsync(coupon);
-            if (result.IsSuccess)
+            if(ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _couponRepo.UpdateAsync(coupon);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
-            return RedirectToAction("Details", coupon.CouponId);
+            return View("Details", coupon.CouponId);
         }
     }
 }

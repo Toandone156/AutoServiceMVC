@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace AutoServiceMVC.Models
 {
@@ -8,6 +9,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int CategoryId { get; set; }
         [StringLength(100)]
+        [DisplayName("Category Name")]
         public string CategoryName { get; set; }
 
         //Relations

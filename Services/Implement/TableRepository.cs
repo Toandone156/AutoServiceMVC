@@ -124,7 +124,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var table = await _context.Tables
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.TableId == id);
+                .FirstOrDefaultAsync(c => c.TableId == id);
             if(table == null)
             {
                 return new StatusMessage()

@@ -58,7 +58,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var table = await _context.Roles
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.RoleId == id);
+                .FirstOrDefaultAsync(c => c.RoleId == id);
 
             if(table == null)
             {

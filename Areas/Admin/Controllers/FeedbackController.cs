@@ -1,11 +1,14 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
     public class FeedbackController : Controller
     {
         private readonly ICommonRepository<ServiceFeedback> _feedbackRepo;

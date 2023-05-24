@@ -125,7 +125,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var paymentMethod = await _context.PaymentMethods
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.PaymentMethodId == id);
+                .FirstOrDefaultAsync(c => c.PaymentMethodId == id);
             if(paymentMethod == null)
             {
                 return new StatusMessage()

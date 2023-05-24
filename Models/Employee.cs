@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AutoServiceMVC.Models
@@ -9,6 +10,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int EmployeeId { get; set; }
         [DataType(DataType.Date)]
+        [DisplayName("Start Date")]
         public DateTime StartDate { get; set; } = DateTime.Now;
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }

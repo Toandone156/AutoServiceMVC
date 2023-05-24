@@ -1,8 +1,9 @@
 ﻿@model AutoServiceMVC.Models.Coupon
-
+@inject ICommonRepository<UserType> userTypeService
 @{
     ViewData["Title"] = "Edit Coupon";
-    var selectList = new SelectList(ViewBag.UserTypeList, "UserTypeId", "UserTypeName");
+    var result = await userTypeService.GetAllAsync();
+    var dropdownlist = new SelectList((IEnumerable<UserType>)result.Data, "UserTypeId", "UserTypeName");
 }
 
 <div class="row">
@@ -16,6 +17,7 @@
             <form asp-action="Edit" class="tm-edit-product-form">
                 <div asp-validation-summary="ModelOnly" class="text-white"></div>
                 <input type="hidden" asp-for="CouponId" />
+                <input type="hidden" asp-for="CreatorId" />
                 <div class="row tm-edit-product-row">
                     <div class="col-xl-6 col-lg-6 col-md-12">
                         <div class="form-group mb-3">
@@ -50,7 +52,7 @@
                         </div>
                         <div class="form-group mb-3">
                             <label asp-for="UserTypeId">User Type</label>
-                            <select asp-for="CreatorId" asp-items="selectList"
+                            <select asp-for="CreatorId" asp-items="dropdownlist"
                                     class="custom-select tm-select-accounts">
                             </select>
                         </div>

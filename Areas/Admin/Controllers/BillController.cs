@@ -1,16 +1,18 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class BillConroller : Controller
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
+    public class BillController : Controller
     {
         private readonly ICommonRepository<Order> _orderRepo;
 
-        public BillConroller(ICommonRepository<Order> orderRepo)
+        public BillController(ICommonRepository<Order> orderRepo)
         {
             _orderRepo = orderRepo;
         }

@@ -15,7 +15,7 @@ namespace AutoServiceMVC.Services.Implement
         private readonly AppDbContext _context;
         private readonly int Page_Size;
 
-        public ProductRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor) 
+        public ProductRepository(AppDbContext context, IOptionsMonitor<AppSettings> monitor)
         {
             _context = context;
             Page_Size = monitor.CurrentValue.PageSize;
@@ -23,7 +23,7 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> CreateAsync(Product? entity)
         {
-            if(entity == null)
+            if (entity == null)
             {
                 return new StatusMessage()
                 {
@@ -93,7 +93,7 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> GetByIdAsync(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return new StatusMessage()
                 {
@@ -105,9 +105,9 @@ namespace AutoServiceMVC.Services.Implement
             var product = await _context.Products
                 .Include(p => p.Category)
                 .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.ProductId == id);
+                .FirstOrDefaultAsync(c => c.ProductId == id);
 
-            if(product == null)
+            if (product == null)
             {
                 return new StatusMessage()
                 {
@@ -126,7 +126,7 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> UpdateAsync(Product? entity)
         {
-            if(entity == null)
+            if (entity == null)
             {
                 return new StatusMessage()
                 {
@@ -136,7 +136,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == entity.ProductId);
-            if(product == null)
+            if (product == null)
             {
                 return new StatusMessage()
                 {

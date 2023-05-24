@@ -1,11 +1,13 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
     public class CategoryController : Controller
     {
         private readonly ICommonRepository<Category> _categoryRepo;
@@ -43,50 +45,51 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin",AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Create(
             [Bind("CategoryName")] Category category)
         {
-            var result = await _categoryRepo.CreateAsync(category);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _categoryRepo.CreateAsync(category);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
-            return RedirectToAction("Create");
+            return View();
         }
 
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("CategoryId,CategoryName")] Category category)
         {
-            var result = await _categoryRepo.UpdateAsync(category);
-            if (result.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
-            }
-
-            return RedirectToAction("Details", category.CategoryId);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            try
-            {
-                var result = await _categoryRepo.DeleteByIdAsync(id);
-
+                var result = await _categoryRepo.UpdateAsync(category);
                 if (result.IsSuccess)
                 {
                     return RedirectToAction("Index");
                 }
-            }catch(Exception ex)
-            {
 
+                ModelState.AddModelError(String.Empty, result.Message);
             }
 
+            return View("Details", category.CategoryId);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _categoryRepo.DeleteByIdAsync(id);
             return RedirectToAction("Index");
         }
     }

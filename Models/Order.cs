@@ -34,5 +34,9 @@ namespace AutoServiceMVC.Models
         public virtual PaymentMethod? PaymentMethod { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
         public virtual ICollection<OrderStatus>? OrderStatuses { get; set; }
+
+        //Not map attribute
+        [NotMapped]
+        public Status? Status { get; set; }
     }
 }
