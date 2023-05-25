@@ -57,7 +57,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var table = await _context.Roles
-                .AsNoTracking()
+                
                 .FirstOrDefaultAsync(c => c.RoleId == id);
 
             if(table == null)
@@ -89,7 +89,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.Roles
-                .AsNoTracking()
+                
                 .ToListAsync();
 
             if (result == null)

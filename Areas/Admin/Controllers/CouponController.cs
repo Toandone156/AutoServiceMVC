@@ -64,6 +64,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
                 ModelState.AddModelError(String.Empty, result.Message);
             }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+            }
 
             return View();
         }
@@ -76,7 +80,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             [Bind("CouponId,CouponCode,DiscountValue,DiscountPercentage,MinimumOrderAmount,MaximumDiscountAmount," +
             "Quantity,PointAmount,StartAt,EndAt,CreatorId,UserTypeId")] Coupon coupon)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var result = await _couponRepo.UpdateAsync(coupon);
                 if (result.IsSuccess)
@@ -85,6 +89,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 }
 
                 ModelState.AddModelError(String.Empty, result.Message);
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View("Details", coupon.CouponId);

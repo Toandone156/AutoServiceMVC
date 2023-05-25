@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var orderStatus = await _context.OrderStatus
-                .AsNoTracking()
+                
                 .FirstOrDefaultAsync(c => c.OrderStatusId == id);
 
             if(orderStatus == null)
@@ -79,10 +79,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic orderStatus = await _context.OrderStatus
-                    .Include(c => c.Order)
-                    .Include(c => c.Status)
-                    .Include(c => c.Employee)
-                    .AsNoTracking()
                     .ToListAsync();
 
             var result = PaginatedList<OrderStatus>.Create(orderStatus, page, Page_Size);
@@ -116,7 +112,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var orderStatus = await _context.OrderStatus
-                .AsNoTracking()
+                
                 .FirstOrDefaultAsync(c => c.OrderStatusId == id);
             if(orderStatus == null)
             {
@@ -171,10 +167,6 @@ namespace AutoServiceMVC.Services.Implement
         {
 
             var result = await _context.OrderStatus
-                    .Include(c => c.Order)
-                    .Include(c => c.Status)
-                    .Include(c => c.Employee)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)

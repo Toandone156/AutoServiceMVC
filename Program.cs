@@ -19,7 +19,8 @@ services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"))
 #region DbContext
 services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
+    options.UseLazyLoadingProxies()
+            .UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
     options.UseLoggerFactory(LoggerFactory.Create(builder =>
     {
         builder

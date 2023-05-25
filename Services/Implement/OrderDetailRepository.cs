@@ -114,9 +114,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var orderDetails = await _context.OrderDetails
-                .Include(o => o.Order)
-                .Include(o => o.Product)
-                .AsNoTracking()
                 .Where(c => c.OrderId == orderId)
                 .ToListAsync();
 
@@ -140,9 +137,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.OrderDetails
-                    .Include(o => o.Order)
-                    .Include(o => o.Product)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)

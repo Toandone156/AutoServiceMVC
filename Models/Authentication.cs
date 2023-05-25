@@ -29,10 +29,8 @@ namespace AutoServiceMVC.Models
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()\\-=_+{}[\\]:;|\"',<.>/?]).{8,32}$",
-                ErrorMessage = "Password is not valid")]
         [Compare("Password", ErrorMessage = "Again password not match")]
-        [DisplayName("Again Password")]
+        [DisplayName("Re-enter Password")]
         public string AgainPassword { get; set; }
         [Required]
         [StringLength(255)]

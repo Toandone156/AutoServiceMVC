@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var coupon = await _context.Coupons.AsNoTracking().FirstOrDefaultAsync(c => c.CouponId == id);
+            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponId == id);
 
             if(coupon == null)
             {
@@ -82,18 +82,12 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 coupons = await _context.Coupons
-                    .Include(c => c.Creator)
-                    .Include(c => c.UserType)
-                    .AsNoTracking()
                     .Where(u => u.CouponCode.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 coupons = await _context.Coupons
-                    .Include(c => c.Creator)
-                    .Include(c => c.UserType)
-                    .AsNoTracking()
                     .ToListAsync();
             }
 
@@ -128,9 +122,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var coupon = await _context.Coupons
-                .Include(c => c.Creator)
-                .Include(c => c.UserType)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.CouponId == id);
             if(coupon == null)
             {
@@ -201,10 +192,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var coupon = await _context.Coupons
-                .Include(c => c.Creator)
-                .Include(c => c.UserType)
-                .AsNoTracking()
-                .AsNoTracking().FirstOrDefaultAsync(c => c.CouponCode == code);
+                .FirstOrDefaultAsync(c => c.CouponCode == code);
 
             if (coupon == null)
             {
@@ -227,9 +215,6 @@ namespace AutoServiceMVC.Services.Implement
         {
 
             var result = await _context.Coupons
-                    .Include(c => c.Creator)
-                    .Include(c => c.UserType)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)

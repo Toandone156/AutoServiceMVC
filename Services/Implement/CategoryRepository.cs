@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == id);
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
 
             if(category == null)
             {
@@ -82,14 +82,14 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 categories = await _context.Categories
-                    .AsNoTracking()
+                    
                     .Where(u => u.CategoryName.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 categories = await _context.Categories
-                    .AsNoTracking()
+                    
                     .ToListAsync();
             }
 
@@ -124,7 +124,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var category = await _context.Categories
-                .AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == id);
+                .FirstOrDefaultAsync(c => c.CategoryId == id);
             if(category == null)
             {
                 return new StatusMessage()
@@ -177,7 +177,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result =  await _context.Categories
-                                .AsNoTracking()
+                                
                                 .ToListAsync();
 
             if (result == null)

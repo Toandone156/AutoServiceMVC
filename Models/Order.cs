@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AutoServiceMVC.Models
@@ -7,13 +8,15 @@ namespace AutoServiceMVC.Models
     {
         //Attributes
         [Key]
+        [DisplayName("Order ID")]
         public int OrderId { get; set; }
         public int Amount { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DisplayName("Date")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Column(TypeName = "ntext")]
-        public string Note { get; set; }
+        public string? Note { get; set; }
 
         //Foreign Keys
         public int? UserId { get; set; }

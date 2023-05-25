@@ -70,6 +70,11 @@ namespace AutoServiceMVC.Controllers
                 var result = await _category.CreateAsync(category);
                 if(result.IsSuccess) return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+            }
+
             return View(category);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AutoServiceMVC.Models
@@ -9,6 +10,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int PaymentMethodId { get; set; }
         [Column(TypeName = "nvarchar(100)")]
+        [DisplayName("Payment method")]
         public string PaymentMethodName { get; set;}
 
         //Relations

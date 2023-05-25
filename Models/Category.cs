@@ -9,7 +9,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int CategoryId { get; set; }
         [StringLength(100)]
-        [DisplayName("Category Name")]
+        [DisplayName("Category")]
         public string CategoryName { get; set; }
 
         //Relations

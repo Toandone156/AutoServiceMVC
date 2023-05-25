@@ -18,7 +18,7 @@ namespace AutoServiceMVC.Models
         [DisplayName("Decription")]
         public string ProductDescription { get; set; }
         [DataType(DataType.ImageUrl)]
-        public string ProductImage { get; set; }
+        public string? ProductImage { get; set; }
         public decimal ProductRating { get; set; } = 5;
         public bool IsAvailable { get; set; } = true;
         public bool IsOutOfStock { get; set; } = false;

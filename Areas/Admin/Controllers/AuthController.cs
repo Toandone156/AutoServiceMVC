@@ -52,6 +52,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
                 ModelState.AddModelError(String.Empty, status.Message);
             }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+            }
 
             return View();
         }
@@ -71,6 +75,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 }
 
                 ModelState.AddModelError(String.Empty, status.Message);
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View();

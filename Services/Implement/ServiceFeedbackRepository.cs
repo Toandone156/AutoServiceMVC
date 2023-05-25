@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var serviceFeedback = await _context.ServiceFeedbacks.AsNoTracking().FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
+            var serviceFeedback = await _context.ServiceFeedbacks.FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
 
             if(serviceFeedback == null)
             {
@@ -82,16 +82,12 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 serviceFeedbacks = await _context.ServiceFeedbacks
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .Where(u => u.Comment.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 serviceFeedbacks = await _context.ServiceFeedbacks
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .ToListAsync();
             }
 
@@ -126,8 +122,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var serviceFeedback = await _context.ServiceFeedbacks
-                .Include(p => p.User)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.ServiceFeedbackId == id);
             if(serviceFeedback == null)
             {
@@ -181,8 +175,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.ServiceFeedbacks
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)

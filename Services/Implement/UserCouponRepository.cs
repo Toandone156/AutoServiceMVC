@@ -54,9 +54,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic userCoupons =  await _context.UserCoupons
-                    .Include(uc => uc.User)
-                    .Include(uc => uc.Coupon)
-                    .AsNoTracking()
                     .ToListAsync();
 
             var result = PaginatedList<UserCoupon>.Create(userCoupons, page, Page_Size);
@@ -126,9 +123,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetByUserIdAsync(int userId)
         {
             var userCoupons = await _context.UserCoupons
-                .Include(p => p.User)
-                .Include(p => p.Coupon)
-                .AsNoTracking()
                 .Where(c => c.UserId == userId)
                 .ToListAsync();
 
@@ -152,9 +146,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.UserCoupons
-                    .Include(uc => uc.User)
-                    .Include(uc => uc.Coupon)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)
