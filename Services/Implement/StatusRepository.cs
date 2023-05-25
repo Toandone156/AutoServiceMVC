@@ -67,7 +67,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.Status
-                .AsNoTracking()
+                
                 .ToListAsync();
 
             if (result == null)

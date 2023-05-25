@@ -53,7 +53,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var table = await _context.Tables.AsNoTracking().FirstOrDefaultAsync(c => c.TableId == id);
+            var table = await _context.Tables.FirstOrDefaultAsync(c => c.TableId == id);
 
             if(table == null)
             {
@@ -81,14 +81,14 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 tables = await _context.Tables
-                    .AsNoTracking()
+                    
                     .Where(u => u.TableName.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 tables = await _context.Tables
-                    .AsNoTracking()
+                    
                     .ToListAsync();
             }
 
@@ -123,7 +123,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var table = await _context.Tables
-                .AsNoTracking()
+                
                 .FirstOrDefaultAsync(c => c.TableId == id);
             if(table == null)
             {
@@ -177,7 +177,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.Tables
-                .AsNoTracking()
+                
                 .ToListAsync();
 
             if (result == null)

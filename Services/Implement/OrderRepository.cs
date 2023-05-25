@@ -52,7 +52,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var order = await _context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == id);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
             {
@@ -77,12 +77,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
         {
             dynamic orders = await _context.Orders
-                .Include(p => p.User)
-                .Include(p => p.Employee)
-                .Include(p => p.Table)
-                .Include(p => p.ApplyCoupon)
-                .Include(p => p.PaymentMethod)
-                .AsNoTracking()
+                
                 .ToListAsync();
 
             var result = PaginatedList<Order>.Create(orders, page, Page_Size);
@@ -116,12 +111,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var order = await _context.Orders
-                .Include(p => p.User)
-                .Include(p => p.Employee)
-                .Include(p => p.Table)
-                .Include(p => p.ApplyCoupon)
-                .Include(p => p.PaymentMethod)
-                .AsNoTracking()
+                
                 .FirstOrDefaultAsync(c => c.OrderId == id);
 
             if (order == null)
@@ -177,14 +167,7 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> GetAllAsync()
         {
-
             var result = await _context.Orders
-                .Include(p => p.User)
-                .Include(p => p.Employee)
-                .Include(p => p.Table)
-                .Include(p => p.ApplyCoupon)
-                .Include(p => p.PaymentMethod)
-                .AsNoTracking()
                 .ToListAsync();
 
             foreach(var order in result)
@@ -212,8 +195,6 @@ namespace AutoServiceMVC.Services.Implement
         async Task<Status?> GetRecentOrderStatus(int orderId)
         {
             var recentStatus = await _context.OrderStatus
-                .Include(s => s.Status)
-                .AsNoTracking()
                 .Where(s => s.OrderId == orderId)
                 .OrderByDescending(s => s.StatusId)
                 .FirstOrDefaultAsync();

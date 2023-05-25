@@ -74,7 +74,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var category = await _context.UserTypes
-                .AsNoTracking().FirstOrDefaultAsync(c => c.UserTypeId == id);
+                .FirstOrDefaultAsync(c => c.UserTypeId == id);
             if(category == null)
             {
                 return new StatusMessage()
@@ -105,7 +105,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result =  await _context.UserTypes
-                                .AsNoTracking()
+                                
                                 .ToListAsync();
 
             if (result == null)

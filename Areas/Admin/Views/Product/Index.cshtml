@@ -1,9 +1,12 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.Product>
 @inject ICommonRepository<Category> categoryService
+@using System.Security.Claims
+
 @{
     ViewData["Title"] = "Product";
     var result = await categoryService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
+    var role = User.FindFirstValue(ClaimTypes.Role);
 }
 
 <div class="row tm-content-row">
@@ -54,8 +57,11 @@
                 </table>
             </div>
 
-            <a asp-action="Create"
-               class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
+            @if (role == "Admin")
+            {
+                <a asp-action="Create"
+                   class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
+            }
         </div>
     </div>
 </div>

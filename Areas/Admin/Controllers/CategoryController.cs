@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
+    [Authorize(Roles = "Admin",AuthenticationSchemes = "Admin_Scheme")]
     public class CategoryController : Controller
     {
         private readonly ICommonRepository<Category> _categoryRepo;
@@ -46,7 +46,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin",AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Create(
             [Bind("CategoryName")] Category category)
         {
@@ -60,6 +59,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 }
 
                 ModelState.AddModelError(String.Empty, result.Message);
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View();
@@ -83,13 +86,16 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
                 ModelState.AddModelError(String.Empty, result.Message);
             }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+            }
 
             return View("Details", category.CategoryId);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _categoryRepo.DeleteByIdAsync(id);

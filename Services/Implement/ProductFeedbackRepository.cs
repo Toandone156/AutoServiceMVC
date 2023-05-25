@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var productFeedback = await _context.ProductFeedbacks.AsNoTracking().FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
+            var productFeedback = await _context.ProductFeedbacks.FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
 
             if(productFeedback == null)
             {
@@ -82,18 +82,12 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 productFeedbacks = await _context.ProductFeedbacks
-                    .Include(p => p.Product)
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .Where(u => u.Comment.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 productFeedbacks = await _context.ProductFeedbacks
-                    .Include(p => p.Product)
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .ToListAsync();
             }
 
@@ -128,9 +122,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var productFeedback = await _context.ProductFeedbacks
-                .Include(p => p.Product)
-                .Include(p => p.User)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.ProductFeedbackId == id);
 
             if(productFeedback == null)
@@ -186,9 +177,6 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.ProductFeedbacks
-                    .Include(p => p.Product)
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)

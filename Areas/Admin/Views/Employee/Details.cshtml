@@ -51,7 +51,7 @@
                         }
 
                     </div>
-                    @if (Model.EndDate > DateTime.Now)
+                    @if (Model.EndDate == null || Model.EndDate >= DateTime.Now)
                     {
                         <div class="col-12 mb-3">
                             <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>

@@ -59,16 +59,12 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 products = await _context.Products
-                    .Include(p => p.Category)
-                    .AsNoTracking()
                     .Where(u => u.ProductName.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 products = await _context.Products
-                    .Include(p => p.Category)
-                    .AsNoTracking()
                     .ToListAsync();
             }
 
@@ -103,8 +99,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var product = await _context.Products
-                .Include(p => p.Category)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.ProductId == id);
 
             if (product == null)
@@ -171,7 +165,8 @@ namespace AutoServiceMVC.Services.Implement
                 product.IsAvailable = entity.IsAvailable;
                 product.IsOutOfStock = entity.IsOutOfStock;
                 product.CategoryId = entity.CategoryId;
-                await _context.AddAsync(product);
+
+                await CreateAsync(product);
             }
 
             return new StatusMessage()
@@ -184,8 +179,7 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.Products
-                    .Include(p => p.Category)
-                    .AsNoTracking()
+                    .Where(p => p.IsAvailable)
                     .ToListAsync();
 
             if (result == null)

@@ -36,10 +36,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Details([FromRoute]int id)
         {
             var product = await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductFeedbacks)
-                .ThenInclude(f => f.User)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             if(product != null)
@@ -79,6 +75,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
                 ModelState.AddModelError(String.Empty, result.Message);
             }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+            }
 
             return View();
         }
@@ -88,7 +88,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("ProductId,ProductName,Price,ProductDescription,CategoryId,ProductImage")] Product product,
-            IFormFile imageFile)
+            IFormFile? imageFile)
         {
             if (imageFile != null)
             {
@@ -105,6 +105,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 }
 
                 ModelState.AddModelError(String.Empty, result.Message);
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View("Details",product.ProductId);

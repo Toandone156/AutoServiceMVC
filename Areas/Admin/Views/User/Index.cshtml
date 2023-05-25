@@ -1,9 +1,9 @@
-﻿@model IEnumerable<AutoServiceMVC.Models.Coupon>
-@using System.Security.Claims
-
+﻿@model IEnumerable<AutoServiceMVC.Models.User>
+@inject ICommonRepository<UserType> userTypeService
 @{
-    ViewData["Title"] = "Coupon";
-    var role = User.FindFirstValue(ClaimTypes.Role);
+    ViewData["Title"] = "User";
+    var list = await userTypeService.GetAllAsync();
+    var selectList = new SelectList((IEnumerable<UserType>)list.Data, "UserTypeId", "UserTypeName");
 }
 
 <div class="row tm-content-row">
@@ -12,10 +12,9 @@
             <div class="form-group mb-3">
                 <label for="statusDropdown">Status</label>
                 <select id="statusDropdown"
+                        asp-items="@selectList"
                         class="custom-select tm-select-accounts">
-                    <option value="All">All coupon</option>
-                    <option value="using">On using</option>
-                    <option value="ended">Ended</option>
+                    <option value="All">All user</option>
                 </select>
             </div>
             <div class="tm-product-table-container">
@@ -23,65 +22,43 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.CouponCode)
+                                @Html.DisplayNameFor(model => model.FullName)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Quantity)
+                                @Html.DisplayNameFor(model => model.Email)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PointAmount)
+                                @Html.DisplayNameFor(model => model.Point)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.StartAt)
-                            </th>
-                            <th>
-                                Status
+                                @Html.DisplayNameFor(model => model.UserType)
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr class="item"
-                                data-status="@((item.StartAt > DateTime.Now || item.EndAt < DateTime.Now) ? "ended" : "using")">
+                            <tr class="item" data-type="@item.UserTypeId">
                                 <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.CouponId"
+                                    <a asp-action="Details" asp-route-id="@item.UserId"
                                        class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.CouponCode)
+                                        @Html.DisplayFor(modelItem => item.FullName)
                                     </a>
                                 </td>
                                 <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                    @Html.DisplayFor(modelItem => item.Email)
                                 </td>
                                 <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.PointAmount)
+                                    @Html.DisplayFor(modelItem => item.Point)
                                 </td>
                                 <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.StartAt)
-                                </td>
-                                <td scope="col">
-                                    @if (item.StartAt > DateTime.Now || item.EndAt < DateTime.Now)
-                                    {
-                                        <div class="tm-status-circle cancelled"></div>
-                                        <span>Ended</span>
-                                    }
-                                    else
-                                    {
-                                        <div class="tm-status-circle done"></div>
-                                        <span>On Using</span>
-                                    }
+                                    @item.UserType.UserTypeName
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            <!-- table container -->
-            @if(role == "Admin")
-            {
-                <a asp-action="Create"
-                   class="btn btn-primary btn-block text-uppercase mb-3">Add new coupon</a>
-            }
         </div>
     </div>
 </div>

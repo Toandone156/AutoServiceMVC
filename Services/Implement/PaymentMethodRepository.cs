@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var paymentMethod = await _context.PaymentMethods.AsNoTracking().FirstOrDefaultAsync(c => c.PaymentMethodId == id);
+            var paymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(c => c.PaymentMethodId == id);
 
             if(paymentMethod == null)
             {
@@ -82,14 +82,14 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 paymentMethods = await _context.PaymentMethods
-                    .AsNoTracking()
+                    
                     .Where(u => u.PaymentMethodName.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 paymentMethods = await _context.PaymentMethods
-                    .AsNoTracking()
+                    
                     .ToListAsync();
             }
 
@@ -124,7 +124,7 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var paymentMethod = await _context.PaymentMethods
-                .AsNoTracking()
+                
                 .FirstOrDefaultAsync(c => c.PaymentMethodId == id);
             if(paymentMethod == null)
             {
@@ -178,7 +178,7 @@ namespace AutoServiceMVC.Services.Implement
         {
 
             var result = await _context.PaymentMethods
-                .AsNoTracking()
+                
                 .ToListAsync();
 
             if (result == null)

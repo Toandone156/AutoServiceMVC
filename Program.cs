@@ -19,7 +19,8 @@ services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"))
 #region DbContext
 services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
+    options.UseLazyLoadingProxies()
+            .UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
     options.UseLoggerFactory(LoggerFactory.Create(builder =>
     {
         builder
@@ -52,7 +53,7 @@ services.AddSingleton<ICookieAuthentication, CookieAuthentication>();
 
 services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[] { "en-GB" };
+    var supportedCultures = new[] { "vi-VN" };
     options.SetDefaultCulture(supportedCultures[0])
         .AddSupportedCultures(supportedCultures)
         .AddSupportedUICultures(supportedCultures);
@@ -103,7 +104,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 #region currency
-var supportedCultures = new[] { "en-GB" };
+var supportedCultures = new[] { "vi-VN" };
 var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);

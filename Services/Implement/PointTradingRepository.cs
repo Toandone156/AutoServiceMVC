@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var pointtrading = await _context.PointTrading.AsNoTracking().FirstOrDefaultAsync(c => c.PointTradingId == id);
+            var pointtrading = await _context.PointTrading.FirstOrDefaultAsync(c => c.PointTradingId == id);
 
             if(pointtrading == null)
             {
@@ -82,16 +82,12 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 pointtradings = await _context.PointTrading
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .Where(u => u.TradeDescription.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 pointtradings = await _context.PointTrading
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .ToListAsync();
             }
 
@@ -126,8 +122,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var pointtrading = await _context.PointTrading
-                .Include(p => p.User)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.PointTradingId == id);
             if(pointtrading == null)
             {
@@ -182,8 +176,6 @@ namespace AutoServiceMVC.Services.Implement
         {
 
             var result = await _context.PointTrading
-                    .Include(p => p.User)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)

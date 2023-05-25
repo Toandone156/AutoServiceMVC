@@ -8,7 +8,7 @@ using System.Data;
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(AuthenticationSchemes = "Admin_Scheme")]
+    [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
     public class EmployeeController : Controller
     {
         private readonly ICommonRepository<Employee> _employeeRepo;
@@ -43,27 +43,22 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("EmployeeId,FullName,Email,RoleId")] Employee employee)
         {
-            if (ModelState.IsValid)
+            var result = await _employeeRepo.UpdateAsync(employee);
+            if (result.IsSuccess)
             {
-                var result = await _employeeRepo.UpdateAsync(employee);
-                if (result.IsSuccess)
-                {
-                    return RedirectToAction("Index");
-                }
-
-                ModelState.AddModelError(String.Empty, result.Message);
+                return RedirectToAction("Index");
             }
+
+            ModelState.AddModelError(String.Empty, result.Message);
 
             return View("Details", employee.EmployeeId);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> LayOff(int id)
         {
             var result = await _employeeRepo.GetByIdAsync(id);

@@ -1,9 +1,12 @@
 ﻿@model AutoServiceMVC.Models.Product
 @inject ICommonRepository<Category> categoryService
+@using System.Security.Claims
+
 @{
     ViewData["Title"] = "Edit Product";
     var result = await categoryService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
+    var role = User.FindFirstValue(ClaimTypes.Role);
 }
 
 <div class="row mb-5">
@@ -11,7 +14,7 @@
         <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="tm-block-title d-inline-block">Add Product</h2>
+                    <h2 class="tm-block-title d-inline-block">Product detail</h2>
                 </div>
             </div>
             <form asp-action="Edit" class="tm-edit-product-form" enctype="multipart/form-data">
@@ -53,14 +56,19 @@
                                 <i id="upload" class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
                             }
                         </div>
+                        @if(role == "Admin")
+                        {
                             <div class="custom-file mt-3 mb-3">
-                            <input id="fileInput" type="file" name="imageFile" style="display:none;" onchange="previewImage(event)">
+                                <input id="fileInput" type="file" name="imageFile" style="display:none;" onchange="previewImage(event)">
                                 <input type="button" class="btn btn-primary btn-block mx-auto" value="CHANGE IMAGE NOW" onclick="document.getElementById('fileInput').click();">
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
-                        </div>
+                        }
+                    </div>
+                        @if(role == "Admin"){
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
+                            </div>
+                        }
                     </div>
                 </form>
         </div>

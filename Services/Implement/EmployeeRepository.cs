@@ -31,8 +31,6 @@ namespace AutoServiceMVC.Services.Implement
         {
 
             var result = await _context.Employees
-                    .Include(e => e.Role)
-                    .AsNoTracking()
                     .ToListAsync();
 
             if (result == null)
@@ -59,16 +57,12 @@ namespace AutoServiceMVC.Services.Implement
             if (!String.IsNullOrEmpty(search))
             {
                 employees = await _context.Employees
-                    .Include(e => e.Role)
-                    .AsNoTracking()
                     .Where(u => u.FullName.Contains(search))
                     .ToListAsync();
             }
             else
             {
                 employees = await _context.Employees
-                    .Include(e => e.Role)
-                    .AsNoTracking()
                     .ToListAsync();
             }
 
@@ -112,8 +106,6 @@ namespace AutoServiceMVC.Services.Implement
         async Task<StatusMessage> ICommonRepository<Employee>.GetByIdAsync(int?  id)
         {
             var Employee = await _context.Employees
-                    .Include(e => e.Role)
-                    .AsNoTracking()
                     .SingleOrDefaultAsync(u => u.EmployeeId == id);
 
             if (Employee == null)
@@ -202,8 +194,8 @@ namespace AutoServiceMVC.Services.Implement
 
         async Task<StatusMessage> IAuthenticateService<Employee>.ValidateLoginAsync(Login login)
         {
-            var employee = await _context.Employees.Include(e => e.Role)
-                .AsNoTracking().FirstOrDefaultAsync(u => u.Username == login.Username);
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(u => u.Username == login.Username);
             if (employee == null)
             {
                 return new StatusMessage()
