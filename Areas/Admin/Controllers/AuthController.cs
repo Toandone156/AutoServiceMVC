@@ -30,7 +30,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin" ,AuthenticationSchemes = "Admin_Scheme")]
+        // [Authorize(Roles = "Admin" ,AuthenticationSchemes = "Admin_Scheme")]
         public IActionResult Register()
         {
             return View();
@@ -61,7 +61,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
+        // [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Register([Bind("Username,Password,AgainPassword,FullName,Email,RoleId")]
                                 Register register)
         {
