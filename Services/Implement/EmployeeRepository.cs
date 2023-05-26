@@ -195,22 +195,14 @@ namespace AutoServiceMVC.Services.Implement
         async Task<StatusMessage> IAuthenticateService<Employee>.ValidateLoginAsync(Login login)
         {
             var employee = await _context.Employees
-                .FirstOrDefaultAsync(u => u.Username == login.Username);
+                .FirstOrDefaultAsync(u => u.Username == login.Username &&
+                                        u.HashPassword == _hash.GetHashPassword(login.Password));
             if (employee == null)
             {
                 return new StatusMessage()
                 {
                     IsSuccess = false,
-                    Message = "Username is wrong"
-                };
-            }
-            
-            if (employee.HashPassword != _hash.GetHashPassword(login.Password))
-            {
-                return new StatusMessage()
-                {
-                    IsSuccess = false,
-                    Message = "Password is wrong"
+                    Message = "Username or password is wrong"
                 };
             }
             

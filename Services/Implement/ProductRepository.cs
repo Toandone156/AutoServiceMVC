@@ -146,7 +146,7 @@ namespace AutoServiceMVC.Services.Implement
                 product.ProductDescription = entity.ProductDescription;
                 product.ProductImage = entity.ProductImage;
                 product.IsAvailable = entity.IsAvailable;
-                product.IsOutOfStock = entity.IsOutOfStock;
+                product.IsInStock = entity.IsInStock;
                 product.CategoryId = entity.CategoryId;
                 await _context.SaveChangesAsync();
             }
@@ -163,7 +163,7 @@ namespace AutoServiceMVC.Services.Implement
                 product.ProductDescription = entity.ProductDescription;
                 product.ProductImage = entity.ProductImage;
                 product.IsAvailable = entity.IsAvailable;
-                product.IsOutOfStock = entity.IsOutOfStock;
+                product.IsInStock = entity.IsInStock;
                 product.CategoryId = entity.CategoryId;
 
                 await CreateAsync(product);

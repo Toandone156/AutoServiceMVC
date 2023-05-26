@@ -4,6 +4,7 @@ using AutoServiceMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoServiceMVC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230526054245_ChangeStockNameProduct")]
+    partial class ChangeStockNameProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,7 +176,8 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.HasIndex("TableId");
+                    b.HasIndex("TableId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -555,8 +558,8 @@ namespace AutoServiceMVC.Migrations
                         .IsRequired();
 
                     b.HasOne("AutoServiceMVC.Models.Table", "Table")
-                        .WithMany("Orders")
-                        .HasForeignKey("TableId")
+                        .WithOne("Order")
+                        .HasForeignKey("AutoServiceMVC.Models.Order", "TableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -749,7 +752,7 @@ namespace AutoServiceMVC.Migrations
 
             modelBuilder.Entity("AutoServiceMVC.Models.Table", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.User", b =>

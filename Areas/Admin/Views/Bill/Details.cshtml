@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label asp-for="Note"></label>
-                                    <input asp-for="Note" class="form-control validate" disabled>
+                                    <textarea asp-for="Note" class="form-control validate" rows="5" disabled></textarea>
                                 </div>
                                 @if(Model.UserId == null)
                                 {

@@ -222,6 +222,10 @@ thead {
   border-radius: 50%;
   margin-top: -3px;
 }
+.sended {
+    background-color: #fff;
+    box-shadow: 0 0 8px #c3cdcc, inset 0 0 8px #fff;
+}
 .received {
     background-color: #c3cdcc;
     box-shadow: 0 0 8px #c3cdcc, inset 0 0 8px #c3cdcc;
@@ -754,4 +758,211 @@ a[href^="mailto:"]{
 /*Change background color*/
 .form-control:disabled, .form-control[readonly], select:disabled {
     background-color: #919191!important
+}
+
+.nav-link:focus {
+    color: #f5a623 !important;
+}
+
+/*disable anchor*/
+.achor-disable {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/*Cart style*/
+body {
+    font-family: system-ui;
+}
+
+.container {
+    width: 1000px;
+    margin: auto;
+    transition: 0.5s;
+}
+
+header {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+header .shopping {
+    text-align: right;
+}
+
+header .shopping i {
+    font-size: 40px;
+    color: #fff;
+    cursor: pointer;
+}
+
+header .shopping span {
+    background: red;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    position: absolute;
+    top: -5px;
+    left: 80%;
+    padding: 3px 10px;
+}
+
+
+.list .item {
+    text-align: center;
+    background-color: #DCE0E1;
+    padding: 20px;
+    letter-spacing: 1px;
+    border-radius: 10px;
+}
+
+    .list .item img {
+        width: 90%;
+        height: 60%;
+    }
+
+    .list .item .title {
+        font-weight: 600;
+    }
+
+    .list .item .price {
+        margin: 10px;
+    }
+
+    .list .item button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+.card {
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 500px;
+    background-color: #453E3B;
+    height: 100vh;
+    transition: 0.5s;
+}
+
+.active .card {
+    left: calc(100% - 500px);
+}
+
+.active .container {
+    transform: translateX(-200px);
+}
+
+.card h1 {
+    color: #E8BC0E;
+    font-weight: 100;
+    margin: 0;
+    padding: 0 20px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.card .checkOut {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+    .card .checkOut div {
+        background-color: #E8BC0E;
+        width: 100%;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .card .checkOut div:nth-child(2) {
+            background-color: #1C1F25;
+            color: #fff;
+        }
+
+.listCard li {
+    display: flex;
+    color: #fff;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+    .listCard li div {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .listCard li button {
+        background-color: #fff5;
+        border: none;
+    }
+
+.listCard .count {
+    margin: 0 10px;
+}
+
+    .shopping > img {
+        margin-left: 18.5rem;
+    }
+
+.shopping i:after {
+    content: attr(data-value);
+    font-size: 20px;
+    color: #fff;
+    background: red;
+    border-radius: 50%;
+    padding: 0 5px;
+    position: relative;
+    left: -15px;
+    top: -20px;
+    opacity: 0.9;
+}
+
+@media(max-width: 576px) {
+    
+
+    .list {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        column-gap: 20px;
+        row-gap: 20px;
+        margin-top: 50px;
+    }
+
+    .item {
+        width: 37%;
+    }
+
+    .active .card {
+        left: calc(35% - 150px);
+    }
+
+    .active .container {
+        transform: translateX(-200px);
+    }
+}
+
+@media(min-width: 1024px) {
+    .list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 20px;
+        row-gap: 20px;
+        margin-top: 50px;
+    }
+}
+
+::placeholder{
+    color: aliceblue;
 }

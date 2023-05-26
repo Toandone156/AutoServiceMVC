@@ -116,11 +116,28 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
-        public async Task<IActionResult> DeleteFeedback(int id)
+        public async Task<JsonResult> DeleteFeedback(int id)
         {
             //var result = await _productRepo.DeleteByIdAsync(id);
 
             return Json("hello");
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateStock(int productId)
+        {
+            var result = await _productRepo.GetByIdAsync(productId);
+            if(result.IsSuccess)
+            {
+                var product = result.Data as Product;
+
+                product.IsInStock = !product.IsInStock;
+                await _productRepo.UpdateAsync(product);
+
+                return Json(new { success = true, stockValue = product.IsInStock});
+            }
+
+            return Json(new { error = "Update fail" });
         }
     }
 }

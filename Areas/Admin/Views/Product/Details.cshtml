@@ -47,23 +47,24 @@
                                 </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
-                        <div class="tm-product-img-dummy mx-auto">
-                            @if(Model.ProductImage != string.Empty)
+                            <div class="tm-product-img-dummy mx-auto">
+                                @if(Model.ProductImage != string.Empty)
+                                {
+                                    <img id="preview" src="@Model.ProductImage" alt="Product image" class="img-fluid d-block mx-auto">
+                                }else{
+                                    <img id="preview" src="#" alt="Product image" class="img-fluid mx-auto" style="display:none;">
+                                    <i id="upload" class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
+                                }
+                            </div>
+
+                            @if(role == "Admin")
                             {
-                                <img id="preview" src="@Model.ProductImage" alt="Product image" class="img-fluid d-block mx-auto">
-                            }else{
-                                <img id="preview" src="#" alt="Product image" class="img-fluid mx-auto" style="display:none;">
-                                <i id="upload" class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
+                                <div class="custom-file mt-3 mb-3">
+                                    <input id="fileInput" type="file" name="imageFile" style="display:none;" onchange="previewImage(event)">
+                                    <input type="button" class="btn btn-primary btn-block mx-auto" value="CHANGE IMAGE NOW" onclick="document.getElementById('fileInput').click();">
+                                </div>
                             }
                         </div>
-                        @if(role == "Admin")
-                        {
-                            <div class="custom-file mt-3 mb-3">
-                                <input id="fileInput" type="file" name="imageFile" style="display:none;" onchange="previewImage(event)">
-                                <input type="button" class="btn btn-primary btn-block mx-auto" value="CHANGE IMAGE NOW" onclick="document.getElementById('fileInput').click();">
-                            </div>
-                        }
-                    </div>
                         @if(role == "Admin"){
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
@@ -119,3 +120,23 @@
             </div>
         </div>
     </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateStock(productId){
+            $.ajax({
+                url: '/Admin/Product/UpdateStock',
+                type: 'POST',
+                data: { productId: productId},
+                success: function (response) {
+                    console.log('Update status!');
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log('Error update status: ' + error);
+                }
+            });
+        }
+    </script>
+}

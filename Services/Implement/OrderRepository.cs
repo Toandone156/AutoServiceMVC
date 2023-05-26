@@ -111,7 +111,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             var order = await _context.Orders
-                
                 .FirstOrDefaultAsync(c => c.OrderId == id);
 
             if (order == null)

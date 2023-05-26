@@ -10,7 +10,7 @@ namespace AutoServiceMVC.Models
         [Key]
         [DisplayName("Order ID")]
         public int OrderId { get; set; }
-        public int Amount { get; set; }
+        public int Amount { get; set; } = 0;
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         [DisplayName("Date")]

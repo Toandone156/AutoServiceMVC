@@ -12,13 +12,28 @@
 <div class="row tm-content-row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
         <div class="tm-bg-primary-dark tm-block tm-block-products">
-            <div class="form-group mb-3">
-                <label for="categoryDropdown">Category</label>
-                <select id="categoryDropdown"
-                        asp-items="@dropdownlist"
-                        class="custom-select tm-select-accounts">
-                        <option value="All">All category</option>
-                </select>
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12">
+                    <div class="form-group mb-3">
+                        <label for="categoryDropdown">Category</label>
+                        <select id="categoryDropdown"
+                                asp-items="@dropdownlist"
+                                class="custom-select tm-select-accounts">
+                            <option value="All">All category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12">
+                    <div class="form-group mb-3">
+                        <label for="viewDropdown">View</label>
+                        <select id="viewDropdown"
+                                class="custom-select tm-select-accounts">
+                            <option value="All">All product</option>
+                            <option value="false">Hiden product</option>
+                            <option value="true">Show product</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="tm-product-table-container">
                 <table class="table table-hover tm-table-small tm-product-table">
@@ -31,14 +46,17 @@
                                 @Html.DisplayNameFor(model => model.Price)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Category.CategoryName)
+                                @Html.DisplayNameFor(model => model.Category)
+                            </th>
+                            <th>
+                                View
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                                <tr class="item" data-category="@item.CategoryId">
+                                <tr class="item" data-category="@item.CategoryId" data-stock="@item.IsInStock.ToString().ToLower()">
                                         <td scope="col">
                                             <a asp-action="Details" asp-route-id="@item.ProductId"
                                                 class="text-reset text-decoration-none">
@@ -50,6 +68,12 @@
                                         </td>
                                         <td scope="col">
                                                 @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                                        </td>
+                                        <td scope="col">
+                                            <a href="#" class="tm-product-delete-link"
+                                                title="Change stock" onclick="updateStock(@item.ProductId, this);">
+                                                <i class="tm-product-delete-icon far @(item.IsInStock ? "fa-eye" : "fa-eye-slash")"></i>
+                                            </a>
                                         </td>
                                 </tr>
                         }
@@ -70,21 +94,55 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var categoryDropdown = document.getElementById("categoryDropdown");
-            categoryDropdown.addEventListener("change", function () {
+            var viewDropdown = document.getElementById("viewDropdown");
+
+            categoryDropdown.addEventListener("change", doFilter);
+
+            viewDropdown.addEventListener("change", doFilter);
+
+            function doFilter(){
                 var selectedCategory = categoryDropdown.value;
+                var selectedView = viewDropdown.value;
                 var productRows = document.getElementsByClassName("item");
 
                 for (var i = 0; i < productRows.length; i++) {
                     var row = productRows[i];
                     var category = row.getAttribute("data-category");
+                    var rowValue = row.getAttribute("data-stock");
 
-                    if (selectedCategory === "All" || category === selectedCategory) {
+                    if ((selectedCategory === "All" || category === selectedCategory) &&
+                        (selectedView === "All" || rowValue === selectedView)) {
                         row.style.display = "";
                     } else {
                         row.style.display = "none";
                     }
                 }
-            });
+            }
         });
+
+        function updateStock(productId, clickedItem) {
+            $.ajax({
+                url: '/Admin/Product/UpdateStock',
+                type: 'POST',
+                data: { productId: productId },
+                success: function (response) {
+                    console.log('Update status!');
+
+                    var row = clickedItem.closest(".item");
+
+                    console.log(response);
+
+                    row.querySelector(".tm-product-delete-icon").className = response.stockValue ? 
+                                                                            "tm-product-delete-icon far fa-eye" : 
+                                                                            "tm-product-delete-icon far fa-eye-slash";
+
+                    row.setAttribute("data-stock", response.stockValue);
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log('Error update status: ' + error);
+                }
+            });
+        }
     </script>
 }

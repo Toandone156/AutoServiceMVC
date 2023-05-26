@@ -6,12 +6,20 @@ using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.MaxValue;
+});
+
+services.AddSingleton<ISessionCustom, SessionCustom>();
 
 //Add enviroment variable
 services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -27,7 +35,7 @@ services.AddDbContext<AppDbContext>(options =>
         .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
         .AddConsole();
     }));
-});
+}, ServiceLifetime.Transient);
 #endregion
 
 #region Authentication
@@ -100,6 +108,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 

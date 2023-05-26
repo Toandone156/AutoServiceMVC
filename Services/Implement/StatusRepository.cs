@@ -48,10 +48,32 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> GetByIdAsync(int? id)
         {
+            if (id == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.INPUT_EMPTY
+                };
+            }
+
+            var status = await _context.Status
+                .FirstOrDefaultAsync(c => c.StatusId == id);
+
+            if (status == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.ID_NOT_FOUND
+                };
+            }
+
             return new StatusMessage()
             {
-                IsSuccess = false,
-                Message = Message.METHOD_NOT_DEFINED
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = status
             };
         }
 

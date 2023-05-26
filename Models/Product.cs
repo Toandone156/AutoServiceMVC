@@ -21,7 +21,7 @@ namespace AutoServiceMVC.Models
         public string? ProductImage { get; set; }
         public decimal ProductRating { get; set; } = 5;
         public bool IsAvailable { get; set; } = true;
-        public bool IsOutOfStock { get; set; } = false;
+        public bool IsInStock { get; set; } = true;
 
         //Foreign Key
         public int CategoryId { get; set; }

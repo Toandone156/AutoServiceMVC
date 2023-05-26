@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Product>
+@inject ICommonRepository<Category> categoryService
+
+@{
+    ViewData["Title"] = "Menu";
+    List<OrderDetail> cartList = ViewBag.Cart ?? new List<OrderDetail>();
+    var result = await categoryService.GetAllAsync();
+    var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
+}
+
+<header class="row tm-content-row">
+    <div class="form-group col-xl-6 col-lg-6 col-md-12">
+        <select id="categoryDropdown"
+                asp-items="@dropdownlist"
+                class="custom-select tm-select-accounts" style="background-color: #567086;">
+            <option value="All">All category</option>
+        </select>
+    </div>
+
+    <div class="shopping col-xl-6 col-lg-6 col-md-12">
+        <i class="fas fa-shopping-cart" data-value="0"></i>
+    </div>
+</header>
+
+<div class="list">
+    @foreach(var item in Model)
+    {
+        <div class="item" data-category="@item.CategoryId">
+            <img src="@item.ProductImage">
+            <div class="title">@item.ProductName</div>
+            <div class="price">@item.Price</div>
+            <button class="btn btn-primary" onclick="addToCart(@item.ProductId, 1);">Add To Card</button>
+        </div>
+    }
+</div>
+
+@section Cart {
+    <div class="card" id="cardVs">
+        <h1>Card</h1>
+        <ul class="listCard">
+            @foreach(var item in cartList)
+            {
+                <li data-id="@item.ProductId">
+                    <div>@item.Product.ProductName</div>
+                    <div>@item.Product.Price</div>
+                    <div>
+                        <button onclick="changeQuantity(@item.ProductId, 'minus')">-</button>
+                        <div class="count">@item.Quantity</div>
+                        <button onclick="changeQuantity(@item.ProductId, 'plus')">+</button>
+                    </div>
+                </li>
+            }
+        </ul>
+
+        <form id="paymentForm" asp-area="Admin" asp-controller="Order" asp-action="Payment" method="post">
+            <div class="form-group mb-3 m-5">
+                <textarea id="Note" name="Note" class="form-control validate" rows="5" placeholder="Note here..."></textarea>
+            </div>
+        </form>
+
+        <div class="checkOut">
+            <div class="total" onclick="payment()">0</div>
+            <div class="closeShopping">Close</div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="~/js/app.js"></script>
+
+    <script>
+        function payment(){
+            document.getElementById("paymentForm").submit();
+        }
+    </script>
+}

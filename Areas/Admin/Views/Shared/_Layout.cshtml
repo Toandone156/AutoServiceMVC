@@ -15,7 +15,7 @@
           href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
     <link rel="stylesheet" href="~/css/fontawesome.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
     <link rel="stylesheet" href="~/css/admin.css">
 </head>
 <body id="reportsPage">
@@ -37,7 +37,6 @@
                         asp-area="Admin" asp-controller="Home" asp-action="Index">
                             <i class="fas fa-tachometer-alt"></i>
                             Home
-                            <span class="sr-only">(current)</span>
                         </a>
                     </li>
 
@@ -59,7 +58,7 @@
                     <li class="nav-item">
                         <a class="nav-link"
                            asp-area="Admin" asp-controller="Bill" asp-action="Index">
-                            <i class="fas fa-list"></i> Bills
+                            <i class="fas fa-list"></i> Orders
                         </a>
                     </li>
 
@@ -70,36 +69,43 @@
                         </a>
                     </li>
 
-                    @*For employee*@
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-area="Admin" asp-controller="Order" asp-action="Index">
+                            <i class="fas fa-shopping-cart"></i> Menu
+                        </a>
+                    </li>
+
+                    @*For admin*@
 
                     @if(role == "Admin")
                     {
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                <i class="fas fa-list"></i> Categories
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-cog"></i>
+                                <span>
+                                    Admin <i class="fas fa-angle-down"></i>
+                                </span>
                             </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-area="Admin" asp-controller="Table" asp-action="Index">
-                                <i class="fas fa-table"></i> Tables
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-area="Admin" asp-controller="Employee" asp-action="Index">
-                                <i class="fas fa-users"></i> Employees
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-area="Admin" asp-controller="User" asp-action="Index">
-                                <i class="far fa-user"></i> Users
-                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="nav-link"
+                                   asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                    <i class="fas fa-list"></i> Categories
+                                </a>
+                                <a class="nav-link"
+                                   asp-area="Admin" asp-controller="Table" asp-action="Index">
+                                    <i class="fas fa-table"></i> Tables
+                                </a>
+                                <a class="nav-link"
+                                   asp-area="Admin" asp-controller="Employee" asp-action="Index">
+                                    <i class="fas fa-users"></i> Employees
+                                </a>
+                                <a class="nav-link"
+                                   asp-area="Admin" asp-controller="User" asp-action="Index">
+                                    <i class="far fa-user"></i> Users
+                                </a>
+                            </div>
                         </li>
                     }
 
@@ -129,6 +135,8 @@
             </p>
         </div>
     </footer>
+
+    @await RenderSectionAsync("Cart", required: false)
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
