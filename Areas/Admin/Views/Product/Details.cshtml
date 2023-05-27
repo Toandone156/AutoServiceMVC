@@ -66,11 +66,42 @@
                             }
                         </div>
                         @if(role == "Admin"){
-                            <div class="col-12">
+                            <div class="col-12 mb-3">
                                 <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="button" class="btn btn-danger btn-block text-uppercase"
+                                        data-toggle="modal" data-target="#deleteModal">
+                                    Delete
+                                </button>
                             </div>
                         }
                     </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Are you sure?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                You want to delete product <b>@Model.ProductName</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button asp-action="Delete" asp-route-id="@Model.ProductId"
+                                        class="btn btn-danger">
+                                    Sure, Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </form>
         </div>
     </div>

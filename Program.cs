@@ -35,7 +35,7 @@ services.AddDbContext<AppDbContext>(options =>
         .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
         .AddConsole();
     }));
-}, ServiceLifetime.Transient);
+});
 #endregion
 
 #region Authentication

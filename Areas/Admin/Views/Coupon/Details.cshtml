@@ -36,16 +36,16 @@
                             <span asp-validation-for="PointAmount" class="text-white"></span>
                         </div>
                         <div class="form-group mb-3">
-                            <label asp-for="StartAt"></label>
-                            <input asp-for="StartAt" class="form-control validate">
-                            <span asp-validation-for="StartAt" class="text-white"></span>
-                        </div>
-                        <div class="form-group mb-3">
                             <label asp-for="UserTypeId">User Type</label>
                             <select asp-for="UserTypeId" asp-items="dropdownlist"
                                     class="custom-select tm-select-accounts">
-                                    <option value="">None</option>
+                                <option value="">None</option>
                             </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="StartAt"></label>
+                            <input asp-for="StartAt" class="form-control validate">
+                            <span asp-validation-for="StartAt" class="text-white"></span>
                         </div>
                         <div class="form-group mb-3">
                             <label asp-for="Creator"></label>

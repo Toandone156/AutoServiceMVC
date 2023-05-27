@@ -116,7 +116,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
             if (detailsList == null)
             {
-                Console.WriteLine("Order fail");
+                TempData["Message"] = "Send order fail";
                 return RedirectToAction("Index");
             }
 
@@ -149,6 +149,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             
             _session.DeleteSession(HttpContext, "cart");
 
+            TempData["Message"] = "Send order success";
             return RedirectToAction("Index");
         }
 

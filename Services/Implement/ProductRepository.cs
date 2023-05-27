@@ -45,10 +45,33 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> DeleteByIdAsync(int? id)
         {
+            if (id == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.INPUT_EMPTY
+                };
+            }
+
+            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == id);
+
+            if (product == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.ID_NOT_FOUND
+                };
+            }
+
+            product.IsAvailable = false;
+            await _context.SaveChangesAsync();
+
             return new StatusMessage()
             {
-                IsSuccess = false,
-                Message = Message.METHOD_NOT_DEFINED
+                IsSuccess = true,
+                Message = Message.DELETE_SUCCESS
             };
         }
 

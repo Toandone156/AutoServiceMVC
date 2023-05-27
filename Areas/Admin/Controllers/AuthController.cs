@@ -30,7 +30,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View();
         }
 
-        // [Authorize(Roles = "Admin" ,AuthenticationSchemes = "Admin_Scheme")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public IActionResult Register()
         {
             return View();
@@ -46,7 +46,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
                 if (status.IsSuccess)
                 {
-                    _auth.SignInAsync(status.Data, HttpContext);
+                    await _auth.SignInAsync(status.Data, HttpContext);
+
+                    TempData["Message"] = "Login success";
                     return RedirectToAction("Index", "Home", new {area = "Admin"});
                 }
 

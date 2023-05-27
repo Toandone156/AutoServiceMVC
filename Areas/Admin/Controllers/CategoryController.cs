@@ -21,7 +21,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _categoryRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                ViewBag.Message = TempData["Message"];
+                //ViewBag.Message = TempData["Message"];
                 return View(result.Data);
             }
 
@@ -54,7 +54,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _categoryRepo.CreateAsync(category);
                 if (result.IsSuccess)
                 {
-                    TempData["Message"] = "Create Category success";
+                    TempData["Message"] = "Create category success";
                     return RedirectToAction("Index");
                 }
 
@@ -80,7 +80,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _categoryRepo.UpdateAsync(category);
                 if (result.IsSuccess)
                 {
-                    TempData["Message"] = "Edit Category success";
+                    TempData["Message"] = "Edit category success";
                     return RedirectToAction("Index");
                 }
 
@@ -99,7 +99,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _categoryRepo.DeleteByIdAsync(id);
-            TempData["Message"] = "Delete Category success";
+            TempData["Message"] = "Delete category success";
             return RedirectToAction("Index");
         }
     }

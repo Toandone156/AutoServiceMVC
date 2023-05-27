@@ -22,6 +22,7 @@
     </div>
 </header>
 
+
 <div class="list">
     @foreach(var item in Model)
     {
@@ -41,12 +42,14 @@
             @foreach(var item in cartList)
             {
                 <li data-id="@item.ProductId">
-                    <div>@item.Product.ProductName</div>
-                    <div>@item.Product.Price</div>
-                    <div>
-                        <button onclick="changeQuantity(@item.ProductId, 'minus')">-</button>
+                    <div class="left-container">
+                        <div>@item.Product.ProductName</div>
+                        <div class="order-price">@item.Product.Price</div>
+                    </div>
+                    <div class="right-container">
+                        <button class="btn-dark" onclick="changeQuantity(@item.ProductId, 'minus')">-</button>
                         <div class="count">@item.Quantity</div>
-                        <button onclick="changeQuantity(@item.ProductId, 'plus')">+</button>
+                        <button class="btn-dark" onclick="changeQuantity(@item.ProductId, 'plus')">+</button>
                     </div>
                 </li>
             }
@@ -59,8 +62,35 @@
         </form>
 
         <div class="checkOut">
-            <div class="total" onclick="payment()">0</div>
+            <div class="total" onclick="openModal()">0</div>
             <div class="closeShopping">Close</div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">You want to order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Total: <b id="total"></b>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+                    <button type="submit"
+                            class="btn btn-success"
+                            onclick="payment()">
+                        Send order
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 }
@@ -69,8 +99,35 @@
     <script src="~/js/app.js"></script>
 
     <script>
-        function payment(){
-            document.getElementById("paymentForm").submit();
+        function openModal(){
+            var total = document.getElementById("total");
+            total.textContent = document.querySelector(".total").textContent;
+            $("#orderModal").modal("show");
         }
+        
+        function closeModal(){
+            $("#orderModal").modal("hide");
+        }
+
+        function payment(){
+            $("#paymentForm").submit();
+        }
+
+        var dropdown = document.getElementById("categoryDropdown");
+        dropdown.addEventListener("change", function () {
+            var selected = dropdown.value;
+            var productRows = document.getElementsByClassName("item");
+
+            for (var i = 0; i < productRows.length; i++) {
+                var row = productRows[i];
+                var rowdata = row.getAttribute("data-category");
+
+                if (selected === "All" || rowdata === selected) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
     </script>
 }

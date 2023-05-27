@@ -70,6 +70,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _productRepo.CreateAsync(product);
                 if (result.IsSuccess)
                 {
+                    TempData["Message"] = "Create product success";
                     return RedirectToAction("Index");
                 }
 
@@ -101,6 +102,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _productRepo.UpdateAsync(product);
                 if (result.IsSuccess)
                 {
+                    TempData["Message"] = "Edit product success";
                     return RedirectToAction("Index");
                 }
 
@@ -112,6 +114,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             }
 
             return View("Details",product.ProductId);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _productRepo.DeleteByIdAsync(id);
+            TempData["Message"] = "Delete product success";
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

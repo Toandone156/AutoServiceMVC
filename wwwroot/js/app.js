@@ -32,12 +32,14 @@ function addToCart(productId, quantity) {
                 let newDiv = document.createElement('li');
                 newDiv.setAttribute("data-id", response.id)
                 newDiv.innerHTML = `
-                                <div>${response.name}</div>
-                                <div>${response.price}</div>
-                                <div>
-                                <button onclick="changeQuantity(${response.id}, 'minus')">-</button>
-                                <div class="count">${response.quantity}</div>
-                                <button onclick="changeQuantity(${response.id}, 'plus')">+</button>
+                                <div class="left-container">
+                                    <div>${response.name}</div>
+                                    <div class="order-price">${response.price}</div>
+                                </div>
+                                <div class="right-container">
+                                    <button class="btn-dark" onclick="changeQuantity(${response.id}, 'minus')">-</button>
+                                    <div class="count">${response.quantity}</div>
+                                    <button class="btn-dark" onclick="changeQuantity(${response.id}, 'plus')">+</button>
                                 </div>`;
                 listCards.appendChild(newDiv);
             } else {
@@ -67,7 +69,7 @@ function reloadCard() {
 
         console.log(li);
 
-        var price = parseFloat(li.children[1].textContent);
+        var price = parseFloat(li.querySelector(".order-price").textContent);
         var quantity = parseInt(li.querySelector(".count").textContent);
 
         var subtotal = price * quantity;

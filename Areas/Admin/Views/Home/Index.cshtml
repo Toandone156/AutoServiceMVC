@@ -6,44 +6,6 @@
 
 <div class="row">
     <div class="col">
-        <p class="text-white mt-5 mb-5">Welcome back, <b>Admin</b> </p>
+        <h1 class="text-white mt-5 mb-5">Welcome back to <b>Management Page</b>!!! </h1>
     </div>
-
-    <button class="btnAddToCart" data-product-id="2">Add to Cart 0</button>
-    <button class="btnAddToCart" data-product-id="4">Add to Cart 1</button>
-    <button class="btnAddToCart" data-product-id="6">Add to Cart 2</button>
-
-    <form asp-area="Admin" asp-controller="Order" asp-action="Payment" method="post">
-        <textarea name="Note"></textarea>
-        <button type="submit" class="btn btn-primary">Payment</button>
-    </form>
 </div>
-
-@section Scripts {
-    <script>
-        $(function () {
-            $('.btnAddToCart').click(function () {
-                var productId = $(this).data('product-id');
-                addToCart(productId);
-            });
-
-            function addToCart(productId) {
-                // AJAX request to add product to the cart
-                $.ajax({
-                    url: '/Admin/Order/AddToCart',
-                    type: 'POST',
-                    data: { productId: productId, quantity: 1 },
-                    success: function (response) {
-                        // Handle the success response
-                        console.log('Product added to cart!');
-                        // Update the cart count or perform any other desired actions
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle the error response
-                        console.log('Error adding product to cart: ' + error);
-                    }
-                });
-            }
-        });
-    </script>
-}
