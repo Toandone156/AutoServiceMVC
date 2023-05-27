@@ -116,19 +116,26 @@
                         <tr>
                             <th scope="col">User</th>
                             <th scope="col" colspan="30%">Comment</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Rating</th>
-                            <th scope="col">&nbsp;</th>
+                            @if(role == "Admin")
+                            {
+                                <th scope="col">&nbsp;</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         @foreach(var item in Model.ProductFeedbacks)
                         {
-                            <tr>
-                                <td class="nameUser">@item.User</td>
+                            <tr class="item">
+                                <td class="nameUser">@item.User.FullName</td>
                                 <td colspan="30%">
-                                    <p class="feedbacks">
+                                    <p class="feedbacks" style="margin: 0;">
                                         @item.Comment
                                     </p>
+                                </td>
+                                <td>
+                                    <img src="@item.Image" width="200px"/>
                                 </td>
                                 <td>
                                     <div class="rating">
@@ -138,12 +145,14 @@
                                         }
                                     </div>
                                 </td>
-                                <td>
-                                    @*Call Api*@
-                                    <a href="#" class="tm-product-delete-link">
-                                        <i class="far fa-trash-alt tm-product-delete-icon"></i>
-                                    </a>
-                                </td>
+                                @if(role == "Admin")
+                                {
+                                    <td>
+                                        <a class="tm-product-delete-link" onclick="deleteProductFeedback(@item.ProductFeedbackId, this)">
+                                            <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                                        </a>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -169,5 +178,23 @@
                 }
             });
         }
+
+        function deleteProductFeedback(feedbackId, thisItem) {
+            $.ajax({
+                url: '/Admin/Product/DeleteFeedback',
+                type: 'POST',
+                data: { feedbackId: feedbackId },
+                success: function (response) {
+                    console.log('Delete success!');
+                    var item = thisItem.closest(".item");
+                    item.remove();
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log('Error delete: ' + error);
+                }
+            });
+        }
+
     </script>
 }

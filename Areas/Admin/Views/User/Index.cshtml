@@ -65,23 +65,21 @@
 
 @section scripts {
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var dropdown = document.getElementById("statusDropdown");
-            dropdown.addEventListener("change", function () {
-                var selected = dropdown.value;
-                var productRows = document.getElementsByClassName("item");
+        var dropdown = document.getElementById("statusDropdown");
+        dropdown.addEventListener("change", function () {
+            var selected = dropdown.value;
+            var productRows = document.getElementsByClassName("item");
 
-                for (var i = 0; i < productRows.length; i++) {
-                    var row = productRows[i];
-                    var rowdata = row.getAttribute("data-status");
+            for (var i = 0; i < productRows.length; i++) {
+                var row = productRows[i];
+                var rowdata = row.getAttribute("data-type");
 
-                    if (selected === "All" || rowdata === selected) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
+                if (selected === "All" || rowdata === selected) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
                 }
-            });
+            }
         });
     </script>
 }
