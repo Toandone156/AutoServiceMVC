@@ -177,6 +177,7 @@ namespace AutoServiceMVC.Services.Implement
             user.FullName = entity.FullName;
             user.Email = entity.Email;
             user.Point = entity.Point;
+            user.HashPassword = entity.HashPassword;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

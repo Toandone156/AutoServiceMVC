@@ -143,7 +143,7 @@ namespace AutoServiceMVC.Services.Implement
                 HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
                 Email = register.Email,
-                RoleId = register.RoleId
+                RoleId = register.RoleId ?? 2
             };
 
             await _context.AddAsync<Employee>(employee);
@@ -182,6 +182,7 @@ namespace AutoServiceMVC.Services.Implement
             employee.Email = entity.Email;
             employee.RoleId = entity.RoleId;
             employee.EndDate = entity.EndDate;
+            employee.HashPassword = entity.HashPassword;
 
             await _context.SaveChangesAsync();
             return new StatusMessage()

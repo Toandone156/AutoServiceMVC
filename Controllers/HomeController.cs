@@ -1,31 +1,25 @@
 ﻿using AutoServiceMVC.Models;
+using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace AutoServiceMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ICommonRepository<Category> _categoryRepo;
+        private readonly IMailService _mail;
 
-        public HomeController(ILogger<HomeController> logger, ICommonRepository<Category> categoryRepo)
+        public HomeController(IMailService mail)
         {
-            _logger = logger;
-            _categoryRepo = categoryRepo;
+            _mail = mail;
         }
 
-        [Route("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

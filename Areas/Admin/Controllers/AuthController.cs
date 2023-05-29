@@ -27,6 +27,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         public ActionResult Login()
         {
+            var rs = User.FindFirst("Id");
             return View();
         }
 

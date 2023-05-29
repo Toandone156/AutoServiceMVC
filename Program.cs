@@ -14,12 +14,25 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+});
+
+#region Session
 services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.MaxValue;
 });
 
 services.AddSingleton<ISessionCustom, SessionCustom>();
+#endregion
+
+#region Mail
+services.AddOptions();
+services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+services.AddTransient<IMailService, MailService>();
+#endregion
 
 //Add enviroment variable
 services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -45,13 +58,13 @@ services.AddAuthentication(options =>
 })
     .AddCookie("Admin_Scheme", options =>
     {
-        options.LoginPath = "/Admin/Auth/Login";
-        options.AccessDeniedPath = "/Admin/";
+        options.LoginPath = "/admin/auth/login";
+        options.AccessDeniedPath = "/admin/";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
     })
     .AddCookie("User_Scheme", options =>
     {
-        options.LoginPath = "/Auth/Login";
+        options.LoginPath = "/auth/login";
         options.AccessDeniedPath = "/";
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
     });

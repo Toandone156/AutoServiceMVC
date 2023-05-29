@@ -123,6 +123,7 @@ namespace AutoServiceMVC.Services.Implement
 
             var pointtrading = await _context.PointTrading
                 .FirstOrDefaultAsync(c => c.PointTradingId == id);
+
             if(pointtrading == null)
             {
                 return new StatusMessage()
@@ -186,6 +187,29 @@ namespace AutoServiceMVC.Services.Implement
                     Message = Message.LIST_EMPTY
                 };
             }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
+            };
+        }
+
+        public async Task<StatusMessage> GetByUserIdAsync(int userId)
+        {
+            var user = _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if(user == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.ID_NOT_FOUND
+                };
+            }
+
+            var result = _context.UserCoupons.Where(x => x.UserId == userId && x.IsUsed == false);
 
             return new StatusMessage()
             {
