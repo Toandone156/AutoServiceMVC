@@ -15,15 +15,19 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ICommonRepository<Product> _productRepo;
+        private readonly ICommonRepository<ProductFeedback> _feedbackRepo;
         private readonly IImageUploadService _imageUpload;
 
+        [ActivatorUtilitiesConstructor]
         public ProductController(
             AppDbContext context,
             ICommonRepository<Product> productRepo,
+            ICommonRepository<ProductFeedback> feedbackRepo,
             IImageUploadService imageUpload)
         {
             _context = context;
             _productRepo = productRepo;
+            _feedbackRepo = feedbackRepo;
             _imageUpload = imageUpload;
         }
 
@@ -35,12 +39,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         public async Task<IActionResult> Details([FromRoute]int id)
         {
-            var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.ProductId == id);
+            var status = await _productRepo.GetByIdAsync(id);
 
-            if(product != null)
+            if(status.IsSuccess)
             {
-                return View(product);
+                return View(status.Data);
             }
 
             return RedirectToAction("Index");
@@ -127,11 +130,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
-        public async Task<JsonResult> DeleteFeedback(int id)
+        public async Task<JsonResult> DeleteFeedback(int feedbackId)
         {
-            //var result = await _productRepo.DeleteByIdAsync(id);
+            var result = await _feedbackRepo.DeleteByIdAsync(feedbackId);
 
-            return Json("hello");
+            return Json(new {success = result.IsSuccess});
         }
 
         [HttpPost]
