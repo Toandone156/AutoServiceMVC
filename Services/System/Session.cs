@@ -9,6 +9,7 @@ namespace AutoServiceMVC.Services.System
     {
         T GetSessionValue<T>(HttpContext context, string sessionKey);
         void AddToSession(HttpContext context, string sessionKey, object data);
+        void AddToSessionWithTimeout(HttpContext context, string sessionKey, object data, int minute);
         void DeleteSession(HttpContext context, string sessionKey);
     }
 
@@ -23,6 +24,24 @@ namespace AutoServiceMVC.Services.System
         public void AddToSession(HttpContext context, string sessionKey, object data)
         {
             context.Session.SetString(sessionKey, JsonConvert.SerializeObject(data));
+        }
+
+        public void AddToSessionWithTimeout(HttpContext context, string sessionKey, object data,int minute)
+        {
+            var session = context.Session;
+
+            lock(session)
+            {
+                session.SetString(sessionKey, JsonConvert.SerializeObject(data));
+            }
+
+            Task.Delay(TimeSpan.FromMinutes(minute)).ContinueWith(t =>
+            {
+                lock(session)
+                {
+                    session.Remove(sessionKey);
+                }
+            });
         }
 
         public void DeleteSession(HttpContext context, string sessionKey)

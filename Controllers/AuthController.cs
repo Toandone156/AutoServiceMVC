@@ -122,7 +122,7 @@ namespace AutoServiceMVC.Controllers
                     var hashEmail = _hash.GetHashPassword(mail);
 
                     //Save id in session
-                    _session.AddToSession(HttpContext, hashEmail, identity.UserId);
+                    _session.AddToSessionWithTimeout(HttpContext, hashEmail, identity.UserId, 5);
                     var resetUrl = Url.Action("ResetPassword", new { key = hashEmail });
 
                     MailContent content = new MailContent()
@@ -183,7 +183,7 @@ namespace AutoServiceMVC.Controllers
                 var hashEmail = _hash.GetHashPassword(mail);
                 var otp = GenerateOTP();
 
-                _session.AddToSession(HttpContext, hashEmail, otp);
+                _session.AddToSessionWithTimeout(HttpContext, hashEmail, otp, 5);
 
                 return Json(new { success = true });
             }
