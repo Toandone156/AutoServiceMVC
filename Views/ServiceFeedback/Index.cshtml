@@ -1,0 +1,56 @@
+﻿@model AutoServiceMVC.Models.ServiceFeedback
+
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+@await Html.PartialAsync("_SlideSection", new {Name = "Feedback", Page = "Feedback"})
+
+<section class="ftco-section contact-section">
+	<div class="container mt-5">
+		<div class="row block-9">
+			<div class="col-md-4 contact-info ftco-animate">
+				<div class="row">
+					<div class="col-md-12 mb-4">
+						<h2 class="h4">Contact Information</h2>
+					</div>
+					<div class="col-md-12 mb-3">
+						<p><span>Address:</span> FPT City Center, Ngu Hanh Son Distrist, Da nang City, Vietnam</p>
+					</div>
+					<div class="col-md-12 mb-3">
+						<p><span>Phone:</span> <a href="tel:+84944497***">+84 944 497 ***</a></p>
+					</div>
+					<div class="col-md-12 mb-3">
+						<p><span>Email:</span> <a href="mailto:autoservice.coffeeshop@gmail.com">autoservice.coffeeshop@gmail.com</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1"></div>
+			<div class="col-md-6 ftco-animate">
+				<form asp-controller="ServiceFeedback" asp-action="SendServiceFeedback" class="contact-form" enctype="multipart/form-data">
+					<div class="form-group">
+						<textarea asp-for="Comment" cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
+					</div>
+					<div class="uploader">
+						<input id="file-upload" type="file" name="imageFile" accept="image/*" />
+
+						<label for="file-upload" id="file-drag">
+							<img id="file-image" src="#" alt="Preview" class="hidden">
+							<div id="start">
+								<i class="fa fa-download" aria-hidden="true"></i>
+								<div>Select a image or drag here</div>
+								<div id="notimage" class="hidden">Please select an image</div>
+							</div>
+							<div id="response" class="hidden">
+								<div id="messages"></div>
+							</div>
+						</label>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Send Feedback" class="btn btn-primary py-3 px-5">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>

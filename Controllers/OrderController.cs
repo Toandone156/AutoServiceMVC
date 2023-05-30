@@ -45,9 +45,10 @@ namespace AutoServiceMVC.Controllers
 
         public async Task<IActionResult> AccessTable([FromQuery] string tablecode)
         {
+            _dbContext.ChangeTracker.LazyLoadingEnabled = false;
             var result = await _dbContext.Tables.FirstOrDefaultAsync(x => x.TableCode == tablecode);
 
-            if(result != null)
+            if (result != null)
             {
                 _session.AddToSession(HttpContext, "table", result);
 

@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AutoServiceMVC</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AutoServiceMVC.styles.css" asp-append-version="true" />
-
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
@@ -31,6 +27,7 @@
     <link rel="stylesheet" href="~/css/user/flaticon.css">
     <link rel="stylesheet" href="~/css/user/icomoon.css">
     <link rel="stylesheet" href="~/css/user/style.css">
+    <link rel="stylesheet" href="~/css/user/upload.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
@@ -41,78 +38,35 @@
             </button>
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
-                    <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
-                    <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="room.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" href="shop.html">Shop</a>
-                            <a class="dropdown-item" href="product-single.html">Single Product</a>
-                            <a class="dropdown-item" href="room.html">Cart</a>
-                            <a class="dropdown-item" href="checkout.html">Checkout</a>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li class="nav-item cart"><a href="cart.html" class="nav-link"><span class="icon icon-shopping_cart"></span><span class="bag d-flex justify-content-center align-items-center"><small>1</small></span></a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Home" ? "active" : "")"><a asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Menu" ? "active" : "")"><a asp-controller="Order" asp-action="Index" class="nav-link">Menu</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Coupon" ? "active" : "")"><a asp-controller="Coupon" asp-action="Index" class="nav-link">Coupon</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Feedback" ? "active" : "")"><a asp-controller="ServiceFeedback" asp-action="Index" class="nav-link">Feedback</a></li>
+
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item"><a asp-controller="Auth" asp-action="Login" class="nav-link">Login</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, [Your name]</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                <a asp-controller="Profile" asp-action="Index" class="dropdown-item">View profile</a>
+                                <a asp-controller="Auth" asp-action="Logout" class="dropdown-item">Logout</a>
+                            </div>
+                        </li>
+                    }
+                    <li class="nav-item cart"><a href="cart.html" class="nav-link"><span class="icon icon-shopping_cart" data-value="0"></span></a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="home-slider owl-carousel">
-        @*<div class="slider-item" style="background-image: url(images/bg_1.jpg);">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-
-                    <div class="col-md-8 col-sm-12 text-center ftco-animate">
-                        <span class="subheading">Welcome</span>
-                        <h1 class="mb-4">The Best Coffee Testing Experience</h1>
-                        <p class="mb-4 mb-md-5">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                        <p><a href="#" class="btn btn-primary p-3 px-xl-4 py-xl-3">Order Now</a> <a href="#" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a></p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="slider-item" style="background-image: url(images/bg_2.jpg);">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-
-                    <div class="col-md-8 col-sm-12 text-center ftco-animate">
-                        <span class="subheading">Welcome</span>
-                        <h1 class="mb-4">Amazing Taste &amp; Beautiful Place</h1>
-                        <p class="mb-4 mb-md-5">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                        <p><a href="#" class="btn btn-primary p-3 px-xl-4 py-xl-3">Order Now</a> <a href="#" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a></p>
-                    </div>
-
-                </div>
-            </div>
-        </div>*@
-
-        <div class="slider-item" style="background-image: url(images/bg_3.jpg);">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-
-                    <div class="col-md-8 col-sm-12 text-center ftco-animate">
-                        <span class="subheading">Welcome</span>
-                        <h1 class="mb-4">Creamy Hot and Ready to Serve</h1>
-                        <p class="mb-4 mb-md-5">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                        <p><a href="#" class="btn btn-primary p-3 px-xl-4 py-xl-3">Order Now</a> <a href="#" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a></p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
     @RenderBody()
+
+    @await Html.PartialAsync("_TableSection")
 
     <footer class="ftco-footer ftco-section img">
         <div class="overlay"></div>
@@ -123,7 +77,6 @@
                         <h2 class="ftco-heading-2">About Us</h2>
                         <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
                         <ul class="ftco-footer-social list-unstyled float-lft mt-5">
-                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                             <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
                             <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
                         </ul>
@@ -135,8 +88,8 @@
                         <div class="block-23 mb-3">
                             <ul>
                                 <li><span class="icon icon-map-marker"></span><span class="text">FPT City Center, Ngu Hanh Son Distrist, Da nang City, Vietnam</span></li>
-                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+84 944497***</span></a></li>
-                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">autoservice.coffeeshop@gmail.com</span></a></li>
+                                <li><a href="tel:+84944497***"><span class="icon icon-phone"></span><span class="text">+84 944497***</span></a></li>
+                                <li><a href="mailto:autoservice.coffeeshop@gmail.com"><span class="icon icon-envelope"></span><span class="text">autoservice.coffeeshop@gmail.com</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -169,9 +122,9 @@
     <script src="~/js/user/bootstrap-datepicker.js"></script>
     <script src="~/js/user/jquery.timepicker.min.js"></script>
     <script src="~/js/user/scrollax.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="~/js/user/google-map.js"></script>
     <script src="~/js/user/main.js"></script>
+    <script src="~/js/user/custom.js"></script>
+    <script src="~/js/user/upload.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

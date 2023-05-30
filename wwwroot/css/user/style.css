@@ -3611,14 +3611,12 @@ input[type="button"].btn-block {
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
-  left: 0;
+  right: 0;
   z-index: 1000;
   display: none;
-  float: left;
+  text-align: center;
   min-width: 10rem;
   padding: 0.5rem 0;
-  margin: 0.125rem 0 0;
   font-size: 1rem;
   color: #212529;
   text-align: left;
@@ -4471,6 +4469,7 @@ input[type="button"].btn-block {
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 
 .nav-link:hover,
@@ -6156,7 +6155,6 @@ button.close {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  width: 100%;
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -6171,7 +6169,6 @@ button.close {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
   background-color: #000;
 }
 
@@ -10594,6 +10591,24 @@ h5,
   color: #fff;
 }
 
+    .ftco-navbar-light .navbar-nav > .nav-item.cart > a .icon:after {
+        content: attr(data-value);
+        position: relative;
+        top: -10px;
+        right: 10px;
+        display: inline-block;
+        text-align: center;
+        background: #f8b500;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1;
+        padding: 4px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
+
 .ftco-navbar-light .navbar-nav>.nav-item.cart>a .bag {
   position: absolute;
   top: 10px;
@@ -11083,7 +11098,7 @@ h5,
 .btn.btn-primary {
   background: #c49b63;
   border: 1px solid #c49b63;
-  color: #000;
+  color: #fff;
 }
 
 .btn.btn-primary:hover {
@@ -11456,20 +11471,26 @@ width: 270px;
   .menu-entry .img {
     display: block;
   }
-  
-  .menu-entry .text h3 {
-    font-size: 18px;
-    text-transform: uppercase;
-  }
-  
-  .menu-entry .text h3 a {
+
+    .menu-wrap .text h3 {
+        font-size: 18px;
+        text-transform: uppercase;
+        height: 2em;
+    }
+
+.menu-wrap .text h3 a {
     color: #fff;
-  }
-  
-  .menu-entry .text .price span {
-    color: #fff;
-    font-size: 18px;
-  }
+}
+
+    .menu-wrap .text p:first-of-type {
+        height: 2em;
+        margin: 0;
+    }
+
+    .menu-wrap .text .price span {
+        color: #fff;
+        font-size: 18px;
+    }
   
   .product-details h3 {
     text-transform: uppercase;
@@ -11495,15 +11516,23 @@ width: 270px;
 .menu-entry .img {
   display: block;
   height: 200px;
+  width: 100%;
+  margin: 0 auto;
+  background-size: cover;
 }
 
 .menu-entry .text h3 {
   font-size: 18px;
   text-transform: uppercase;
+  height: 2.5em;
+}
+
+.menu-entry .text p:first-of-type {
+    height: 3.5em;
 }
 
 .menu-entry .text h3 a {
-  color: #fff;
+    color: #fff;
 }
 
 .menu-entry .text .price span {
@@ -13441,6 +13470,7 @@ label.star:before {
 .menu-entry {
   display: inline-block;
   position: relative;
+  width: 100%;
 }
 .best-seller{
   display: inline-block;
@@ -13589,7 +13619,6 @@ label.star:before {
 
 .modal-content {
   margin: 0 auto;
-  width: 50%;
   position: relative;
   display: flex;
   flex-direction: column;
