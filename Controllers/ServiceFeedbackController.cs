@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AutoServiceMVC.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "User_Scheme")]
+    [Authorize(AuthenticationSchemes = "User_Scheme")]
     public class ServiceFeedbackController : Controller
     {
         private readonly ICommonRepository<ServiceFeedback> _serviceFeedbackRepo;

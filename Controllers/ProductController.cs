@@ -21,7 +21,7 @@ namespace AutoServiceMVC.Controllers
             _feedbackRepo = feedbackRepo;
         }
 
-        public async Task<IActionResult> Details([FromRoute] int id)
+        public async Task<IActionResult> Detail([FromRoute] int id)
         {
             var status = await _productRepo.GetByIdAsync(id);
 

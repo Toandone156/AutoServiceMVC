@@ -9,6 +9,7 @@ using System.Data;
 using System.Net.Http;
 using System.Security.Claims;
 using AutoServiceMVC.Services.System;
+using Microsoft.AspNetCore.Identity;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
@@ -19,7 +20,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         private readonly ICookieAuthentication _auth;
 
         public AuthController(IAuthenticateService<Employee> emplService,
-            ICookieAuthentication auth)
+                                ICookieAuthentication auth)
         {
             _emplService = emplService;
             _auth = auth;
@@ -50,14 +51,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                     await _auth.SignInAsync(status.Data, HttpContext);
 
                     TempData["Message"] = "Login success";
+
                     return RedirectToAction("Index", "Home", new {area = "Admin"});
                 }
 
                 ModelState.AddModelError(String.Empty, status.Message);
-            }
-            else
-            {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View();
@@ -78,10 +76,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 }
 
                 ModelState.AddModelError(String.Empty, status.Message);
-            }
-            else
-            {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View();

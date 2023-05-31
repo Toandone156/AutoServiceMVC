@@ -6,6 +6,7 @@ using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Win32;
 using static Humanizer.On;
 
 namespace AutoServiceMVC.Services.Implement
@@ -82,13 +83,33 @@ namespace AutoServiceMVC.Services.Implement
 
         async Task<StatusMessage> ICommonRepository<User>.CreateAsync(User? entity)
         {
-            return new StatusMessage
+            if(entity.HashPassword != null)
             {
-                IsSuccess = false,
-                Message = Message.METHOD_NOT_DEFINED,
-                Data = null
-            };
-        }
+				return new StatusMessage
+				{
+					IsSuccess = false,
+					Message = Message.METHOD_NOT_DEFINED,
+					Data = null
+				};
+			}
+
+            var user = new User()
+            {
+                FullName = entity.FullName,
+                Email = entity.Email,
+                Point = 0,
+				UserTypeId = 1 //New user
+			};
+
+			await _context.AddAsync<User>(user);
+			await _context.SaveChangesAsync();
+			return new StatusMessage()
+			{
+				IsSuccess = true,
+				Message = "Register success",
+				Data = user
+			};
+		}
 
         async Task<StatusMessage> ICommonRepository<User>.DeleteByIdAsync(int? id)
         {
@@ -139,7 +160,9 @@ namespace AutoServiceMVC.Services.Implement
                 Username = register.Username,
                 HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
-                Email = register.Email
+                Email = register.Email,
+                Point = 0,
+                UserTypeId = 1 //New user
             };
 
             await _context.AddAsync<User>(user);

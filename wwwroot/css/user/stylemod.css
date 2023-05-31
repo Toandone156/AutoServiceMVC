@@ -2290,6 +2290,7 @@ pre code {
 .form-control[readonly] {
   background-color: #e9ecef;
   opacity: 1;
+  border-color: #c49b63 !important;
 }
 
 select.form-control:not([size]):not([multiple]) {
@@ -11143,7 +11144,6 @@ h5,
 .btn.btn-white.btn-outline-white:active {
   background: #c49b63;
   border-color: #c49b63;
-  color: #000;
 }
 
 .btn.btn-outline-black {
@@ -11475,7 +11475,7 @@ width: 270px;
     .menu-wrap .text h3 {
         font-size: 18px;
         text-transform: uppercase;
-        height: 2em;
+        height: 2.5em;
     }
 
 .menu-wrap .text h3 a {
@@ -11904,6 +11904,7 @@ width: 270px;
 .menu-wrap .text h3 {
   font-size: 18px;
   text-transform: uppercase;
+  height: 2.5em;
 }
 
 .menu-wrap .text h3 a {
@@ -12297,7 +12298,7 @@ textarea.form-control {
 }
 
 .ftco-section {
-  padding: 7em 0;
+  padding: 7em 0 5em 0;
   position: relative;
 }
 
@@ -12960,8 +12961,8 @@ textarea.form-control {
 }
 
 .contact-form .form-control {
-  border: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  /*border: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;*/
   height: 58px !important;
   padding-left: 0;
   padding-right: 0;
@@ -13157,10 +13158,10 @@ textarea.form-control {
 .comment-list li {
   padding: 0;
   margin: 0 0 30px 0;
-  float: left;
   width: 100%;
   clear: both;
   list-style: none;
+  text-align: left;
 }
 
 .comment-list li .vcard {
@@ -13174,8 +13175,8 @@ textarea.form-control {
 }
 
 .comment-list li .comment-body {
-  float: right;
   width: calc(100% - 80px);
+  margin: 0 auto
 }
 
 .comment-list li .comment-body h3 {
