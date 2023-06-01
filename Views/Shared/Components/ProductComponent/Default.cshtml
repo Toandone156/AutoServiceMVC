@@ -39,7 +39,7 @@
 											<h3><a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">@item.ProductName</a></h3>
 											<p>Sao sao sao sao sao</p>
 											<p class="price"><span>@item.Price.ToString("C")</span></p>
-											<p><a href="#" class="btn btn-primary btn-outline-primary">Add to cart</a></p>
+											<p><a id="addtocart" href="#" class="btn btn-primary btn-outline-primary" data-id="@item.ProductId">Add to cart</a></p>
 										</div>
 									</div>
 								</div>

@@ -68,6 +68,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var checkStatus = await _emplService.CheckEmailAndUsernameAsync(register.Email, register.Username);
+
+                if ((bool)checkStatus.Data)
+                {
+                    ModelState.AddModelError(String.Empty, "Email was register");
+                    return View();
+                }
+
                 var status = await _emplService.RegisterAsync(register);
 
                 if (status.IsSuccess)

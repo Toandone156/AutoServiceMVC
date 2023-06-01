@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -93,6 +94,13 @@ namespace AutoServiceMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                var checkStatus = await _userAuth.CheckEmailAndUsernameAsync(register.Email, register.Username);
+
+                if((bool) checkStatus.Data)
+                {
+                    return View();
+                }
+
                 var data = JsonConvert.SerializeObject(register);
                 var token = _jwt.GenerateToken(data);
 
@@ -105,11 +113,12 @@ namespace AutoServiceMVC.Controllers
 					Body = $"Link to resetpassword: {confirmEmail}"
 				};
 
-				//await _mail.SendMailAsync(content);
+                await _mail.SendMailAsync(content);
 
                 TempData["Message"] = "Mail was sent. Pls check mail and spam box.";
                 return RedirectToAction("Login");
             }
+            ModelState.AddModelError(String.Empty, "Some fields was wrong");
 
             return View();
         }
@@ -229,6 +238,14 @@ namespace AutoServiceMVC.Controllers
 
             if(user == null)
             {
+                var checkStatus = await _userAuth.CheckEmailAndUsernameAsync(claims.FindFirstValue(ClaimTypes.Email), null);
+
+                if ((bool)checkStatus.Data)
+                {
+                    TempData["Message"] = "Email was register";
+                    return RedirectToAction("Login", "Auth");
+                }
+
                 user = new User()
                 {
                     FullName = claims.FindFirstValue(ClaimTypes.Name),

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Win32;
+using System.ComponentModel.DataAnnotations;
 using static Humanizer.On;
 
 namespace AutoServiceMVC.Services.Implement
@@ -93,6 +94,16 @@ namespace AutoServiceMVC.Services.Implement
 				};
 			}
 
+            if(_context.Users.Any(x => x.Email == entity.Email))
+            {
+                return new StatusMessage
+                {
+                    IsSuccess = false,
+                    Message = "Email was existed",
+                    Data = null
+                };
+            }
+
             var user = new User()
             {
                 FullName = entity.FullName,
@@ -152,6 +163,16 @@ namespace AutoServiceMVC.Services.Implement
                 {
                     IsSuccess = false,
                     Message = "Password was not match"
+                };
+            }
+
+            if (_context.Users.Any(x => x.Email == register.Email))
+            {
+                return new StatusMessage
+                {
+                    IsSuccess = false,
+                    Message = "Email was existed",
+                    Data = null
                 };
             }
 
@@ -237,6 +258,26 @@ namespace AutoServiceMVC.Services.Implement
                 IsSuccess = true,
                 Message = "Username and Password is valid",
                 Data = user
+            };
+        }
+
+        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string? email, string? username)
+        {
+            if (_context.Users.Any(x => (x.Email == email) || (x.Username == username)))
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = "Success",
+                    Data = true
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = "Success",
+                Data = false
             };
         }
     }
