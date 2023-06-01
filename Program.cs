@@ -124,6 +124,8 @@ services.AddScoped<IJWTAuthentication, JWTAuthentication>();
 services.AddHttpContextAccessor();
 services.AddScoped<IImageUploadService, ImageUploadService>();
 
+services.AddScoped<IPaymentService, PaymentService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -137,7 +139,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseSession();

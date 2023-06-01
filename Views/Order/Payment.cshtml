@@ -114,6 +114,7 @@
 								<span class="total">0 ₫</span>
 							</p>
 						</div>
+						<input id="input-total" type="hidden" name="Total"/> 
 						<p class="text-center"><input type="submit" class="btn btn-primary py-3 px-4" value="Payment"></input></p>
 					</div>
 			</div>
@@ -128,6 +129,7 @@
 		var subTotal = document.querySelector(".subTotal");
 		var discount = document.querySelector(".discount");
 		var totalItem = document.querySelector(".total");
+		var totalInput = document.getElementById("input-total");
 
 		function loadContent(){
 			if(products.length == 0){
@@ -149,7 +151,8 @@
 			}
 
 			subTotal.innerHTML = formatCurrency(total);
-			totalItem.innerHTML = formatCurrency(total - convertCurrency(discount.innerHTML));
+			totalInput.value = total - convertCurrency(discount.innerHTML);
+			totalItem.innerHTML = formatCurrency(totalInput.value);
 		}
 
 		function updateQuantity(element, increment) {
