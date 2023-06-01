@@ -10,13 +10,6 @@ namespace AutoServiceMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IMailService _mail;
-
-        public HomeController(IMailService mail)
-        {
-            _mail = mail;
-        }
-
         public async Task<IActionResult> Index()
         {
             return View();
