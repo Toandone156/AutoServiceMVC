@@ -143,7 +143,7 @@ namespace AutoServiceMVC.Services.Implement
                 HashPassword = _hash.GetHashPassword(register.Password),
                 FullName = register.FullName,
                 Email = register.Email,
-                RoleId = register.RoleId
+                RoleId = register.RoleId ?? 2
             };
 
             await _context.AddAsync<Employee>(employee);
@@ -182,6 +182,7 @@ namespace AutoServiceMVC.Services.Implement
             employee.Email = entity.Email;
             employee.RoleId = entity.RoleId;
             employee.EndDate = entity.EndDate;
+            employee.HashPassword = entity.HashPassword;
 
             await _context.SaveChangesAsync();
             return new StatusMessage()
@@ -220,6 +221,44 @@ namespace AutoServiceMVC.Services.Implement
                 IsSuccess = true,
                 Message = "Employeename and Password is valid",
                 Data = employee
+            };
+        }
+        public async Task<StatusMessage> CheckEmailAndUsername(Employee? entity)
+        {
+            if (_context.Employees.Any(x => (x.Email == entity.Email) || (x.Username == entity.Username))){
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = "Success",
+                    Data = true
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = false,
+                Message = "Success",
+                Data = false
+            };
+        }
+
+        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string? email, string? username)
+        {
+            if (_context.Employees.Any(x => (x.Email == email) || (x.Username == username)))
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = "Success",
+                    Data = true
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = "Success",
+                Data = false
             };
         }
     }

@@ -42,6 +42,21 @@ namespace AutoServiceMVC.Models
         [DisplayName("Phone Number")]
         public string? PhoneNum { get; set; }
         [DisplayName("Role")]
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
+    }
+
+    public class ResetPassword
+    {
+        public int UserId { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()\\-=_+{}[\\]:;|\"',<.>/?]).{8,32}$",
+                ErrorMessage = "Password is not valid")]
+        public string Password { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Again password not match")]
+        [DisplayName("Re-enter Password")]
+        public string AgainPassword { get; set; }
     }
 }

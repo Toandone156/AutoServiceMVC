@@ -12,9 +12,9 @@ namespace AutoServiceMVC.Models
         //Common Attributes
         [StringLength(100)]
         [RegularExpression("^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{0,29}$", ErrorMessage = "Username is not valid")]
-        public string Username { get; set; }
+        public string? Username { get; set; }
         [StringLength(255)]
-        public string HashPassword { get; set; }
+        public string? HashPassword { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         [DisplayName("Full name")]
         public string FullName { get; set; }

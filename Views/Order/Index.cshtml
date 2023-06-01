@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Menu";
+}
+
+@await Html.PartialAsync("_SlideSection", new {Name = "Our Menu", Page = "Menu"})
+
+@await Component.InvokeAsync("BestSellerComponent")
+
+@await Component.InvokeAsync("ProductComponent")

@@ -10,6 +10,7 @@ namespace AutoServiceMVC.Services.System
         public Task SignInAsync(object account, HttpContext context);
         public Task SignOutAsync(HttpContext context, bool IsUser);
     }
+
     public class CookieAuthentication : ICookieAuthentication
     {
         public async Task SignInAsync(object account, HttpContext context)

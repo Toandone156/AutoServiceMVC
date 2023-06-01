@@ -112,7 +112,6 @@ namespace AutoServiceMVC.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("HashPassword")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -123,7 +122,6 @@ namespace AutoServiceMVC.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -447,7 +445,6 @@ namespace AutoServiceMVC.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("HashPassword")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -458,7 +455,6 @@ namespace AutoServiceMVC.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 

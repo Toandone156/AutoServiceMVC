@@ -1,49 +1,141 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var IsLogin = User.Identity.IsAuthenticated && (User.Identity.AuthenticationType == "User_Scheme");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AutoServiceMVC</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AutoServiceMVC.styles.css" asp-append-version="true" />
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/user/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/user/animate.css">
+
+    <link rel="stylesheet" href="~/css/user/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/user/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/css/user/magnific-popup.css">
+
+    <link rel="stylesheet" href="~/css/user/aos.css">
+
+    <link rel="stylesheet" href="~/css/user/ionicons.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <link rel="stylesheet" href="~/css/user/flaticon.css">
+    <link rel="stylesheet" href="~/css/user/icomoon.css">
+    <link rel="stylesheet" href="~/css/user/style.css">
+    <link rel="stylesheet" href="~/css/user/upload.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AutoServiceMVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Coffee<small>Blend</small></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Home" ? "active" : "")"><a asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "Menu" ? "active" : "")"><a asp-controller="Order" asp-action="Index" class="nav-link">Menu</a></li>
+
+                    @if (IsLogin)
+                    {
+                        <li class="nav-item @(ViewData["Title"].ToString() == "Coupon" ? "active" : "")"><a asp-controller="Coupon" asp-action="Index" class="nav-link">Coupon</a></li>
+                        <li class="nav-item @(ViewData["Title"].ToString() == "Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
+                        <li class="nav-item @(ViewData["Title"].ToString() == "Feedback" ? "active" : "")"><a asp-controller="ServiceFeedback" asp-action="Index" class="nav-link">Feedback</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, @User.Identity.Name</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                <a asp-controller="Profile" asp-action="Index" class="dropdown-item">View profile</a>
+                                <a asp-controller="Coupon" asp-action="MyCoupon" class="dropdown-item">My coupon</a>
+                                <a asp-controller="Auth" asp-action="Logout" class="dropdown-item">Logout</a>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
-                        </li>
-                    </ul>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a asp-controller="Auth" asp-action="Login" class="nav-link">Login</a></li>
+                    }
+                    <li class="nav-item cart"><a asp-controller="Order" asp-action="Payment" class="nav-link"><span class="icon icon-shopping_cart" data-value="0"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    @await Html.PartialAsync("_TableSection")
+
+    <footer class="ftco-footer ftco-section img">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-6 col-md-12 mb-5 mb-md-5 small-text-center">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">About Us</h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <ul class="ftco-footer-social list-unstyled float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Contact me</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">FPT City Center, Ngu Hanh Son Distrist, Da nang City, Vietnam</span></li>
+                                <li><a href="tel:+84944497***"><span class="icon icon-phone"></span><span class="text">+84 944497***</span></a></li>
+                                <li><a href="mailto:autoservice.coffeeshop@gmail.com"><span class="icon icon-envelope"></span><span class="text">autoservice.coffeeshop@gmail.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - AutoServiceMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <p>
+                        Copyright &copy;2023 All rights reserved 
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+
+    <script src="~/js/user/jquery.min.js"></script>
+    <script src="~/js/user/jquery-migrate-3.0.1.min.js"></script>
+    <script src="~/js/user/popper.min.js"></script>
+    <script src="~/js/user/bootstrap.min.js"></script>
+    <script src="~/js/user/jquery.easing.1.3.js"></script>
+    <script src="~/js/user/jquery.waypoints.min.js"></script>
+    <script src="~/js/user/jquery.stellar.min.js"></script>
+    <script src="~/js/user/owl.carousel.min.js"></script>
+    <script src="~/js/user/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/user/aos.js"></script>
+    <script src="~/js/user/jquery.animateNumber.min.js"></script>
+    <script src="~/js/user/scrollax.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="~/js/user/main.js"></script>
+    <script src="~/js/user/addition.js"></script>
+    <script src="~/js/user/upload.js"></script>
+    <script src="~/js/user/api.js"></script>
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            showToast("@TempData["Message"]")
+        </script>
+    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

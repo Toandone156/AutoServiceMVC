@@ -1,0 +1,31 @@
+﻿@model List<AutoServiceMVC.Models.Product>
+@{
+
+}
+
+<section class="ftco-section">
+    <div class="container mt-5">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <span class="subheading">Discover</span>
+                <h2 class="mb-4">Best Coffee Sellers</h2>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+            </div>
+        </div>
+        <div class="row">
+            @foreach(var item in Model)
+            {
+                <div class="col-md-3">
+                    <div class="menu-wrap">
+                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="menu-img img mb-4" style="background-image: url(@item.ProductImage);"></a>
+                        <div class="text text-center">
+                            <h3><a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">@item.ProductName</a></h3>
+                            <p class="price"><span>@item.Price.ToString("C")</span></p>
+                            <p><a id="addtocart" class="btn btn-primary btn-outline-primary" data-id="@item.ProductId">Add to Cart</a></p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

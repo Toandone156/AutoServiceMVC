@@ -1,0 +1,232 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.OrderDetail>
+
+@{
+	ViewData["Title"] = "Payment";
+	var ExistCart = Model != null;
+	var IsLogin = User.Identity.IsAuthenticated && (User.Identity.AuthenticationType == "User_Scheme");
+}
+
+<section class="ftco-section ftco-cart">
+	<div class="container mt-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-7 heading-section ftco-animate text-center">
+				<span class="subheading">Payment</span>
+				<h2 class="mb-4">Order it now</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 ftco-animate">
+				<p id="emptyMessage" class="@(ExistCart ? "d-none" : "")">Cart is empty. Order at <a asp-controller="Order" asp-action="Index">Menu</a></p>
+
+				@if (ExistCart)
+				{
+					<div class="cart-list" style="overflow-x: hidden;">
+						@foreach (var item in Model)
+						{
+							<div class="text-center row order-item align-items-center" data-id="@item.Product.ProductId">
+
+								<div class="image-prod col-md-3 order-item-info">
+									<div class="img col-md-4" style="background-image:url(@item.Product.ProductImage);"></div>
+								</div>
+
+								<div class="product-name col-md-6 order-item-info">
+									<h3>@item.Product.ProductName</h3>
+									<p class="price">@item.Product.Price.ToString("C")</p>
+								</div>
+								<div class="col-md-3 order-item-info">
+									<div class="quantity">
+										<div class="input-group d-flex mb-3">
+											<span class="input-group-btn mr-2">
+												<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
+													<i class="icon-minus"></i>
+												</button>
+											</span>
+											<input type="text" id="quantity" name="quantity" class="form-control input-number" value="@item.Quantity" min="1" disabled>
+											<span class="input-group-btn ml-2">
+												<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
+													<i class="icon-plus"></i>
+												</button>
+											</span>
+										</div>
+									</div>
+
+									<div class="productTotal">0 ₫</div>
+								</div>
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+		<form asp-controller="Order" asp-action="Payment" method="post">
+			<div class="row justify-content-end">
+					<div class="col-lg-9 col-md-6 mt-5">
+						<div class="cart-total mb-3 row d-flex">
+							<div class="col-md-6">
+								<div class="cart-detail text-left">
+									<label class="mb-4">Payment Method</label>
+									<div class="form-group">
+										<div class="col-md-12 p-0">
+											<div class="radio">
+												<label><input type="radio" name="PaymentMethodId" value="3" class="mr-2" checked>VNPAY</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12 p-0">
+											<div class="radio">
+												<label><input type="radio" name="PaymentMethodId" value="4" class="mr-2">MOMO</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group text-left">
+									<label>Note for order</label>
+									<textarea name="Note" class="form-control" rows="5"></textarea>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group text-left">
+									<label>Enter coupon code</label>
+									<input id="coupon-code" class="form-control" style="text-transform:uppercase;"></input>
+									<input id="coupon-id" name="ApplyCouponId" type="hidden"/>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
+						<div class="cart-total mb-3">
+							<h3>Cart Totals</h3>
+							<p class="d-flex">
+								<span>Subtotal</span>
+								<span class="subTotal">0 ₫</span>
+							</p>
+							<p class="d-flex">
+								<span>Discount</span>
+								<span class="discount">0 ₫</span>
+							</p>
+							<hr>
+							<p class="d-flex total-price">
+								<span>Total</span>
+								<span class="total">0 ₫</span>
+							</p>
+						</div>
+						<p class="text-center"><input type="submit" class="btn btn-primary py-3 px-4" value="Payment"></input></p>
+					</div>
+			</div>
+		</form>
+	</div>
+</section>
+
+
+@section Scripts {
+	<script>
+		var products = document.getElementsByClassName("order-item");
+		var subTotal = document.querySelector(".subTotal");
+		var discount = document.querySelector(".discount");
+		var totalItem = document.querySelector(".total");
+
+		function loadContent(){
+			if(products.length == 0){
+				document.getElementById("emptyMessage").classList.remove("d-none");
+			}else{
+				document.getElementById("emptyMessage").classList.add("d-none");
+			}
+
+			let total = 0;
+
+			for (let item of products) {
+				let price = convertCurrency(item.querySelector(".price").innerHTML);
+				let quantity = item.querySelector("#quantity").value;
+				let productTotal = price * quantity;
+
+				total += productTotal;
+
+				item.querySelector(".productTotal").innerHTML = formatCurrency(productTotal)
+			}
+
+			subTotal.innerHTML = formatCurrency(total);
+			totalItem.innerHTML = formatCurrency(total - convertCurrency(discount.innerHTML));
+		}
+
+		function updateQuantity(element, increment) {
+			let orderItem = element.closest(".order-item");
+			var inputField = orderItem.querySelector('input');
+			var quantity = parseInt(inputField.value, 10);
+
+			quantity += increment;
+
+			if (quantity === 0) {
+				orderItem.remove();
+			} else {
+				inputField.value = quantity;
+
+				var priceElement = orderItem.querySelector('.price');
+				var price = convertCurrency(priceElement.innerHTML);
+				var productTotalElement = orderItem.querySelector('.productTotal');
+			}
+
+			updateCartAjax(orderItem.getAttribute("data-id"), quantity);
+			loadContent();
+		}
+
+		function convertCurrency(currency) {
+			return currency.replace(/[^\d]/g, "");
+		}
+
+		function formatCurrency(number){
+			return number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+		}
+
+		var quantity = document.querySelectorAll("#quantity");
+
+		var minusButtons = document.querySelectorAll('.quantity-left-minus');
+		var plusButtons = document.querySelectorAll('.quantity-right-plus');
+
+		minusButtons.forEach(function (button) {
+			button.addEventListener('click', function () {
+				updateQuantity(this, -1);
+			});
+		});
+
+		plusButtons.forEach(function (button) {
+			button.addEventListener('click', function () {
+				updateQuantity(this, 1);
+			});
+		});
+
+		quantity.forEach(p => {
+			p.addEventListener('keyup', loadContent);
+		})
+
+		loadContent();
+
+		//Coupon check
+		var typingTimer;
+		var doneTypingInterval = 1500;
+		var input = document.getElementById("coupon-code");
+
+		input.addEventListener("keyup", e => {
+			input.classList.add("loading");
+			clearTimeout(typingTimer);
+
+			if(input.value){
+				typingTimer = setTimeout(() => {
+					checkCouponAjax(input.value);
+					input.classList.remove("loading");
+				}, doneTypingInterval);
+			}else{
+				input.classList.remove("loading");
+				document.querySelector(".discount").innerHTML = formatCurrency(0);
+				loadContent();
+			}
+		})
+
+		input.addEventListener("keydown", e => {
+			clearTimeout(typingTimer);
+		})
+	</script>
+}
