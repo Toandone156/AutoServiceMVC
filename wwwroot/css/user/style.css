@@ -2290,6 +2290,7 @@ pre code {
 .form-control[readonly] {
   background-color: #e9ecef;
   opacity: 1;
+  border-color: #c49b63 !important;
 }
 
 select.form-control:not([size]):not([multiple]) {
@@ -3611,14 +3612,12 @@ input[type="button"].btn-block {
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
-  left: 0;
+  right: 0;
   z-index: 1000;
   display: none;
-  float: left;
+  text-align: center;
   min-width: 10rem;
   padding: 0.5rem 0;
-  margin: 0.125rem 0 0;
   font-size: 1rem;
   color: #212529;
   text-align: left;
@@ -4471,6 +4470,7 @@ input[type="button"].btn-block {
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 
 .nav-link:hover,
@@ -6156,7 +6156,6 @@ button.close {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  width: 100%;
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -6171,7 +6170,6 @@ button.close {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
   background-color: #000;
 }
 
@@ -10422,7 +10420,7 @@ body {
   line-height: 1.8;
   text-align: center;
   font-weight: 300;
-  color: #ffffff;
+  color: gray;
   background: url(../../images/bg_4.jpg) no-repeat fixed;
   background-size: cover;
 }
@@ -10593,6 +10591,24 @@ h5,
   font-size: 20px;
   color: #fff;
 }
+
+    .ftco-navbar-light .navbar-nav > .nav-item.cart > a .icon:after {
+        content: attr(data-value);
+        position: relative;
+        top: -10px;
+        right: 10px;
+        display: inline-block;
+        text-align: center;
+        background: #f8b500;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1;
+        padding: 4px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
 
 .ftco-navbar-light .navbar-nav>.nav-item.cart>a .bag {
   position: absolute;
@@ -11083,7 +11099,7 @@ h5,
 .btn.btn-primary {
   background: #c49b63;
   border: 1px solid #c49b63;
-  color: #000;
+  color: #fff;
 }
 
 .btn.btn-primary:hover {
@@ -11128,7 +11144,6 @@ h5,
 .btn.btn-white.btn-outline-white:active {
   background: #c49b63;
   border-color: #c49b63;
-  color: #000;
 }
 
 .btn.btn-outline-black {
@@ -11456,20 +11471,26 @@ width: 270px;
   .menu-entry .img {
     display: block;
   }
-  
-  .menu-entry .text h3 {
-    font-size: 18px;
-    text-transform: uppercase;
-  }
-  
-  .menu-entry .text h3 a {
+
+    .menu-wrap .text h3 {
+        font-size: 18px;
+        text-transform: uppercase;
+        height: 2.5em;
+    }
+
+.menu-wrap .text h3 a {
     color: #fff;
-  }
-  
-  .menu-entry .text .price span {
-    color: #fff;
-    font-size: 18px;
-  }
+}
+
+    .menu-wrap .text p:first-of-type {
+        height: 2em;
+        margin: 0;
+    }
+
+    .menu-wrap .text .price span {
+        color: #fff;
+        font-size: 18px;
+    }
   
   .product-details h3 {
     text-transform: uppercase;
@@ -11495,15 +11516,23 @@ width: 270px;
 .menu-entry .img {
   display: block;
   height: 200px;
+  width: 100%;
+  margin: 0 auto;
+  background-size: cover;
 }
 
 .menu-entry .text h3 {
   font-size: 18px;
   text-transform: uppercase;
+  height: 2.5em;
+}
+
+.menu-entry .text p:first-of-type {
+    height: 3.5em;
 }
 
 .menu-entry .text h3 a {
-  color: #fff;
+    color: #fff;
 }
 
 .menu-entry .text .price span {
@@ -11600,9 +11629,9 @@ width: 270px;
 
 .ftco-cart button,
 .ftco-cart .form-control {
-  height: 54px !important;
-  text-align: center;
-  bordeR: 1px solid rgba(255, 255, 255, 0.1) !important;
+  height: 54px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #c49b63 !important;
   padding: 0;
 }
@@ -11645,10 +11674,6 @@ width: 270px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-}
-
-.cart-list {
-  overflow-x: scroll;
 }
 
 .table {
@@ -11875,6 +11900,7 @@ width: 270px;
 .menu-wrap .text h3 {
   font-size: 18px;
   text-transform: uppercase;
+  height: 2.5em;
 }
 
 .menu-wrap .text h3 a {
@@ -12268,7 +12294,7 @@ textarea.form-control {
 }
 
 .ftco-section {
-  padding: 7em 0;
+  padding: 7em 0 5em 0;
   position: relative;
 }
 
@@ -12931,8 +12957,8 @@ textarea.form-control {
 }
 
 .contact-form .form-control {
-  border: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  /*border: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;*/
   height: 58px !important;
   padding-left: 0;
   padding-right: 0;
@@ -13128,10 +13154,10 @@ textarea.form-control {
 .comment-list li {
   padding: 0;
   margin: 0 0 30px 0;
-  float: left;
   width: 100%;
   clear: both;
   list-style: none;
+  text-align: left;
 }
 
 .comment-list li .vcard {
@@ -13145,8 +13171,8 @@ textarea.form-control {
 }
 
 .comment-list li .comment-body {
-  float: right;
   width: calc(100% - 80px);
+  margin: 0 auto
 }
 
 .comment-list li .comment-body h3 {
@@ -13441,6 +13467,7 @@ label.star:before {
 .menu-entry {
   display: inline-block;
   position: relative;
+  width: 100%;
 }
 .best-seller{
   display: inline-block;
@@ -13589,7 +13616,6 @@ label.star:before {
 
 .modal-content {
   margin: 0 auto;
-  width: 50%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -13793,3 +13819,52 @@ h5.modal-title {
   outline: none;
   background: #fff;
 }
+
+/*Checkout*/
+.order-item {
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.order-item-info {
+    padding: 40px 10px;
+}
+
+.image-prod .img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+
+@media (max-width: 768px) {
+    .order-item-info {
+        padding: 10px;
+    }
+
+    .image-prod .img {
+        display: block;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+    }
+}
+
+.input-number {
+    text-align: center !important;
+    height: 54px !important;
+}
+
+/* .ftco-cart button, .ftco-cart .form-control bỏ height text-align left */
+
+.ftco-cart .form-group .form-control {
+    padding: 10px;
+    font-size: 1em;
+}
+
+input.loading {
+    background: url(./loading.gif) no-repeat right center !important;
+    background-size: contain !important;
+}
+/*End checkout*/

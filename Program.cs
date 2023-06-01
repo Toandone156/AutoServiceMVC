@@ -4,12 +4,16 @@ using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using System.Configuration;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -54,20 +58,33 @@ services.AddDbContext<AppDbContext>(options =>
 #region Authentication
 services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = "Admin_Scheme";
+    options.DefaultAuthenticateScheme = "User_Scheme";
+    options.DefaultScheme = "User_Scheme";
 })
+    .AddCookie("User_Scheme", options =>
+    {
+        options.LoginPath = "/auth/login";
+        options.AccessDeniedPath = "/";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    })
     .AddCookie("Admin_Scheme", options =>
     {
         options.LoginPath = "/admin/auth/login";
         options.AccessDeniedPath = "/admin/";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
     })
-    .AddCookie("User_Scheme", options =>
+    .AddGoogle(options =>
     {
-        options.LoginPath = "/auth/login";
-        options.AccessDeniedPath = "/";
-        options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    });
+        var googleConfig = builder.Configuration.GetSection("ExtenalLogin:Google");
+        options.ClientId = googleConfig["ClientID"];
+        options.ClientSecret = googleConfig["ClientSecret"];
+    })
+    .AddFacebook(options =>
+    {
+        var facebookConfig = builder.Configuration.GetSection("ExtenalLogin:Facebook");
+		options.AppId = facebookConfig["ClientID"];
+		options.AppSecret = facebookConfig["ClientSecret"];
+	});
 
 services.AddSingleton<ICookieAuthentication, CookieAuthentication>();
 #endregion
@@ -102,6 +119,7 @@ services.AddScoped<ICommonRepository<Employee>, EmployeeRepository>();
 services.AddScoped<ICommonRepository<User>, UserRepository>();
 
 services.AddScoped<IHashPassword, HashPassword>();
+services.AddScoped<IJWTAuthentication, JWTAuthentication>();
 
 services.AddHttpContextAccessor();
 services.AddScoped<IImageUploadService, ImageUploadService>();

@@ -1,9 +1,11 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoServiceMVC.Controllers
 {
+    [Authorize(AuthenticationSchemes = "User_Scheme")]
     public class BillController : Controller
     {
         private readonly ICommonRepository<Order> _orderRepo;

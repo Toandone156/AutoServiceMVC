@@ -1,0 +1,53 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Product>
+@using AutoServiceMVC.Services;
+@inject ICommonRepository<Category> categoryRepo
+
+@{
+	var categoryRs = await categoryRepo.GetAllAsync();
+	var categories = categoryRs.Data as IEnumerable<Category> ?? new List<Category>();
+}
+
+<section class="ftco-menu mb-5 pb-5">
+	<div class="container">
+		<div class="row justify-content-center mb-5">
+			<div class="col-md-7 heading-section text-center ftco-animate">
+				<span class="subheading">Discover</span>
+				<h2 class="mb-4">Our Products</h2>
+				<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+			</div>
+		</div>
+		<div class="row d-md-flex">
+			<div class="col-lg-12 ftco-animate p-md-5">
+				<div class="row">
+					<div class="col-md-12 nav-link-wrap mb-5">
+						<div class="nav ftco-animate nav-pills justify-content-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+							<a class="nav-link active" onclick="loadProduct(0, this);">All</a>
+							@foreach(var category in categories)
+							{
+								<a class="nav-link" onclick="loadProduct(@category.CategoryId, this);">@category.CategoryName</a>
+							}
+						</div>
+					</div>
+					<div class="col-md-12 d-flex align-items-center">
+						<div class="row">
+							@foreach(var item in Model)
+							{
+								<div class="col-md-4 text-center product-item" data-category="@item.CategoryId">
+									<div class="menu-wrap">
+										<a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="menu-img img mb-4" style="background-image: url(@item.ProductImage);"></a>
+										<div class="text">
+											<h3><a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">@item.ProductName</a></h3>
+											<p>Sao sao sao sao sao</p>
+											<p class="price"><span>@item.Price.ToString("C")</span></p>
+											<p><a id="addtocart" href="#" class="btn btn-primary btn-outline-primary" data-id="@item.ProductId">Add to cart</a></p>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

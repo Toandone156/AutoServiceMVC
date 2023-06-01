@@ -1,31 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AutoServiceMVC.Models
 {
-    public class Coupon
+	[JsonObject(MemberSerialization.OptIn)]
+	public class Coupon
     {
         //Attributes
         [Key]
-        public int CouponId { get; set; }
+		[JsonProperty]
+		public int CouponId { get; set; }
         [RegularExpression("^[a-zA-Z0-9]{6,}$", ErrorMessage = "Coupon Code is not valid")]
         [StringLength(12)]
         [DisplayName("Coupon code")]
-        public string CouponCode { get; set; }
+		[JsonProperty]
+		public string CouponCode { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Discount value")]
-        public int? DiscountValue { get; set; }
+		[JsonProperty]
+		public int? DiscountValue { get; set; }
         [RegularExpression("^(?:100(?:\\.0{1,2})?|\\d{1,2}(?:\\.\\d{1,2})?)$", ErrorMessage = "Percentage is not valid")]
         [DisplayName("Discount percentage")]
-        public int? DiscountPercentage { get; set; }
+		[JsonProperty]
+		public int? DiscountPercentage { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Minimum order")]
-        public int? MinimumOrderAmount { get; set; }
+		[JsonProperty]
+		public int? MinimumOrderAmount { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Maximum discount")]
-        public int? MaximumDiscountAmount { get; set; }
+		[JsonProperty]
+		public int? MaximumDiscountAmount { get; set; }
         public int? Quantity { get; set; }
         [RegularExpression("^\\d+$", ErrorMessage = "PointAmount must a unsign number")]
         [DisplayName("Point amount")]

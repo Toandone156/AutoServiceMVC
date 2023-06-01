@@ -36,18 +36,15 @@ namespace AutoServiceMVC.Controllers
         
         public IActionResult Index()
         {
-            //get table from session
-            //get order from cart
-            //get list product
-            //get bestseller product
             return View();
         }
 
         public async Task<IActionResult> AccessTable([FromQuery] string tablecode)
         {
+            _dbContext.ChangeTracker.LazyLoadingEnabled = false;
             var result = await _dbContext.Tables.FirstOrDefaultAsync(x => x.TableCode == tablecode);
 
-            if(result != null)
+            if (result != null)
             {
                 _session.AddToSession(HttpContext, "table", result);
 
@@ -57,14 +54,23 @@ namespace AutoServiceMVC.Controllers
             return View("Index", "Home");
         }
 
-        public IActionResult Payment()
+        public async Task<IActionResult> Payment()
         {
-            var cart = _session.GetSessionValue<OrderDetail>(HttpContext, "order_cart");
+            var cart = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart");
+
+            if(cart != null)
+            {
+				foreach (var orderdetail in cart)
+				{
+					orderdetail.Product = (await _productRepo.GetByIdAsync(orderdetail.ProductId)).Data as Product;
+				}
+			}
+
             return View(cart);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Payment([Bind("PaymentMethodId,Note,ApplyCouponId")] Order order) 
+        public async Task<IActionResult> Payment([Bind("PaymentMethodId,Note")] Order order, string CouponCode) 
             //Check coupon using api and save in input for apply coupon
         {
             string strUserId = User.FindFirstValue("Id");
@@ -76,7 +82,7 @@ namespace AutoServiceMVC.Controllers
             if(table == null)
             {
                 TempData["Message"] = "Please enter order before payment";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Payment");
             }
 
             var tableId = table.TableId;
@@ -87,7 +93,7 @@ namespace AutoServiceMVC.Controllers
 
             if (detailsList == null)
             {
-                TempData["Message"] = "Send order fail";
+                TempData["Message"] = "Please select some product first";
                 return RedirectToAction("Index");
             }
 
@@ -143,17 +149,17 @@ namespace AutoServiceMVC.Controllers
                 //Find product
                 var result = cart.FirstOrDefault(p => p.ProductId == productId);
 
-                //Remove if exist
+                //If exist in cart => remove -> prepare to add new
                 if (result != null)
                 {
                     cart.Remove(result);
-                }
+				}
 
-                //If quantity != 0 => Not delete product
-                if (quantity != 0)
-                {
-                    cart.Add(newDetail);
-                }
+                //If quantity != 0 => add new
+                if(quantity != 0)
+				{
+					cart.Add(newDetail);
+				}
             }
 
             _session.AddToSession(HttpContext, "order_cart", cart);

@@ -4,9 +4,17 @@ using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -17,16 +25,16 @@ namespace AutoServiceMVC.Controllers
         private readonly ICookieAuthentication _auth;
         private readonly AppDbContext _dbContext;
         private readonly IMailService _mail;
-        private readonly IHashPassword _hash;
-        private readonly ISessionCustom _session;
+		private readonly IHashPassword _hash;
+		private readonly IJWTAuthentication _jwt;
 
         public AuthController(AppDbContext dbContext, 
                                 IAuthenticateService<User> userAuth,
                                 ICommonRepository<User> userService,
                                 ICookieAuthentication auth,
                                 IMailService mail,
-                                ISessionCustom session,
-                                IHashPassword hash)
+                                IHashPassword hash,
+                                IJWTAuthentication jwt)
         {
             _dbContext = dbContext;
             _userAuth = userAuth;
@@ -34,7 +42,7 @@ namespace AutoServiceMVC.Controllers
             _auth = auth;
             _mail = mail;
             _hash = hash;
-            _session = session;
+			_jwt = jwt;
         }
 
         public IActionResult Login()
@@ -54,14 +62,14 @@ namespace AutoServiceMVC.Controllers
                     await _auth.SignInAsync(status.Data, HttpContext);
                     TempData["Message"] = status.Message;
 
+                    var result = await HttpContext.AuthenticateAsync("User_Scheme");
+
+                    var id = User.FindFirstValue("Id");
+
                     return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(String.Empty, status.Message);
-            }
-            else
-            {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
             return View();
@@ -86,21 +94,31 @@ namespace AutoServiceMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var status = await _userAuth.RegisterAsync(register);
+                var checkStatus = await _userAuth.CheckEmailAndUsernameAsync(register.Email, register.Username);
 
-                if (status.IsSuccess)
+                if((bool) checkStatus.Data)
                 {
-                    TempData["Message"] = status.Message;
-                    //2FA
-                    return RedirectToAction("Login");
+                    return View();
                 }
 
-                ModelState.AddModelError(String.Empty, status.Message);
+                var data = JsonConvert.SerializeObject(register);
+                var token = _jwt.GenerateToken(data);
+
+				var confirmEmail = Url.Action("ConfirmEmail","Auth", new { token = token }, Request.Scheme);
+
+				MailContent content = new MailContent()
+				{
+					To = register.Email,
+					Subject = "RESET PASSWORD IN AUTOSERVICE",
+					Body = $"Link to resetpassword: {confirmEmail}"
+				};
+
+                await _mail.SendMailAsync(content);
+
+                TempData["Message"] = "Mail was sent. Pls check mail and spam box.";
+                return RedirectToAction("Login");
             }
-            else
-            {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
-            }
+            ModelState.AddModelError(String.Empty, "Some fields was wrong");
 
             return View();
         }
@@ -119,11 +137,17 @@ namespace AutoServiceMVC.Controllers
 
                 if(identity != null)
                 {
-                    var hashEmail = _hash.GetHashPassword(mail);
+                    var user = new User
+                    {
+                        UserId = identity.UserId,
+                        Username = identity.Username,
+                        Email = mail
+                    };
 
-                    //Save id in session
-                    _session.AddToSessionWithTimeout(HttpContext, hashEmail, identity.UserId, 5);
-                    var resetUrl = Url.Action("ResetPassword", new { key = hashEmail });
+                    var data = JsonConvert.SerializeObject(user);
+                    var token = _jwt.GenerateToken(data);
+
+                    var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
 
                     MailContent content = new MailContent()
                     {
@@ -133,23 +157,26 @@ namespace AutoServiceMVC.Controllers
                     };
 
                     await _mail.SendMailAsync(content);
+
+                    TempData["Message"] = "Email to change password was sent to your mail and spam box";
+
+                    return RedirectToAction("Login", "Auth");
                 }
             }
 
             return View();
         }
 
-        public async Task<IActionResult> ResetPassword([FromQuery] string key)
+        public async Task<IActionResult> ResetPassword([FromQuery] string token)
         {
-            var id = _session.GetSessionValue<int>(HttpContext, key);
-            if(id != 0)
-            {
-                var result = await _userService.GetByIdAsync(id);
+            var data = _jwt.ValidateToken(token);
+            var user = JsonConvert.DeserializeObject<User>(data);
 
-                if (result.IsSuccess)
-                {
-                    return View(result.Data);
-                }
+            if(user != null)
+            {
+                ViewData["UserId"] = user.UserId;
+                ViewData["Username"] = user.Username;
+                return View();
             }
 
             return RedirectToAction("Index", "Home");
@@ -175,46 +202,63 @@ namespace AutoServiceMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        public async Task<JsonResult> SendOTP(string mail)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
         {
-            if(mail != null)
+            string data = _jwt.ValidateToken(token);
+            var register = JsonConvert.DeserializeObject<Register>(data);
+
+            if (register != null)
             {
-                var hashEmail = _hash.GetHashPassword(mail);
-                var otp = GenerateOTP();
+                var result = await _userAuth.RegisterAsync(register);
 
-                _session.AddToSessionWithTimeout(HttpContext, hashEmail, otp, 5);
-
-                return Json(new { success = true });
-            }
-
-            return Json(new { success = false });
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> CheckOTP(string mail, string otp)
-        {
-            if (!(mail.IsNullOrEmpty() && otp.IsNullOrEmpty()))
-            {
-                var hashEmail = _hash.GetHashPassword(mail);
-
-                var correctOTP = _session.GetSessionValue<string>(HttpContext, hashEmail);
-                if (correctOTP != null && otp == correctOTP)
+                if (result.IsSuccess)
                 {
-                    return Json(new {success = true});
+                    TempData["Message"] = "Confirm email success";
+                    return View("Login");
                 }
             }
 
-            return Json(new { success = false });
+            return RedirectToAction("Index", "Home");
         }
 
-        public string GenerateOTP()
+        public async Task LoginGoogle()
         {
-            const string chars = "0123456789";
-            var random = new Random();
-            var otp = new string(Enumerable.Repeat(chars, 6)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-            return otp;
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            });
         }
-    }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync("User_Scheme");
+            var claims = result.Principal;
+
+            var user = _dbContext.Users.FirstOrDefault(x => x.Email == claims.FindFirstValue(ClaimTypes.Email) && x.HashPassword == null);
+
+            if(user == null)
+            {
+                var checkStatus = await _userAuth.CheckEmailAndUsernameAsync(claims.FindFirstValue(ClaimTypes.Email), null);
+
+                if ((bool)checkStatus.Data)
+                {
+                    TempData["Message"] = "Email was register";
+                    return RedirectToAction("Login", "Auth");
+                }
+
+                user = new User()
+                {
+                    FullName = claims.FindFirstValue(ClaimTypes.Name),
+                    Email = claims.FindFirstValue(ClaimTypes.Email),
+                    Point = 0
+                };
+
+                user = (await _userService.CreateAsync(user)).Data as User;
+			}
+
+            await _auth.SignInAsync(user, HttpContext);
+
+            return RedirectToAction("Index", "Home");
+		}
+	}
 }

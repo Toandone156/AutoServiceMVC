@@ -227,7 +227,7 @@
 		loadingClass: 'owl-loading',
 		rtlClass: 'owl-rtl',
 		responsiveClass: 'owl-responsive',
-		dragClass: 'owl-drag',
+		//dragClass: 'owl-drag',
 		itemClass: 'owl-item',
 		stageClass: 'owl-stage',
 		stageOuterClass: 'owl-stage-outer',
@@ -739,7 +739,7 @@
 		}
 
 		if (this.settings.mouseDrag) {
-			this.$element.addClass(this.options.dragClass);
+			//this.$element.addClass(this.options.dragClass);
 			this.$stage.on('mousedown.owl.core', $.proxy(this.onDragStart, this));
 			this.$stage.on('dragstart.owl.core selectstart.owl.core', function() { return false });
 		}

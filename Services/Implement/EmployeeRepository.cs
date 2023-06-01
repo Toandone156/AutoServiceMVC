@@ -223,5 +223,43 @@ namespace AutoServiceMVC.Services.Implement
                 Data = employee
             };
         }
+        public async Task<StatusMessage> CheckEmailAndUsername(Employee? entity)
+        {
+            if (_context.Employees.Any(x => (x.Email == entity.Email) || (x.Username == entity.Username))){
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = "Success",
+                    Data = true
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = false,
+                Message = "Success",
+                Data = false
+            };
+        }
+
+        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string? email, string? username)
+        {
+            if (_context.Employees.Any(x => (x.Email == email) || (x.Username == username)))
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = "Success",
+                    Data = true
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = "Success",
+                Data = false
+            };
+        }
     }
 }

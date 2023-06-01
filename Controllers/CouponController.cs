@@ -3,6 +3,8 @@ using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -38,7 +40,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CheckCouponCode(string couponCode)
+        public async Task<JsonResult> CheckCoupon(string couponCode)
         {
             //Check coupon exist
             var couponResult = await ((CouponRepository) _couponRepo).GetByCodeAsync(couponCode);
@@ -57,7 +59,7 @@ namespace AutoServiceMVC.Controllers
             }
 
             //Check coupon for user
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var userCouponRs = await ((UserCouponRepository)_userCouponRepo).GetByUserIdAsync(userId);
 
             var userCoupons = userCouponRs.Data as List<UserCoupon>;
@@ -67,8 +69,10 @@ namespace AutoServiceMVC.Controllers
                 return Json(new { success = false });
             }
 
-            //return info of coupon
-            return Json(new { success = true}); //Data
+            string data = JsonConvert.SerializeObject(coupon);
+
+			//return info of coupon
+			return Json(new { success = true, data = data }); //Data
         }
 
         [HttpPost]
