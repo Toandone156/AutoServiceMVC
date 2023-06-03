@@ -23,7 +23,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _orderRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                return View(result.Data);
+                var data = (result.Data as List<Order>).OrderByDescending(o => o.CreatedAt);
+                return View(data);
             }
 
             return View();

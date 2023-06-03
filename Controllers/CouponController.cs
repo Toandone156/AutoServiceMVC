@@ -28,14 +28,16 @@ namespace AutoServiceMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = Convert.ToInt32(User.FindFirstValue("Id"));
-            var user = (await _userRepo.GetByIdAsync(userId)).Data;
-            var result = await _couponRepo.GetAllAsync();
+            var userCouponRs = await _userCouponRepo.GetAllAsync();
+            var couponRs = await _couponRepo.GetAllAsync();
 
-            if (result.IsSuccess)
+            if (couponRs.IsSuccess && userCouponRs.IsSuccess)
             {
-                var coupons = result.Data as IEnumerable<Coupon>;
+                var coupons = couponRs.Data as IEnumerable<Coupon>;
+                var userCoupons = userCouponRs.Data as IEnumerable<UserCoupon>;
                 var couponsForUser = coupons.Where(c => (
-                    ((c.UserTypeId == null) || (c.UserTypeId <= userId)) 
+                    (!userCoupons.Any(uc => uc.CouponId == c.CouponId))
+                    && ((c.UserTypeId == null) || (c.UserTypeId <= userId)) 
                     && ((c.EndAt == null) || (c.EndAt >= DateTime.Now))
                     && (c.Quantity > 0)
                     )
@@ -107,33 +109,48 @@ namespace AutoServiceMVC.Controllers
         {
             var couponRs = await _couponRepo.GetByIdAsync(id);
 
-            if(couponRs.IsSuccess)
+            if(!couponRs.IsSuccess)
             {
-                return Json(new { success = false });
+                return Json(new { success = false, message = "Error to get coupon."});
             }
 
             var coupon = couponRs.Data as Coupon;
 
             if(coupon.StartAt > DateTime.Now || coupon.EndAt < DateTime.Now)
             {
-                return Json(new { success = false });
+                return Json(new { success = false, message = "Coupon is not ready or ended." });
             }
 
-            //Check remain
+			//Check remain
+			if (coupon.Quantity < 1)
+			{
+				return Json(new { success = false, message = "Coupon was not exist." });
+			}
 
-            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+			var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var userRs = await _userRepo.GetByIdAsync(userId);
             var user = userRs.Data as User;
 
-            if(user.UserCoupons.Any(x => x.CouponId == coupon.CouponId) 
-                || user.Point < coupon.PointAmount)
+			if (user.UserCoupons.Any(x => x.CouponId == coupon.CouponId))
             {
-                return Json(new { success = false });
-            }
+				return Json(new { success = false, message = "You collected this coupon before." });
+			}
 
-            //Spent coupon
+			if (user.Point < coupon.PointAmount)
+            {
+				return Json(new { success = false, message = "Your point is not enough." });
+			}
 
-            return Json(new { success = true });
+			UserCoupon userCoupon = new UserCoupon()
+            {
+                CouponId = coupon.CouponId,
+                IsUsed = false,
+                UserId = userId
+            };
+
+            await _userCouponRepo.CreateAsync(userCoupon);
+
+			return Json(new { success = true });
         }
     }
 }

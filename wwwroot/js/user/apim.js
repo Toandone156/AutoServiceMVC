@@ -64,3 +64,26 @@ function applyCoupon(coupon) {
 	document.querySelector(".discount").innerHTML = formatCurrency(discount);
 	loadContent();
 }
+
+function tradeCouponAjax(couponId) {
+	var returnValue = false;
+
+	$.ajax({
+		url: '/Coupon/TradeCoupon',
+		type: 'POST',
+		data: { id: couponId },
+		success: function (response) {
+			if (response.success) {
+				showToast("Trade coupon success.");
+				returnValue = true;
+			} else {
+				showToast(response.message);
+			}
+		},
+		error: function (xhr, status, error) {
+			showToast("Fail to apply coupon")
+		}
+	});
+
+	return returnValue;
+}

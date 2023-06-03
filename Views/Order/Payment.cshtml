@@ -89,14 +89,18 @@
 									<textarea name="Note" class="form-control" rows="5"></textarea>
 								</div>
 							</div>
+						@if(User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
+						{
 							<div class="col-md-6">
 								<div class="form-group text-left">
 									<label>Enter coupon code</label>
-									<input id="coupon-code" class="form-control" style="text-transform:uppercase;"></input>
-									<input id="coupon-id" name="ApplyCouponId" type="hidden"/>
+									<input id="coupon-code" class="form-control" style="text-transform:uppercase;"/>
+									<span class="coupon-loading sending"/>
+									<input id="coupon-id" name="ApplyCouponId" type="hidden" />
 								</div>
 							</div>
-						</div>
+						}
+					</div>
 					</div>
 
 					<div class="col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
@@ -217,18 +221,19 @@
 		var typingTimer;
 		var doneTypingInterval = 1500;
 		var input = document.getElementById("coupon-code");
+		var loading = document.querySelector(".coupon-loading");
 
 		input.addEventListener("keyup", e => {
-			input.classList.add("loading");
+			loading.classList.add("active");
 			clearTimeout(typingTimer);
 
 			if(input.value){
 				typingTimer = setTimeout(() => {
 					checkCouponAjax(input.value);
-					input.classList.remove("loading");
+					loading.classList.remove("active");
 				}, doneTypingInterval);
 			}else{
-				input.classList.remove("loading");
+				loading.classList.remove("active");
 				document.querySelector(".discount").innerHTML = formatCurrency(0);
 				loadContent();
 			}

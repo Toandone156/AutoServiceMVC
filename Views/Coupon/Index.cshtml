@@ -18,9 +18,9 @@
 		<div class=" row coupon-section">
 			@foreach(var item in Model)
 			{
-				<div class="col col-5 container">
+				<div class="col col-md-5 container coupon-item" data-value="@item.CouponId">
 					<div class="row coupon-card" data-type="@(item.UserType?.UserTypeId ?? 0)">
-						<div class="col col-md-5 discount">
+						<div class="col col-5 discount">
 							<div class="heading-section ftco-animate fadeInUp ftco-animated discount-maininfo">
 								<span class="subheading heading-discount">Discount</span>
 								<h2>
@@ -36,8 +36,6 @@
 								<p>@((item.MaximumDiscountAmount != null) ? "Max discount " + item.MaximumDiscountAmount?.ToString("C") : "")</p>
 							</div>
 							<div class="coupon-row">
-								@*<span id="cpnCode">PTT1</span>*@
-
 								@{
 									var startTime = item.StartAt;
 									var isStart = startTime <= DateTime.Now;
@@ -60,7 +58,7 @@
 									}
 								}
 
-								<a href="" class="btn btn-primary btn-outline-primary @(isStart ? "" : "disabled")"
+								<a href="#" class="btn btn-primary btn-outline-primary @(isStart ? "" : "disabled")"
 								   id="cpnBtn" @(isStart ? "" : "disable")>@(isStart ? item.PointAmount + " points" : displayRemain)</a>
 							</div>
 							<div class="date-valid">
@@ -77,5 +75,47 @@
 
 @section Styles {
 	<link rel="stylesheet" href="~/css/user/coupon.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+}
+
+@section Scripts {
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+	<script>
+		var tradeButton = document.querySelectorAll("#cpnBtn");
+
+		tradeButton.forEach(button => {
+			button.addEventListener("click",e => {
+				e.preventDefault();
+
+				var points = button.innerHTML;
+
+				$.confirm({
+					title: 'Trade Coupon',
+					content: 'You already want to trade this coupon with <b>' + points + '</b>',
+					buttons: {
+						confirm: {
+							text: "Trade now",
+							btnClass: 'btn-orange',
+							keys: ['enter'],
+							action: function(){
+								tradeCoupon(button.closest(".coupon-item"))
+							}
+						},
+						cancel: function () {
+							showToast("Cancelled trade coupon")
+						}
+					}
+				});
+			})
+		})
+
+		function tradeCoupon(couponItem){
+			debugger
+
+			if(tradeCouponAjax(couponItem.getAttribute("data-value"))){
+				couponItem.remove();
+			}
+		}
+	</script>
 }
 

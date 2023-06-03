@@ -35,9 +35,9 @@
 								<p>@((item.Coupon.MaximumDiscountAmount != null) ? "Max discount " + item.Coupon.MaximumDiscountAmount?.ToString("C") : "")</p>
 							</div>
 							<div class="coupon-row">
-								<span id="cpnCode">COUPONCODE</span>
-								<a href="" class="btn btn-primary btn-outline-primary"
-								   id="cpnBtn">Using now</a>
+								<span id="cpnCode"class="coupon-code">@item.Coupon.CouponCode</span>
+								<a href="" class="btn btn-primary btn-outline-primary copy-button"
+								   id="cpnBtn">Copy code</a>
 							</div>
 							<div class="date-valid">
 								<p>@(item.Coupon.EndAt == null ? "" : "Expired at " + @item.Coupon.EndAt)</p>
@@ -53,5 +53,24 @@
 
 @section Styles {
 	<link rel="stylesheet" href="~/css/user/coupon.css">
+}
+
+@section Scripts {
+	<script>
+		debugger
+
+		var copyButton = document.querySelectorAll(".copy-button");
+
+		copyButton.forEach(button => {
+			button.addEventListener("click", e => {
+				e.preventDefault();
+
+				var code = button.previousElementSibling;
+				navigator.clipboard.writeText(code.innerHTML);
+
+				showToast("Code was copy successfully");
+			})
+		})
+	</script>
 }
 

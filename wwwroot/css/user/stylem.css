@@ -36,6 +36,18 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 *,
 *::before,
 *::after {
@@ -13850,14 +13862,41 @@ h5.modal-title {
     font-size: 1em;
 }
 
-input.loading {
-    background: url(./loading.gif) no-repeat right center !important;
-    background-size: contain !important;
+.coupon-loading::before {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 70%;
+    margin-top: -12px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #c49b63;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.5s;
+    animation: 0.8s linear infinite rotate;
+}
+
+.coupon-loading.active:before {
+    transition-delay: 0.5s;
+    transition-duration: 1s;
+    opacity: 1;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 /*End checkout*/
 
-/*Start*/
-
+/*Star*/
 .star-rating {
     display: flex;
     align-items: center;

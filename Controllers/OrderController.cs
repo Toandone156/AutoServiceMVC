@@ -89,7 +89,7 @@ namespace AutoServiceMVC.Controllers
 
             if(table == null)
             {
-                TempData["Message"] = "Please enter order before payment";
+                TempData["Message"] = "Please enter TABLECODE before payment";
                 return RedirectToAction("Payment");
             }
 
