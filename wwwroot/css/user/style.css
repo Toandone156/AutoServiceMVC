@@ -13861,7 +13861,7 @@ input.loading {
 .star-rating {
     display: flex;
     align-items: center;
-    font-size: 1.5em;
+    font-size: 22px;
     justify-content: center;
 }
 
