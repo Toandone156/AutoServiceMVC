@@ -24,6 +24,7 @@ function showToast(message) {
     Toastify({
         text: message,
         duration: 3000,
+        close: true,
         style: {
             background: "linear-gradient(to right, #6f4e37, #b28451)",
         },
