@@ -54,7 +54,6 @@ function CheckCartIfEmpty() {
 		cartHeader.innerHTML = NotEmptyHeaderMessage;
 	} else {
 		cartFooter.classList.add(hiddenClass);
-		//cartFooter.getElementsByClassName("d-flex")[0].style.display = "none!important";
 		cartIsEmpty = true;
 		cartHeader.innerHTML = EmptyHeaderMessage;
 	}
@@ -266,6 +265,7 @@ for (const element of quantityInputs) {
 function UpdateCartButtonQuantity() {
 	let cartItemList = cartBody.getElementsByClassName("cart-item");
 	let quantityNumber = cartButton.getElementsByClassName("icon-shopping_cart")[0];
+	if(cartItemList.length == 0) console.log("is empty");
 	quantityNumber.setAttribute("data-value", cartItemList.length);
 }
 
@@ -275,9 +275,9 @@ function UpdateCartTotalPrice() {
 
 	let cartItemList = cartBody.getElementsByClassName("cart-item");
 	let cartQuantity = cartHeader.getElementsByClassName("cart-quantity")[0];
+	UpdateCartButtonQuantity();
 	if (!cartIsEmpty)
 	{
-		UpdateCartButtonQuantity();
 		cartQuantity.innerText = cartItemList.length;
 	}
 	let total = 0;
