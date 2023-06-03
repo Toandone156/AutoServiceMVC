@@ -110,7 +110,6 @@ namespace AutoServiceMVC.Services.Implement
             }
 
             userCoupon.IsUsed = entity.IsUsed;
-            userCoupon.ExpireAt = entity.ExpireAt;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

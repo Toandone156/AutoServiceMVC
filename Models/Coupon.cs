@@ -34,8 +34,11 @@ namespace AutoServiceMVC.Models
         [DisplayName("Maximum discount")]
 		[JsonProperty]
 		public int? MaximumDiscountAmount { get; set; }
-        public int? Quantity { get; set; }
-        [RegularExpression("^\\d+$", ErrorMessage = "PointAmount must a unsign number")]
+		[RegularExpression("^\\d+$", ErrorMessage = "Quantity must a unsign number")]
+		public int? Quantity { get; set; }
+		[RegularExpression("^\\d+$", ErrorMessage = "Remain must a unsign number")]
+		public int? Remain { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "Point Amount must a unsign number")]
         [DisplayName("Point amount")]
         public int PointAmount { get; set; }
         [DataType(DataType.DateTime)]

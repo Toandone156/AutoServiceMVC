@@ -12,6 +12,8 @@ namespace AutoServiceMVC.Models
         public string Comment { get; set; }
         [DataType(DataType.ImageUrl)]
         public string? Image { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //Foreign Keys
         public int UserId { get; set; }

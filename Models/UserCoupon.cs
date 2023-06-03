@@ -9,8 +9,6 @@ namespace AutoServiceMVC.Models
         public int UserId { get; set; }
         public int CouponId { get; set; }
         public bool IsUsed { get; set; }
-        [DataType(DataType.DateTime)]
-        public DateTime? ExpireAt { get; set;}
 
         //Relations
         [ForeignKey("UserId")]

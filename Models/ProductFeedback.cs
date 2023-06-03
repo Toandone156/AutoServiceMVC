@@ -14,9 +14,11 @@ namespace AutoServiceMVC.Models
         public string? Image { get; set; }
         [Column(TypeName = "tinyint")]
         public int Rating { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        //Foreign keys
-        public int ProductId { get; set; }
+		//Foreign keys
+		public int ProductId { get; set; }
         public int UserId { get; set; }
 
         //Relations

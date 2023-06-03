@@ -32,6 +32,11 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
+            if(entity.Quantity != null)
+            {
+                entity.Remain = entity.Quantity;
+            }
+
             await _context.AddAsync<Coupon>(entity);
             await _context.SaveChangesAsync();
 
