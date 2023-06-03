@@ -266,7 +266,12 @@ function UpdateCartTotalPrice() {
 
 	let cartItemList = cartBody.getElementsByClassName("cart-item");
 	let cartQuantity = cartHeader.getElementsByClassName("cart-quantity")[0];
-	if (!cartIsEmpty) cartQuantity.innerText = cartItemList.length;
+	if (!cartIsEmpty)
+	{
+		let quantityNumber = cartButton.getElementsByClassName("icon-shopping_cart")[0];
+		quantityNumber.setAttribute("data-value", cartItemList.length);
+		cartQuantity.innerText = cartItemList.length;
+	}
 	let total = 0;
 	for (const element of cartItemList) {
 		let cartItem = element;
