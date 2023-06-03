@@ -1,0 +1,81 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Coupon>
+
+@{
+    ViewData["Title"] = "Coupon";
+}
+
+@await Html.PartialAsync("_SlideSection", new {Name = "Coupon", Page="Coupon"})
+
+<section class="ftco-section">
+	<div class="container mt-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-7 heading-section ftco-animate text-center">
+				<span class="subheading">Coupon</span>
+				<h2 class="mb-4">Discount Order</h2>
+				<p>Your order will be approximately <b>FREE</b>. Collect all coupon to apply.</p>
+			</div>
+		</div>
+		<div class=" row coupon-section">
+			@foreach(var item in Model)
+			{
+				<div class="col col-5 container">
+					<div class="row coupon-card" data-type="@(item.UserType?.UserTypeId ?? 0)">
+						<div class="col col-md-5 discount">
+							<div class="heading-section ftco-animate fadeInUp ftco-animated discount-maininfo">
+								<span class="subheading heading-discount">Discount</span>
+								<h2>
+									@(item.DiscountValue?.ToString("C") ?? item.DiscountPercentage + "%") </h2>
+								<h5 class="member-type">
+									@(item.UserType?.UserTypeName ?? "All member")
+								</h5>
+							</div>
+						</div>
+						<div class="col col-7 condition">
+							<div class="condition-title">
+								<h3>@((item.MinimumOrderAmount != null) ? "Order from " + item.MinimumOrderAmount?.ToString("C") : "")</h3>
+								<p>@((item.MaximumDiscountAmount != null) ? "Max discount " + item.MaximumDiscountAmount?.ToString("C") : "")</p>
+							</div>
+							<div class="coupon-row">
+								@*<span id="cpnCode">PTT1</span>*@
+
+								@{
+									var startTime = item.StartAt;
+									var isStart = startTime <= DateTime.Now;
+									var displayRemain = "";
+
+									if(!isStart)
+									{
+										var remainingTime = startTime - DateTime.Now;
+
+										int remainingDays = remainingTime.Days;
+										int remainingHours = remainingTime.Hours;
+										int remainingMinutes = remainingTime.Minutes;
+										int remainingSeconds = remainingTime.Seconds;
+
+										displayRemain = remainingDays > 0 ? remainingDays + " days left" : (
+											remainingHours > 0 ? remainingDays + " hours left" : (
+												remainingMinutes > 0 ? remainingMinutes + " mins left" : remainingSeconds + " seconds left"
+											)
+										);
+									}
+								}
+
+								<a href="" class="btn btn-primary btn-outline-primary @(isStart ? "" : "disabled")"
+								   id="cpnBtn" @(isStart ? "" : "disable")>@(isStart ? item.PointAmount + " points" : displayRemain)</a>
+							</div>
+							<div class="date-valid">
+								<p>@(item.EndAt == null ? "" : "Expired at " + @item.EndAt)</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</section>
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/user/couponm.css">
+}
+

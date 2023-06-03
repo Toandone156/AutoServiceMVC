@@ -1,19 +1,3 @@
-//Add to cart
-
-var addtocartbutton = document.querySelectorAll("#addtocart");
-
-addtocartbutton.forEach(button => {
-	button.addEventListener("click", e => {
-		e.preventDefault();
-
-		debugger
-
-		var status = updateCartAjax(button.getAttribute("data-id"), 1);
-
-		showToast(status ? "Add to cart success" : "Fail to add")
-	})
-})
-
 function updateCartAjax(id, quantity) {
 	var status = true;
 

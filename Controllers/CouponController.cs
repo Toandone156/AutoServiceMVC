@@ -27,16 +27,43 @@ namespace AutoServiceMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+            var user = (await _userRepo.GetByIdAsync(userId)).Data;
             var result = await _couponRepo.GetAllAsync();
-            return View(result.Data);
+
+            if (result.IsSuccess)
+            {
+                var coupons = result.Data as IEnumerable<Coupon>;
+                var couponsForUser = coupons.Where(c => (
+                    ((c.UserTypeId == null) || (c.UserTypeId <= userId)) 
+                    && ((c.EndAt == null) || (c.EndAt >= DateTime.Now))
+                    && (c.Quantity > 0)
+                    )
+                ).OrderByDescending(c => c.StartAt);
+
+                return View(couponsForUser);
+            }
+
+            TempData["Message"] = "Something was wrong";
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> MyCoupon()
         {
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
-            var userCoupon = await ((UserCouponRepository)_userCouponRepo).GetByUserIdAsync(userId);
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+            var result = await ((UserCouponRepository)_userCouponRepo).GetByUserIdAsync(userId);
 
-            return View(userCoupon.Data);
+            var userCoupons = result.Data as IEnumerable<UserCoupon>;
+
+            var usefulCoupons = userCoupons.Where(c => (
+                        (!c.IsUsed) 
+                        && (
+                        (c.Coupon.EndAt == null) || (c.Coupon.EndAt >= DateTime.Now)
+                    )
+                )
+            ).OrderByDescending(c => c.Coupon.StartAt);
+
+            return View(usefulCoupons);
         }
 
         [HttpPost]
@@ -94,7 +121,7 @@ namespace AutoServiceMVC.Controllers
 
             //Check remain
 
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var userRs = await _userRepo.GetByIdAsync(userId);
             var user = userRs.Data as User;
 

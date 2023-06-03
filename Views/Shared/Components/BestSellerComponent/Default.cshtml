@@ -17,11 +17,28 @@
             {
                 <div class="col-md-3">
                     <div class="menu-wrap">
-                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="menu-img img mb-4" style="background-image: url(@item.ProductImage);"></a>
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" class="menu-img img mb-4" style="background-image: url(@item.ProductImage);"></a>
                         <div class="text text-center">
-                            <h3><a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">@item.ProductName</a></h3>
-                            <p class="price"><span>@item.Price.ToString("C")</span></p>
-                            <p><a id="addtocart" class="btn btn-primary btn-outline-primary" data-id="@item.ProductId">Add to Cart</a></p>
+                            <h3><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" class="product-name">@item.ProductName</a></h3>
+                            <div class="star-rating">
+                                <div class="back-stars">
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+
+                                    <div class="front-stars" style="width: @(Convert.ToInt32(item.ProductRating/5*100))%">
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="price"><span class="product-price">@item.Price.ToString("C")</span></p>
+                            <p><a id="addtocart" href="#" class="btn btn-primary btn-outline-primary add-to-cart" data-id="@item.ProductId">Add to Cart</a></p>
                         </div>
                     </div>
                 </div>

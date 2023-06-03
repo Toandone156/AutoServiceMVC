@@ -5,6 +5,7 @@ using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Security.Policy;
 using System.Security.Principal;
 
@@ -30,7 +31,7 @@ namespace AutoServiceMVC.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            int userId = Convert.ToInt32(User.FindFirst("Id"));
+            int userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var user = await _userRepo.GetByIdAsync(userId);
 
             return View(user.Data);
@@ -38,7 +39,7 @@ namespace AutoServiceMVC.Controllers
 
         public async Task<IActionResult> Update()
         {
-            int userId = Convert.ToInt32(User.FindFirst("Id"));
+            int userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var user = await _userRepo.GetByIdAsync(userId);
 
             return View(user.Data);
@@ -47,7 +48,7 @@ namespace AutoServiceMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Update([Bind("FullName")] User user)
         {
-            int userId = Convert.ToInt32(User.FindFirst("Id"));
+            int userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var result = await _userRepo.GetByIdAsync(userId);
 
             var oldUser = result.Data as User;
@@ -61,7 +62,7 @@ namespace AutoServiceMVC.Controllers
 
         public async Task<IActionResult> ChangePassword()
         {
-            int userId = Convert.ToInt32(User.FindFirst("Id"));
+            int userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var result = await _userRepo.GetByIdAsync(userId);
             var user = result.Data as User;
 

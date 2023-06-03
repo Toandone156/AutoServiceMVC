@@ -30,7 +30,9 @@
 								</div>
 
 								<div class="product-name col-md-6 order-item-info">
-									<h3>@item.Product.ProductName</h3>
+									<h3>
+										@item.Product.ProductName<i class="remove-payment-item icon-trash px-2 h5 text-white-50" style="cursor: pointer;"></i>
+									</h3>
 									<p class="price">@item.Product.Price.ToString("C")</p>
 								</div>
 								<div class="col-md-3 order-item-info">
@@ -114,6 +116,7 @@
 								<span class="total">0 ₫</span>
 							</p>
 						</div>
+						<input id="input-total" type="hidden" name="Total"/> 
 						<p class="text-center"><input type="submit" class="btn btn-primary py-3 px-4" value="Payment"></input></p>
 					</div>
 			</div>
@@ -128,8 +131,10 @@
 		var subTotal = document.querySelector(".subTotal");
 		var discount = document.querySelector(".discount");
 		var totalItem = document.querySelector(".total");
+		var totalInput = document.getElementById("input-total");
 
 		function loadContent(){
+
 			if(products.length == 0){
 				document.getElementById("emptyMessage").classList.remove("d-none");
 			}else{
@@ -149,7 +154,8 @@
 			}
 
 			subTotal.innerHTML = formatCurrency(total);
-			totalItem.innerHTML = formatCurrency(total - convertCurrency(discount.innerHTML));
+			totalInput.value = total - convertCurrency(discount.innerHTML);
+			totalItem.innerHTML = formatCurrency(parseInt(totalInput.value));
 		}
 
 		function updateQuantity(element, increment) {
@@ -157,10 +163,10 @@
 			var inputField = orderItem.querySelector('input');
 			var quantity = parseInt(inputField.value, 10);
 
-			quantity += increment;
+			quantity += increment; 
 
 			if (quantity === 0) {
-				orderItem.remove();
+				return;
 			} else {
 				inputField.value = quantity;
 
@@ -173,18 +179,11 @@
 			loadContent();
 		}
 
-		function convertCurrency(currency) {
-			return currency.replace(/[^\d]/g, "");
-		}
-
-		function formatCurrency(number){
-			return number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
-		}
-
 		var quantity = document.querySelectorAll("#quantity");
 
 		var minusButtons = document.querySelectorAll('.quantity-left-minus');
 		var plusButtons = document.querySelectorAll('.quantity-right-plus');
+		var deleteButtons = document.querySelectorAll('.remove-payment-item');
 
 		minusButtons.forEach(function (button) {
 			button.addEventListener('click', function () {
@@ -197,6 +196,16 @@
 				updateQuantity(this, 1);
 			});
 		});
+
+		deleteButtons.forEach(button => {
+			button.addEventListener('click', function () {
+				var item = button.closest(".order-item");
+				updateCartAjax(item.getAttribute("data-id"), 0);
+				item.remove();
+
+				loadContent();
+			})
+		})
 
 		quantity.forEach(p => {
 			p.addEventListener('keyup', loadContent);

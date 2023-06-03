@@ -179,7 +179,9 @@ namespace AutoServiceMVC.Services.Implement
                 product.IsAvailable = false;
                 await _context.SaveChangesAsync();
 
-                product.ProductId = 0;
+				var feedbacks = _context.ProductFeedbacks.Where(c => c.ProductId == product.ProductId);
+
+				product.ProductId = 0;
                 product.Price = entity.Price;
 
                 product.ProductName = entity.ProductName;
@@ -190,7 +192,10 @@ namespace AutoServiceMVC.Services.Implement
                 product.CategoryId = entity.CategoryId;
 
                 await CreateAsync(product);
-            }
+
+                await feedbacks.ForEachAsync(c => c.ProductId = product.ProductId);
+				await _context.SaveChangesAsync();
+			}
 
             return new StatusMessage()
             {

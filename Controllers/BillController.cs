@@ -22,7 +22,7 @@ namespace AutoServiceMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _orderRepo.GetByIdAsync(id);
 

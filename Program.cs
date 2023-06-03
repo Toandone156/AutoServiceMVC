@@ -27,6 +27,8 @@ services.AddRouting(options =>
 services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.MaxValue;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 services.AddSingleton<ISessionCustom, SessionCustom>();
@@ -97,7 +99,7 @@ services.Configure<RequestLocalizationOptions>(options =>
         .AddSupportedUICultures(supportedCultures);
 });
 
-//Add service
+#region AddService
 services.AddScoped<IAuthenticateService<User>, UserRepository>();
 services.AddScoped<IAuthenticateService<Employee>, EmployeeRepository>();
 services.AddScoped<ICommonRepository<Category>, CategoryRepository>();
@@ -124,7 +126,9 @@ services.AddScoped<IJWTAuthentication, JWTAuthentication>();
 services.AddHttpContextAccessor();
 services.AddScoped<IImageUploadService, ImageUploadService>();
 
-// Add services to the container.
+services.AddScoped<IPaymentService, PaymentService>();
+#endregion
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -137,7 +141,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseSession();

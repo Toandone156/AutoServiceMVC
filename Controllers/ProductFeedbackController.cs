@@ -5,6 +5,7 @@ using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -27,7 +28,7 @@ namespace AutoServiceMVC.Controllers
 
         public async Task<IActionResult> Index(int id) //ProductId
         {
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
 
             var orderProducts = _context.Users
                 .Where(x => x.UserId == userId)
@@ -56,7 +57,7 @@ namespace AutoServiceMVC.Controllers
                 feedback.Image = imageLink;
             }
 
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             feedback.UserId = userId;
 
             await _productFeedbackRepo.CreateAsync(feedback);
