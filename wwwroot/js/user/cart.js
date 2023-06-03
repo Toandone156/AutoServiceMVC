@@ -13,6 +13,9 @@ let quantityPlus = "quantity-right-plus";
 let quantityMinus = "quantity-left-minus";
 let cartIsEmpty = false;
 
+
+// Window Function & Event
+window.addEventListener('load', UpdateCartButtonQuantity);
 // Display & Hide the CartModal section
 cartButton.addEventListener("click", function (e) {
 	e.preventDefault();
@@ -260,6 +263,12 @@ for (const element of quantityInputs) {
 }
 
 // Update cart function
+function UpdateCartButtonQuantity() {
+	let cartItemList = cartBody.getElementsByClassName("cart-item");
+	let quantityNumber = cartButton.getElementsByClassName("icon-shopping_cart")[0];
+	quantityNumber.setAttribute("data-value", cartItemList.length);
+}
+
 function UpdateCartTotalPrice() {
 
 	debugger
@@ -268,8 +277,7 @@ function UpdateCartTotalPrice() {
 	let cartQuantity = cartHeader.getElementsByClassName("cart-quantity")[0];
 	if (!cartIsEmpty)
 	{
-		let quantityNumber = cartButton.getElementsByClassName("icon-shopping_cart")[0];
-		quantityNumber.setAttribute("data-value", cartItemList.length);
+		UpdateCartButtonQuantity();
 		cartQuantity.innerText = cartItemList.length;
 	}
 	let total = 0;
