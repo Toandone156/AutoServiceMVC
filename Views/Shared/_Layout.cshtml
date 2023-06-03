@@ -65,14 +65,15 @@
                     {
                         <li class="nav-item"><a asp-controller="Auth" asp-action="Login" class="nav-link">Login</a></li>
                     }
-                    
-                    @if(ViewData["Title"] != "Payment")
-                    {
-                        <li class="nav-item cart"><a id="cartButton" href="#" class="nav-link"><span class="icon icon-shopping_cart" data-value="0"></span></a></li>
-                    }
-
                 </ul>
+                
             </div>
+            @if(ViewData["Title"] != "Payment")
+                    {
+                        <ul class="navbar-nav justify-content-center">
+                            <li class="nav-item cart"><a id="cartButton" href="#" class="nav-link"><span class="icon icon-shopping_cart" data-value="0"></span></a></li>
+                        </ul>
+                    }
         </div>
     </nav>
 
