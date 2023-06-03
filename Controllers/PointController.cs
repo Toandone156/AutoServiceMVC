@@ -3,6 +3,7 @@ using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -22,7 +23,7 @@ namespace AutoServiceMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var rs = await ((PointTradingRepository) _pointTradingRepo).GetByUserIdAsync(userId);
 
             if(rs.IsSuccess)
@@ -36,7 +37,7 @@ namespace AutoServiceMVC.Controllers
         [HttpPost]
         public async Task<JsonResult> ChangePoint(int amount)
         {
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var userRs = await _userRepo.GetByIdAsync(userId);
             var user = userRs.Data as User;
 

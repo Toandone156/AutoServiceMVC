@@ -60,17 +60,15 @@ namespace AutoServiceMVC.Controllers
                 if (status.IsSuccess)
                 {
                     await _auth.SignInAsync(status.Data, HttpContext);
-                    TempData["Message"] = status.Message;
 
                     var result = await HttpContext.AuthenticateAsync("User_Scheme");
 
-                    var id = User.FindFirstValue("Id");
-
-                    return RedirectToAction("Index", "Home");
+					TempData["Message"] = "Login successfully";
+					return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError(String.Empty, status.Message);
-            }
+				TempData["Message"] = status.Message;
+			}
 
             return View();
         }
@@ -259,6 +257,46 @@ namespace AutoServiceMVC.Controllers
             await _auth.SignInAsync(user, HttpContext);
 
             return RedirectToAction("Index", "Home");
+		}
+
+		public async Task LoginFacebook()
+		{
+			await HttpContext.ChallengeAsync(FacebookDefaults.AuthenticationScheme, new AuthenticationProperties()
+			{
+				RedirectUri = Url.Action("FacebookResponse")
+			});
+		}
+
+		public async Task<IActionResult> FacebookResponse()
+		{
+			var result = await HttpContext.AuthenticateAsync("User_Scheme");
+			var claims = result.Principal;
+
+			var user = _dbContext.Users.FirstOrDefault(x => x.Email == claims.FindFirstValue(ClaimTypes.Email) && x.HashPassword == null);
+
+			if (user == null)
+			{
+				var checkStatus = await _userAuth.CheckEmailAndUsernameAsync(claims.FindFirstValue(ClaimTypes.Email), null);
+
+				if ((bool)checkStatus.Data)
+				{
+					TempData["Message"] = "Email was register";
+					return RedirectToAction("Login", "Auth");
+				}
+
+				user = new User()
+				{
+					FullName = claims.FindFirstValue(ClaimTypes.Name),
+					Email = claims.FindFirstValue(ClaimTypes.Email),
+					Point = 0
+				};
+
+				user = (await _userService.CreateAsync(user)).Data as User;
+			}
+
+			await _auth.SignInAsync(user, HttpContext);
+
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }

@@ -55,10 +55,12 @@ namespace AutoServiceMVC.Controllers
             {
                 _session.AddToSession(HttpContext, "table", result);
 
+                TempData["Message"] = "Add table success";
                 return View("Index");
             }
 
-            return View("Index", "Home");
+			TempData["Message"] = "Table code is wrong";
+			return View("Index", "Home");
         }
 
         public async Task<IActionResult> Payment()

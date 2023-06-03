@@ -1,7 +1,7 @@
 ﻿@model AutoServiceMVC.Models.Order
 
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewData["Title"] = "Edit Order";
 }
 
 <div class="row mb-5">
@@ -67,12 +67,12 @@
                                             Status
                                         </th>
                                         <th>
-                                            Employee
+                                            Created By
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.OrderStatuses)
+                                    @foreach (var item in Model.OrderStatuses.OrderBy(p => p.StatusId))
                                     {
                                         <tr>
                                             <td scope="col">
@@ -82,7 +82,7 @@
                                                 @item.Status.StatusName
                                             </td>
                                             <td scope="col">
-                                                @item.Employee.FullName
+                                                @(item.Employee?.FullName ?? @Model.User.FullName)
                                             </td>
                                         </tr>
                                     }

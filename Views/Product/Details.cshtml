@@ -1,7 +1,7 @@
 ﻿@model AutoServiceMVC.Models.Product
 
 @{
-	ViewData["Title"] = "Detail";
+	ViewData["Title"] = "Details";
 }
 
 <section class="ftco-section">
@@ -18,24 +18,41 @@
 			</div>
 			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
 				<h3>@Model.ProductName</h3>
+				<div class="star-rating">
+					<div class="back-stars">
+						<span class="star" aria-hidden="true"></span>
+						<span class="star" aria-hidden="true"></span>
+						<span class="star" aria-hidden="true"></span>
+						<span class="star" aria-hidden="true"></span>
+						<span class="star" aria-hidden="true"></span>
+
+						<div class="front-stars" style="width: @(Convert.ToInt32(Model.ProductRating/5*100))%">
+							<span class="star" aria-hidden="true"></span>
+							<span class="star" aria-hidden="true"></span>
+							<span class="star" aria-hidden="true"></span>
+							<span class="star" aria-hidden="true"></span>
+							<span class="star" aria-hidden="true"></span>
+						</div>
+					</div>
+				</div>
 				<p class="price"><span>@Model.Price.ToString("C")</span></p>
 				<p>@Model.ProductDescription</p>
 				<div class="row mt-4">
 					<div class="input-group col-md-6 d-flex mb-3">
 						<span class="input-group-btn mr-2">
-							<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
+							<button id="minus-button" type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
 								<i class="icon-minus"></i>
 							</button>
 						</span>
-						<input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">
+						<input type="text" id="quantity" name="quantity" disabled class="form-control input-number" value="1" min="1" max="100">
 						<span class="input-group-btn ml-2">
-							<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
+							<button id="plus-button" type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
 								<i class="icon-plus"></i>
 							</button>
 						</span>
 					</div>
 					<div class="col-md-6">
-						<p><a href="cart.html" class="btn btn-primary py-3 px-5">Add to Cart</a></p>
+						<p><a id="addtocartButton" href="#" class="btn btn-primary py-3 px-5">Add to Cart</a></p>
 					</div>
 				</div>
 			</div>
@@ -92,39 +109,30 @@
 
 @section Scripts {
 	<script>
-		$(document).ready(function () {
+		var input = document.getElementById("quantity");
+		var plus = document.getElementById("plus-button");
+		var minus = document.getElementById("minus-button");
+		var addButton = document.getElementById("addtocartButton");
 
-			var quantitiy = 0;
-			$('.quantity-right-plus').click(function (e) {
+		console.log(plus)
+		console.log(minus)
 
-				// Stop acting like a button
-				e.preventDefault();
-				// Get the field name
-				var quantity = parseInt($('#quantity').val());
+		plus.addEventListener("click", function() {
+			let quantity = input.value;
+			input.value = ++quantity;
+		})
 
-				// If is not undefined
+		minus.addEventListener("click", function() {
+			let quantity = input.value;
+			if (quantity > 1) input.value = --quantity;
+		})
 
-				$('#quantity').val(quantity + 1);
+		addButton.addEventListener("click", e => {
+			e.preventDefault();
 
+			debugger
 
-				// Increment
-
-			});
-
-			$('.quantity-left-minus').click(function (e) {
-				// Stop acting like a button
-				e.preventDefault();
-				// Get the field name
-				var quantity = parseInt($('#quantity').val());
-
-				// If is not undefined
-
-				// Increment
-				if (quantity > 1) {
-					$('#quantity').val(quantity - 1);
-				}
-			});
-
+			AddItemToCart("@Model.ProductId", "@Model.ProductName", "@Model.Price", "@Model.ProductImage", input.value);
 		});
 	</script>
 }

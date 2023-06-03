@@ -53,7 +53,7 @@
 
             string relativePath = $"/uploads/{fileName}";
 
-            return $"{baseUrl}{relativePath}";
+            return relativePath;
         }
     }
 }
