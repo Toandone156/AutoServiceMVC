@@ -48,7 +48,7 @@ namespace AutoServiceMVC.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SendProductFeedback(
-            [Bind("ProductId,Comment,Rating")] ProductFeedback feedback,
+            [Bind("ProductId,OrderId,Comment,Rating")] ProductFeedback feedback,
             IFormFile imageFile)
         {
             if(imageFile != null)
@@ -63,7 +63,7 @@ namespace AutoServiceMVC.Controllers
             await _productFeedbackRepo.CreateAsync(feedback);
 
             TempData["Message"] = "Thanks for your feedback!";
-            return RedirectToAction("Detail", "Product", feedback.ProductId);
+            return RedirectToAction("Details", "Product", feedback.ProductId);
         }
     }
 }

@@ -87,3 +87,26 @@ function tradeCouponAjax(couponId) {
 
 	return returnValue;
 }
+
+function changePasswordApi(mail) {
+	var returnValue = false;
+
+	$.ajax({
+		url: '/Auth/ChangePassword',
+		type: 'POST',
+		data: { mail: mail },
+		success: function (response) {
+			if (response.success) {
+				showToast(response.message);
+				returnValue = true;
+			} else {
+				showToast(response.message);
+			}
+		},
+		error: function (xhr, status, error) {
+			showToast("Fail to send api.");
+		}
+	});
+
+	return returnValue;
+}

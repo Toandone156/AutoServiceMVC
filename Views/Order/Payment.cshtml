@@ -33,7 +33,7 @@
 									<h3>
 										@item.Product.ProductName<i class="remove-payment-item icon-trash px-2 h5 text-white-50" style="cursor: pointer;"></i>
 									</h3>
-									<p class="price">@item.Product.Price.ToString("C")</p>
+									<p class="price">@item.Product.Price.ToString("N0") ₫</p>
 								</div>
 								<div class="col-md-3 order-item-info">
 									<div class="quantity">
@@ -71,13 +71,6 @@
 										<div class="col-md-12 p-0">
 											<div class="radio">
 												<label><input type="radio" name="PaymentMethodId" value="3" class="mr-2" checked>VNPAY</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-12 p-0">
-											<div class="radio">
-												<label><input type="radio" name="PaymentMethodId" value="4" class="mr-2">MOMO</label>
 											</div>
 										</div>
 									</div>

@@ -38,6 +38,7 @@ namespace AutoServiceMVC.Models
         public virtual PaymentMethod? PaymentMethod { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
         public virtual ICollection<OrderStatus>? OrderStatuses { get; set; }
+        public virtual ICollection<ProductFeedback>? ProductFeedbacks { get; set; }
 
         //Not map attribute
         [NotMapped]

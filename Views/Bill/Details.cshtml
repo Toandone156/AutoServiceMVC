@@ -1,0 +1,151 @@
+﻿@model AutoServiceMVC.Models.Order
+
+@{
+	ViewData["Title"] = "Order Detail";
+	var SubAmount = 0;
+
+	foreach(var item in Model.OrderDetails)
+	{
+		SubAmount += item.Product.Price * item.Quantity;
+	}
+}
+
+<section class="ftco-section ftco-cart">
+	<div class="container mt-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-7 heading-section ftco-animate text-center">
+				<span class="subheading">Bill</span>
+				<h2 class="mb-4">Thanks for your order!</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 ftco-animate">
+				<div class="cart-list" style="overflow-x: hidden;">
+					@foreach (var item in Model.OrderDetails)
+					{
+						<div class="text-center row order-item align-items-center" data-id="@item.Product.ProductId">
+							<div class="image-prod col-md-3 order-item-info">
+								<div class="img col-md-4" style="background-image:url(@item.Product.ProductImage);"></div>
+							</div>
+
+							<div class="product-name col-md-6 order-item-info">
+								<h3>@item.Product.ProductName</h3>
+								<p class="price">@item.Product.Price.ToString("N0") ₫</p>
+							</div>
+							<div class="col-md-3 order-item-info">
+								<div class="quantity">
+									<div class="input-group d-flex mb-3">
+										<input type="text" id="quantity" name="quantity" class="form-control input-number" 
+										value="@item.Quantity" disabled>
+									</div>
+								</div>
+
+								<div class="productTotal">@((item.Quantity * item.Product.Price).ToString("N0")) ₫</div>
+							</div>
+							@if(!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true)
+							{
+								<div class="col-md-12 p-0">
+									<form asp-controller="ProductFeedback" asp-action="SendProductFeedback"
+										  class="contact-form w-100 row m-0" enctype="multipart/form-data">
+										<input type="hidden" name="ProductId" value="@item.ProductId" />
+										<input type="hidden" name="OrderId" value="@Model.OrderId" />
+										<div class="form-group col-md-6">
+											<textarea name="Comment" class="form-control" placeholder="Message" style="height: 100% !important;"></textarea>
+										</div>
+										<div class="uploader col-md-6">
+											<input id="file-upload" type="file" name="imageFile" accept="image/*" />
+
+											<label for="file-upload" id="file-drag">
+												<img id="file-image" src="#" alt="Preview" class="hidden">
+												<div id="start">
+													<i class="fa fa-download" aria-hidden="true"></i>
+													<div>Select a image or drag here</div>
+													<div id="notimage" class="hidden">Please select an image</div>
+												</div>
+												<div id="response" class="hidden">
+													<div id="messages"></div>
+												</div>
+											</label>
+										</div>
+
+										<div class="position col-md-6">
+											<div class="stars menu-star">
+												<input class="star star-5" id="star-5" type="radio" name="Rating" value="5" selected/>
+												<label class="star star-5" for="star-5"></label>
+												<input class="star star-4" id="star-4" type="radio" name="Rating" value="4" />
+												<label class="star star-4" for="star-4"></label>
+												<input class="star star-3" id="star-3" type="radio" name="Rating" value="3" />
+												<label class="star star-3" for="star-3"></label>
+												<input class="star star-2" id="star-2" type="radio" name="Rating" value="2" />
+												<label class="star star-2" for="star-2"></label>
+												<input class="star star-1" id="star-1" type="radio" name="Rating" value="1" />
+												<label class="star star-1" for="star-1"></label>
+											</div>
+										</div>
+
+										<div class="form-group col-md-6 text-right">
+											<input type="submit" value="Send" class="btn btn-primary py-2 px-3">
+										</div>
+									</form>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-end">
+			<div class="col-lg-9 col-md-6 mt-5">
+				<div class="cart-total mb-3 row d-flex">
+					<div class="col-md-6">
+						<div class="cart-detail text-left">
+							<label class="mb-4">Payment Method</label>
+							<div class="form-group">
+								<div class="col-md-12 p-0">
+									<div class="radio">
+										<label><input type="radio" name="PaymentMethodId" value="3" class="mr-2" checked disabled>VNPAY</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group text-left">
+							<label>Note for order</label>
+							<textarea name="Note" class="form-control" rows="5" disabled>@Model.Note</textarea>
+						</div>
+					</div>
+					@if (Model.ApplyCouponId != null)
+					{
+						<div class="col-md-6">
+							<div class="form-group text-left">
+								<label>Enter coupon code</label>
+								<input id="coupon-code" class="form-control" style="text-transform:uppercase;"
+								value="@Model.ApplyCoupon.CouponCode" disabled />
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
+				<div class="cart-total mb-3">
+					<h3>Cart Totals</h3>
+					<p class="d-flex">
+						<span>Subtotal</span>
+						<span class="subTotal">@SubAmount.ToString("N0") ₫<span>
+					</p>
+					<p class="d-flex">
+						<span>Discount</span>
+						<span class="discount">@((SubAmount - Model.Amount).ToString("N0")) ₫</span>
+					</p>
+					<hr>
+					<p class="d-flex total-price">
+						<span>Total</span>
+						<span class="total">@Model.Amount.ToString("N0") ₫</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

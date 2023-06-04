@@ -20,9 +20,11 @@ namespace AutoServiceMVC.Models
 		//Foreign keys
 		public int ProductId { get; set; }
         public int UserId { get; set; }
+        public int OrderId { get; set; }
 
         //Relations
         public virtual Product? Product { get; set; }
         public virtual User? User { get; set; }
+        public virtual Order? Order { get; set; }
     }
 }

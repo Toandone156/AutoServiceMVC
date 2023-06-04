@@ -121,8 +121,7 @@ namespace AutoServiceMVC.Controllers
                 return Json(new { success = false, message = "Coupon is not ready or ended." });
             }
 
-			//Check remain
-			if (coupon.Quantity < 1)
+			if (coupon.Remain < 1)
 			{
 				return Json(new { success = false, message = "Coupon was not exist." });
 			}
@@ -149,6 +148,9 @@ namespace AutoServiceMVC.Controllers
             };
 
             await _userCouponRepo.CreateAsync(userCoupon);
+
+            coupon.Remain--;
+            await _couponRepo.UpdateAsync(coupon);
 
 			return Json(new { success = true });
         }

@@ -1,0 +1,94 @@
+.progressbar {
+	--main-color: #bebebe;
+	--done-color: rgb(196, 155, 99);
+	--done-border: rgb(176, 137, 81);
+	--cancel-color: rgb(220, 121, 99);
+	--cancel-border: rgb(176, 81, 81);
+	counter-reset: step;
+	font-size: 10px;
+	position: relative;
+	/* for demo */
+}
+
+
+.historyRow {
+	background-color: rgb(250, 245, 238);
+	color: black;
+}
+
+.progressbar li {
+	--progress-item-width: 30px;
+	float: left;
+	color: var(--main-color);
+	list-style: none;
+	position: relative;
+	text-align: center;
+	font-weight: bold;
+	z-index: 5;
+	width: calc(100% / 4);
+}
+
+.progressbar .progress-icon {
+	background: #fff;
+	border: 2px solid #bebebe;
+	border-radius: 50%;
+	color: var(--main-color);
+	content: counter(step);
+	counter-increment: step;
+	display: block;
+	font-weight: bold;
+	height: 30px;
+	line-height: 27px;
+	margin: 0 auto 10px;
+	text-align: center;
+	width: var(--progress-item-width);
+}
+
+.progressbar li:after {
+	background: #979797;
+	content: "";
+	height: 3px;
+	border: 1px;
+	left: calc(calc(-50%) + 15px);
+	position: absolute;
+	background-color: var(--main-color);
+	top: 15px;
+	width: 100%;
+	z-index: -1;
+}
+
+.progressbar li.active:after,
+.progressbar li.complete:after {
+	background: var(--done-border);
+}
+
+.progressbar li:first-child:after {
+	content: none;
+}
+
+.progressbar .active .progress-icon,
+.progressbar .complete .progress-icon {
+	background: var(--done-color);
+	border-color: var(--done-border);
+	color: #fff;
+}
+
+.progressbar li.active span {
+	color: var(--done-color);
+	font-weight: 700;
+}
+
+/* Cancel Section */
+.cancel span {
+	color: var(--cancel-border);
+}
+
+.progressbar .cancel .progress-icon {
+	background: var(--cancel-color);
+	border-color: var(--cancel-border);
+	color: #fff;
+}
+
+.progressbar .cancel:after {
+	background: var(--cancel-border);
+}

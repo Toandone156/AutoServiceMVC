@@ -4,6 +4,7 @@ using AutoServiceMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoServiceMVC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230604025743_AddTotalAmountforUser")]
+    partial class AddTotalAmountforUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,9 +337,6 @@ namespace AutoServiceMVC.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -348,8 +347,6 @@ namespace AutoServiceMVC.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductFeedbackId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -653,12 +650,6 @@ namespace AutoServiceMVC.Migrations
 
             modelBuilder.Entity("AutoServiceMVC.Models.ProductFeedback", b =>
                 {
-                    b.HasOne("AutoServiceMVC.Models.Order", "Order")
-                        .WithMany("ProductFeedbacks")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("AutoServiceMVC.Models.Product", "Product")
                         .WithMany("ProductFeedbacks")
                         .HasForeignKey("ProductId")
@@ -670,8 +661,6 @@ namespace AutoServiceMVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
 
                     b.Navigation("Product");
 
@@ -741,8 +730,6 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("OrderStatuses");
-
-                    b.Navigation("ProductFeedbacks");
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.PaymentMethod", b =>

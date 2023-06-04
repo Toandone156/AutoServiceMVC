@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AutoServiceMVC</title>
+    <title>@ViewData["Title"] - SelfCoffee</title>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
@@ -38,7 +38,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Coffee<small>Blend</small></a>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">SELF<small>Coffee</small></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
@@ -50,7 +50,7 @@
                     @if (IsLogin)
                     {
                         <li class="nav-item @(ViewData["Title"].ToString() == "Coupon" ? "active" : "")"><a asp-controller="Coupon" asp-action="Index" class="nav-link">Coupon</a></li>
-                        <li class="nav-item @(ViewData["Title"].ToString() == "Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
+                        <li class="nav-item @(ViewData["Title"].ToString() == "My Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
                         <li class="nav-item @(ViewData["Title"].ToString() == "Feedback" ? "active" : "")"><a asp-controller="ServiceFeedback" asp-action="Index" class="nav-link">Feedback</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, @User.Identity.Name</a>
@@ -139,7 +139,7 @@
     <script src="~/js/user/main.js"></script>
     <script src="~/js/user/addition.js"></script>
     <script src="~/js/user/upload.js"></script>
-    <script src="~/js/user/api.js"></script>
+    <script src="~/js/user/apim.js"></script>
     @if (ViewData["Title"] != "Payment")
     {
         <script src="~/js/user/cart.js"></script>

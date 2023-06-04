@@ -24,7 +24,7 @@
 							<div class="heading-section ftco-animate fadeInUp ftco-animated discount-maininfo">
 								<span class="subheading heading-discount">Discount</span>
 								<h2>
-									@(item.DiscountValue?.ToString("C") ?? item.DiscountPercentage + "%") </h2>
+									@(item.DiscountValue?.ToString("N0") + " ₫" ?? item.DiscountPercentage + "%") </h2>
 								<h5 class="member-type">
 									@(item.UserType?.UserTypeName ?? "All member")
 								</h5>
@@ -32,8 +32,8 @@
 						</div>
 						<div class="col col-7 condition">
 							<div class="condition-title">
-								<h3>@((item.MinimumOrderAmount != null) ? "Order from " + item.MinimumOrderAmount?.ToString("C") : "")</h3>
-								<p>@((item.MaximumDiscountAmount != null) ? "Max discount " + item.MaximumDiscountAmount?.ToString("C") : "")</p>
+								<h3>@((item.MinimumOrderAmount != null) ? "Order from " + item.MinimumOrderAmount?.ToString("N0") + " ₫" : "")</h3>
+								<p>@((item.MaximumDiscountAmount != null) ? "Max discount " + item.MaximumDiscountAmount?.ToString("N0") + " ₫" : "")</p>
 							</div>
 							<div class="coupon-row">
 								@{

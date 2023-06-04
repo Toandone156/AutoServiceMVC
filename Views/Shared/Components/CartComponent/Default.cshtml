@@ -37,8 +37,8 @@
                                     <img class="rounded cart-img" src="@item.Product.ProductImage" alt="1" />
                                     <div class="ml-3 d-flex flex-column align-self-center text-left font-weight-bold">
                                         <span class="cart-item-title d-block text-dark"> @item.Product.ProductName </span>
-                                        <span class="d-block font-weight-bold small">Price: <span class="item-price">@item.Product.Price.ToString("C")</span> VND</span>
-                                        <span class="d-block font-weight-bold small">Total: <span class="item-total-price">@((item.Product.Price * item.Quantity).ToString("C"))</span> VND</span>
+                                        <span class="d-block font-weight-bold small">Price: <span class="item-price">@item.Product.Price.ToString("N0")</span> ₫</span>
+                                        <span class="d-block font-weight-bold small">Total: <span class="item-total-price">@((item.Product.Price * item.Quantity).ToString("N0"))</span> ₫</span>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center cart-right-item">

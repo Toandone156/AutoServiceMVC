@@ -165,6 +165,45 @@ namespace AutoServiceMVC.Controllers
             return View();
         }
 
+        //Change password api
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = "User_Scheme")]
+        public async Task<JsonResult> ChangePassword(string mail)
+        {
+            if (!mail.IsNullOrEmpty())
+            {
+                var identity = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == mail && x.HashPassword != null);
+
+                if (identity != null)
+                {
+                    var user = new User
+                    {
+                        UserId = identity.UserId,
+                        Username = identity.Username,
+                        Email = mail
+                    };
+
+                    var data = JsonConvert.SerializeObject(user);
+                    var token = _jwt.GenerateToken(data);
+
+                    var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
+
+                    MailContent content = new MailContent()
+                    {
+                        To = mail,
+                        Subject = "CHANGE PASSWORD IN AUTOSERVICE",
+                        Body = $"Link to change password: {resetUrl}"
+                    };
+
+                    await _mail.SendMailAsync(content);
+
+                    return Json(new { success = true, message = "Email to change password was sent to your mail and spam box." });
+                }
+            }
+
+            return Json(new { success = false, message = "Send mail fail."});
+        }
+
         public async Task<IActionResult> ResetPassword([FromQuery] string token)
         {
             var data = _jwt.ValidateToken(token);

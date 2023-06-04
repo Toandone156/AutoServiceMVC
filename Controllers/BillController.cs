@@ -1,7 +1,9 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -17,8 +19,20 @@ namespace AutoServiceMVC.Controllers
             _orderRepo = orderRepo;
             _orderStatusRepo = orderStatusRepo;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+            var userOrdersRs = await ((OrderRepository) _orderRepo).GetByUserIdAsync(userId);
+            
+            if(userOrdersRs.IsSuccess)
+            {
+                var userOrders = userOrdersRs.Data as List<Order>;
+                var orderduserOrders = userOrders.OrderByDescending(o => o.CreatedAt);
+
+                return View(orderduserOrders);
+            }
+
+            TempData["Message"] = "Can not get order list.";
             return View();
         }
 
@@ -28,7 +42,7 @@ namespace AutoServiceMVC.Controllers
 
             if(result.IsSuccess)
             {
-                return View(result);
+                return View(result.Data);
             }
 
             return View("Index", "Home");

@@ -1,6 +1,7 @@
 ﻿using AutoServiceMVC.Data;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
 using AutoServiceMVC.Utils;
 using Castle.Core.Internal;
@@ -20,6 +21,8 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<OrderDetail> _detailRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly ICommonRepository<Product> _productRepo;
+		private readonly ICommonRepository<User> _userRepo;
+        private readonly ICommonRepository<UserCoupon> _userCouponRepo;
         private readonly ISessionCustom _session;
 		private readonly IPaymentService _payment;
 
@@ -28,6 +31,8 @@ namespace AutoServiceMVC.Controllers
                                 ICommonRepository<OrderDetail> detailRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 ICommonRepository<Product> productRepo,
+                                ICommonRepository<User> userRepo,
+                                ICommonRepository<UserCoupon> userCouponRepo,
                                 ISessionCustom session,
                                 IPaymentService payment)
         {
@@ -36,6 +41,8 @@ namespace AutoServiceMVC.Controllers
             _detailRepo = detailRepo;
             _orderStatusRepo = orderStatusRepo;
             _productRepo = productRepo;
+            _userRepo = userRepo;
+            _userCouponRepo = userCouponRepo;
             _session = session;
             _payment = payment;
 
@@ -137,10 +144,20 @@ namespace AutoServiceMVC.Controllers
                     StatusId = 1 //sended
                 });
 
+                var applyCouponId = order.ApplyCouponId;
+
+                if(applyCouponId != null)
+                {
+                    var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+                    var userCoupons = (await ((UserCouponRepository)_userCouponRepo).GetByUserIdAsync(userId)).Data as List<UserCoupon>;
+                    var usedCoupon = userCoupons.Find(c => c.CouponId == applyCouponId);
+
+                    usedCoupon.IsUsed = true;
+                    await _userCouponRepo.UpdateAsync(usedCoupon);
+                }
+
                 _session.DeleteSession(HttpContext, "order_cart");
                 _session.DeleteSession(HttpContext, "doing_cart");
-
-                //receive point
 
                 TempData["Message"] = "Order successfully";
 				return RedirectToAction("Index");
