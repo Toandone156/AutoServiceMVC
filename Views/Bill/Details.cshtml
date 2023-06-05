@@ -42,7 +42,7 @@
 
 								<div class="productTotal">@((item.Quantity * item.Product.Price).ToString("N0")) ₫</div>
 							</div>
-							@if(!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true)
+							@if ( Model.Status.StatusId == 4 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
 							{
 								<div class="col-md-12 p-0">
 									<form asp-controller="ProductFeedback" asp-action="SendProductFeedback"
@@ -145,7 +145,36 @@
 						<span class="total">@Model.Amount.ToString("N0") ₫</span>
 					</p>
 				</div>
+				<p class="text-center"><a href="#" id="cancelButton" class="btn btn-danger py-3 px-4">Cancel order</a></p>
 			</div>
 		</div>
 	</div>
 </section>
+
+@section Scripts {
+	<script>
+		var cancelButton = document.getElementById("cancelButton");
+
+		cancelButton.addEventListener("click", e => {
+			e.preventDefault();
+
+			$.confirm({
+				title: 'Cancel order',
+				content: 'You really want to cancel this order?<br>After cancel, go to staff to receive money.',
+				buttons: {
+					confirm: {
+						text: "Cancel now",
+						btnClass: 'btn-orange',
+						keys: ['enter'],
+						action: function () {
+							window.location.assign("@Url.Action("CancelOrder", "Bill", new {id = Model.OrderId})")
+						}
+					},
+					cancel: function () {
+						showToast("Cancelled confirm.")
+					}
+				}
+			});
+		})
+	</script>
+}

@@ -51,7 +51,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([Bind("Username,Password")] Login login)
+        public async Task<IActionResult> Login([Bind("Username, Password")] Login login)
         {
             if (ModelState.IsValid)
             {
@@ -104,11 +104,13 @@ namespace AutoServiceMVC.Controllers
 
 				var confirmEmail = Url.Action("ConfirmEmail","Auth", new { token = token }, Request.Scheme);
 
+                var mailBody = _mail.GetMailFromContent(register.FullName, "confirm email", confirmEmail);
+
 				MailContent content = new MailContent()
 				{
 					To = register.Email,
 					Subject = "RESET PASSWORD IN AUTOSERVICE",
-					Body = $"Link to resetpassword: {confirmEmail}"
+					Body = mailBody
 				};
 
                 await _mail.SendMailAsync(content);
@@ -147,12 +149,14 @@ namespace AutoServiceMVC.Controllers
 
                     var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
 
+                    var mailBody = _mail.GetMailFromContent(identity.Username, "reset password", resetUrl);
+
                     MailContent content = new MailContent()
                     {
                         To = mail,
                         Subject = "RESET PASSWORD IN AUTOSERVICE",
-                        Body = $"Link to resetpassword: {resetUrl}"
-                    };
+                        Body = mailBody
+					};
 
                     await _mail.SendMailAsync(content);
 
@@ -188,12 +192,14 @@ namespace AutoServiceMVC.Controllers
 
                     var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
 
+                    var mailBody = _mail.GetMailFromContent(identity.FullName, "change password", resetUrl);
+
                     MailContent content = new MailContent()
                     {
                         To = mail,
                         Subject = "CHANGE PASSWORD IN AUTOSERVICE",
-                        Body = $"Link to change password: {resetUrl}"
-                    };
+                        Body = mailBody
+					};
 
                     await _mail.SendMailAsync(content);
 

@@ -70,6 +70,22 @@ namespace AutoServiceMVC.Controllers
 			return View("Index", "Home");
         }
 
+        [HttpPost]
+        public async Task<JsonResult> AccessTableApi(string tablecode)
+        {
+            _dbContext.ChangeTracker.LazyLoadingEnabled = false;
+            var result = await _dbContext.Tables.FirstOrDefaultAsync(x => x.TableCode == tablecode);
+
+            if (result != null)
+            {
+                _session.AddToSession(HttpContext, "table", result);
+
+                return Json(new {success = true, message = "Add table success", name = result.TableName });
+            }
+
+            return Json(new { success = false, message = "Table code is wrong" });
+        }
+
         public async Task<IActionResult> Payment()
         {
             var cart = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart");
@@ -166,7 +182,7 @@ namespace AutoServiceMVC.Controllers
             {
 				_session.DeleteSession(HttpContext, "doing_cart");
 
-				TempData["Message"] = "Payment fail";
+				TempData["Message"] = $"Payment fail. ERROR: {paymentResult.status} {paymentResult.responseCode}";
 				return RedirectToAction("Payment");
 			}
 		}

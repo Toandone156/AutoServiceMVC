@@ -62,6 +62,9 @@ namespace AutoServiceMVC.Controllers
 
             await _productFeedbackRepo.CreateAsync(feedback);
 
+            //Get point
+            
+
             TempData["Message"] = "Thanks for your feedback!";
             return RedirectToAction("Details", "Product", feedback.ProductId);
         }

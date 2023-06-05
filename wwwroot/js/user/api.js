@@ -110,3 +110,31 @@ function changePasswordApi(mail) {
 
 	return returnValue;
 }
+
+function accessTableAjax(tablecode) {
+	var notbookElement = document.querySelector(".notbooktable");
+	var bookContainer = document.querySelector(".book");
+
+	$.ajax({
+		url: '/Order/AccessTableApi',
+		type: 'POST',
+		data: { tablecode: tablecode },
+		success: function (response) {
+			if (response.success) {
+				console.log(response)
+				showToast(response.message);
+
+				notbookElement.remove();
+				var existTable = document.createElement("h3");
+				existTable.innerHTML = "YOUR TABLE: " + response.name.toUpperCase();
+				bookContainer.append(existTable);
+			} else {
+				showToast(response.message);
+				return null;
+			}
+		},
+		error: function (xhr, status, error) {
+			showToast("Fail to apply coupon")
+		}
+	});
+}

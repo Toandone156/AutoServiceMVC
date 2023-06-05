@@ -24,7 +24,8 @@
 							<div class="heading-section ftco-animate fadeInUp ftco-animated discount-maininfo">
 								<span class="subheading heading-discount">Discount</span>
 								<h2>
-									@(item.DiscountValue?.ToString("N0") + " ₫" ?? item.DiscountPercentage + "%") </h2>
+									@(item.DiscountValue == null ? item.DiscountPercentage + "%" : item.DiscountValue?.ToString("N0") + " ₫")
+									</h2>
 								<h5 class="member-type">
 									@(item.UserType?.UserTypeName ?? "All member")
 								</h5>
@@ -75,11 +76,9 @@
 
 @section Styles {
 	<link rel="stylesheet" href="~/css/user/coupon.css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 }
 
 @section Scripts {
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 	<script>
 		var tradeButton = document.querySelectorAll("#cpnBtn");
 

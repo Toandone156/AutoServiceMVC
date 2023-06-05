@@ -284,3 +284,11 @@
   });
 
 })(jQuery);
+
+function convertCurrency(currency) {
+	return currency.replace(/[^\d]/g, "");
+}
+
+function formatCurrency(number) {
+	return number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+}

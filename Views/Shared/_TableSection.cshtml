@@ -10,20 +10,20 @@
         <div class="book p-3" style="border-top-left-radius: 0.25em;">
             @if(table == null)
             {
-                <div class="container-wrap ftco-intro position-fixed" style="bottom: 0; right: 0; z-index:1;">
+                <div class="notbooktable container-wrap ftco-intro position-fixed" style="bottom: 0; right: 0; z-index:1;">
                     <div class="wrap d-md-flex align-items-xl-end">
                         <div class="book p-3" style="border-top-left-radius: 0.25em;">
                             <h3>Book a Table</h3>
-                            <form asp-controller="Order" asp-action="AccessTable" class="appointment-form" method="get">
+                            <div class="appointment-form">
                                 <div class="d-md-flex">
                                     <div class="form-group">
-                                        <input type="text" name="tablecode" class="form-control" placeholder="Table Code">
+                                        <input type="text" class="form-control tablecode" placeholder="Table Code">
                                     </div>
                                     <div class="form-group ml-md-4">
-                                        <input type="submit" value="Select" class="btn btn-white py-3 px-4">
+                                        <input type="button" value="Book" class="bookbutton btn btn-white btn-outline-white boxshadown-hover p-3 px-xl-4 py-xl-3">
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

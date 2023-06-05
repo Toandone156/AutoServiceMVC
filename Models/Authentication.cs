@@ -7,7 +7,7 @@ namespace AutoServiceMVC.Models
     {
         [Required]
         [StringLength(100)]
-        [RegularExpression("^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{0,29}$", ErrorMessage = "Username is not valid")]
+        [RegularExpression("^(?:[\\w.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}|[\\w]+)$", ErrorMessage = "Username/Email is not valid")]
         public string Username { get; set; }
         [Required]
         [DataType(DataType.Password)]

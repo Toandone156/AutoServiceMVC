@@ -56,7 +56,7 @@ namespace AutoServiceMVC.Controllers
             {
                 var status = (result.Data as Order).Status;
 
-                if(status.StatusId > 2) // Can cancel if in receive
+                if(status.StatusId < 3) // Can cancel if in receive
                 {
                     await _orderStatusRepo.CreateAsync(new OrderStatus()
                     {
@@ -65,11 +65,13 @@ namespace AutoServiceMVC.Controllers
                     });
 
                     TempData["Message"] = "Cancel order success";
-                    return View("Index");
+                    return RedirectToAction("Index");
                 }
+
+                TempData["Message"] = "Your order was prepared. Cancel fail.";
             }
 
-            return View("Detail", id);
+            return RedirectToAction("Details", new {id = id });
         }
     }
 }
