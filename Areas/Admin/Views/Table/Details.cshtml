@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Edit Table";
+    var accessTableLink = Url.ActionLink("Order", "AccessTable", new { area = "" ,tablecode = Model.TableCode });
+
+    var qrImageLink = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + accessTableLink;
 }
 
 <div class="row">
@@ -22,15 +25,18 @@
                             <input asp-for="TableName" class="form-control validate">
                             <span asp-validation-for="TableName" class="text-white"></span>
                         </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 col-md-12">
                         <div class="form-group mb-3">
                             <label asp-for="TableCode"></label>
                             <input asp-for="TableCode" class="form-control validate">
                             <span asp-validation-for="TableCode" class="text-white"></span>
                         </div>
                     </div>
-                    <div class="col-12 mb-3">
+                    <div class="col-xl-6 col-lg-6 col-md-12">
+                        <div class="tm-product-img-dummy mx-auto">
+                            <img id="preview" src="@qrImageLink" alt="Product image" class="img-fluid mx-auto">
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3 mt-3">
                         <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
                     </div>
                     <div class="col-12">
@@ -68,3 +74,26 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function forceDownload(link) {
+            var url = "@qrImageLink";
+            var fileName = link.getAttribute("download");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.responseType = "blob";
+            xhr.onload = function () {
+                var urlCreator = window.URL || window.webkitURL;
+                var imageUrl = urlCreator.createObjectURL(this.response);
+                var tag = document.createElement('a');
+                tag.href = imageUrl;
+                tag.download = fileName;
+                document.body.appendChild(tag);
+                tag.click();
+                document.body.removeChild(tag);
+            }
+            xhr.send();
+        }
+    </script>
+}

@@ -133,7 +133,7 @@ namespace AutoServiceMVC.Controllers
         {
             if (!mail.IsNullOrEmpty())
             {
-                var identity = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == mail);
+                var identity = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == mail && x.HashPassword != null);
 
                 if(identity != null)
                 {
@@ -164,6 +164,8 @@ namespace AutoServiceMVC.Controllers
 
                     return RedirectToAction("Login", "Auth");
                 }
+
+                TempData["Message"] = "Email was not register or login by Google";
             }
 
             return View();

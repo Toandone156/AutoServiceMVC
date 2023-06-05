@@ -21,6 +21,8 @@
                                     </div>
                                     <div class="form-group ml-md-4">
                                         <input type="button" value="Book" class="bookbutton btn btn-white btn-outline-white boxshadown-hover p-3 px-xl-4 py-xl-3">
+                                        <button type="button" data-toggle="modal" data-target="#scan_qr"
+                                            class="scanbutton btn btn-white btn-outline-white boxshadown-hover p-3 px-xl-4 py-xl-3">Scan QR</button>
                                     </div>
                                 </div>
                             </div>
@@ -32,6 +34,28 @@
             {
                 <h3>Your table: @table.TableName</h3>
             }
+        </div>
+    </div>
+</div>
+
+<div id="scan_qr" class="modal bg-transparent pt-5" style="z-index: 100;">
+    <div class="container cart-container bg-transparent p-0">
+        <div class="row no-gutters justify-content-center">
+            <div class="col-md-10 p-4 bg-light rounded">
+                <div class="cart-header d-flex pl-2 pb-0 justify-content-between">
+                    <div class="font-weight-bold d-flex align-items-center">
+                        <span class="header-message">
+                            Scan QR Code
+                        </span>
+                    </div>
+                    <span class="close">
+                        <button id="closeButton" data-dismiss="modal" class="btn btn-outline-danger font-weight-bold">&#9932</button>
+                    </span>
+                </div>
+                <div class="cart-body">
+                    <div id="reader"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
