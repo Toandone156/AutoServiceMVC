@@ -32,8 +32,8 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
     "reader",
     { fps: 10, qrbox: 250 });
 
-function onScanSuccess(decodedText, decodedResult) {
-    window.location.assign(decodeText);
+function onScanSuccess(qrCodeMessage) {
+    window.location.assign(qrCodeMessage);
 }
 
 function onScanFailure(error) {

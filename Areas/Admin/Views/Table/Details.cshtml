@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit Table";
-    var accessTableLink = Url.ActionLink("Order", "AccessTable", new { area = "" ,tablecode = Model.TableCode });
+    var accessTableLink = Url.ActionLink("AccessTable", "Order", new { area = "" ,tablecode = Model.TableCode });
 
     var qrImageLink = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + accessTableLink;
 }
