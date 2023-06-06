@@ -23,6 +23,8 @@ namespace AutoServiceMVC.Controllers
         private readonly IAuthenticateService<User> _userAuth;
         private readonly ICommonRepository<User> _userService;
         private readonly ICookieAuthentication _auth;
+        private readonly ICommonRepository<Order> _orderRepo;
+        private readonly ICookieService _cookie;
         private readonly AppDbContext _dbContext;
         private readonly IMailService _mail;
 		private readonly IHashPassword _hash;
@@ -31,7 +33,9 @@ namespace AutoServiceMVC.Controllers
         public AuthController(AppDbContext dbContext, 
                                 IAuthenticateService<User> userAuth,
                                 ICommonRepository<User> userService,
+                                ICommonRepository<Order> orderRepo,
                                 ICookieAuthentication auth,
+                                ICookieService cookie,
                                 IMailService mail,
                                 IHashPassword hash,
                                 IJWTAuthentication jwt)
@@ -40,6 +44,8 @@ namespace AutoServiceMVC.Controllers
             _userAuth = userAuth;
             _userService = userService;
             _auth = auth;
+            _orderRepo = orderRepo;
+            _cookie = cookie;
             _mail = mail;
             _hash = hash;
 			_jwt = jwt;
@@ -62,6 +68,8 @@ namespace AutoServiceMVC.Controllers
                     await _auth.SignInAsync(status.Data, HttpContext);
 
                     var result = await HttpContext.AuthenticateAsync("User_Scheme");
+
+                    await AddGuestOrder((status.Data as User));
 
 					TempData["Message"] = "Login successfully";
 					return RedirectToAction("Index", "Home");
@@ -303,6 +311,8 @@ namespace AutoServiceMVC.Controllers
 
             await _auth.SignInAsync(user, HttpContext);
 
+            await AddGuestOrder(user);
+
             return RedirectToAction("Index", "Home");
 		}
 
@@ -345,5 +355,27 @@ namespace AutoServiceMVC.Controllers
 
 			return RedirectToAction("Index", "Home");
 		}
+
+        public async Task AddGuestOrder(User user)
+        {
+            var guestOrderIdList = _cookie.GetCookie(HttpContext, "guest_order").Split(",").ToList();
+            if(!guestOrderIdList.IsNullOrEmpty())
+            {
+                foreach (var orderIdString in guestOrderIdList)
+                {
+                    int orderId = Convert.ToInt32(orderIdString ?? "0");
+                    var orderRs = await _orderRepo.GetByIdAsync(orderId);
+
+                    if (orderRs.IsSuccess)
+                    {
+                        var order = orderRs.Data as Order;
+                        order.UserId = user.UserId;
+                        await _orderRepo.UpdateAsync(order);
+
+                        _cookie.RemoveCookie(HttpContext, "guest_order");
+                    }
+                }
+            }
+        }
 	}
 }

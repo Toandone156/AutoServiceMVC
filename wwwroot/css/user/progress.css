@@ -1,11 +1,11 @@
 .progressbar {
-	--main-color: #bebebe;
+	--main-color: gray;
 	--done-color: rgb(196, 155, 99);
 	--done-border: rgb(176, 137, 81);
 	--cancel-color: rgb(220, 121, 99);
 	--cancel-border: rgb(176, 81, 81);
 	counter-reset: step;
-	font-size: 10px;
+	font-size: 12px;
 	position: relative;
 	/* for demo */
 }
@@ -24,7 +24,7 @@
 	position: relative;
 	text-align: center;
 	font-weight: bold;
-	z-index: 5;
+	z-index: 2;
 	width: calc(100% / 4);
 }
 

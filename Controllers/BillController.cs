@@ -1,39 +1,62 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
+using AutoServiceMVC.Services.System;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
-    [Authorize(AuthenticationSchemes = "User_Scheme")]
     public class BillController : Controller
     {
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
+        private readonly ICookieService _cookie;
 
         public BillController(ICommonRepository<Order> orderRepo,
-                                ICommonRepository<OrderStatus> orderStatusRepo)
+                                ICommonRepository<OrderStatus> orderStatusRepo,
+                                ICookieService cookie)
         {
             _orderRepo = orderRepo;
             _orderStatusRepo = orderStatusRepo;
+            _cookie = cookie;
         }
         public async Task<IActionResult> Index()
         {
-            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
-            var userOrdersRs = await ((OrderRepository) _orderRepo).GetByUserIdAsync(userId);
-            
-            if(userOrdersRs.IsSuccess)
+            var orders = new List<Order>();
+            if(User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
             {
-                var userOrders = userOrdersRs.Data as List<Order>;
-                var orderduserOrders = userOrders.OrderByDescending(o => o.CreatedAt);
+                var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+                var userOrdersRs = await ((OrderRepository)_orderRepo).GetByUserIdAsync(userId);
 
-                return View(orderduserOrders);
+                if (userOrdersRs.IsSuccess)
+                {
+                    orders = userOrdersRs.Data as List<Order>;
+                }
+            }
+            else
+            {
+                var guestOrderIdCookie = _cookie.GetCookie(HttpContext, "guest_order");
+                if (!guestOrderIdCookie.IsNullOrEmpty())
+                {
+                    var guestOrderIdList = guestOrderIdCookie.Split(",").ToList();
+                    foreach (var orderIdString in guestOrderIdList)
+                    {
+                        int orderId = Convert.ToInt32(orderIdString ?? "0");
+                        var order = await _orderRepo.GetByIdAsync(orderId);
+
+                        if (order.IsSuccess)
+                        {
+                            orders.Add(order.Data as Order);
+                        }
+                    }
+                }
             }
 
-            TempData["Message"] = "Can not get order list.";
-            return View();
+            var orderduserOrders = orders?.OrderByDescending(o => o.CreatedAt);
+            return View(orderduserOrders);
         }
 
         public async Task<IActionResult> Details(int id)

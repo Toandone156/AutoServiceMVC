@@ -176,7 +176,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var newStatusObject = await _statusRepo.GetByIdAsync(recentStatusId + 1);
             var status = newStatusObject.Data as Status;
 
-            if(status.StatusId == 5 && order.UserId != null && order.UserId != 2)
+            if(status.StatusId == 4 && order.UserId != null && order.UserId != 2)
             {
                 //Add point
                 var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, (int)order.Amount / 10000, $"Receive point from order {order.OrderId}.");

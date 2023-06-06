@@ -25,7 +25,8 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<UserCoupon> _userCouponRepo;
         private readonly IPointService _pointService;
         private readonly ISessionCustom _session;
-		private readonly IPaymentService _payment;
+        private readonly ICookieService _cookie;
+        private readonly IPaymentService _payment;
 
 		public OrderController(AppDbContext dbContext,
                                 ICommonRepository<Order> orderRepo,
@@ -35,6 +36,7 @@ namespace AutoServiceMVC.Controllers
                                 ICommonRepository<User> userRepo,
                                 ICommonRepository<UserCoupon> userCouponRepo,
                                 ISessionCustom session,
+                                ICookieService cookie,
                                 IPaymentService payment)
         {
             _dbContext = dbContext;
@@ -45,6 +47,7 @@ namespace AutoServiceMVC.Controllers
             _userRepo = userRepo;
             _userCouponRepo = userCouponRepo;
             _session = session;
+            _cookie = cookie;
             _payment = payment;
 
 		}   
@@ -171,6 +174,15 @@ namespace AutoServiceMVC.Controllers
 
                     usedCoupon.IsUsed = true;
                     await _userCouponRepo.UpdateAsync(usedCoupon);
+                }
+
+                if(order.UserId == 2) //Guest
+                {
+                    var guestOrder = _cookie.GetCookie(HttpContext, "guest_order");
+                    var orderIdList = guestOrder.IsNullOrEmpty() ? new List<string>() : guestOrder.Split(",").ToList();
+
+                    orderIdList.Add(orderid.ToString());
+                    _cookie.AddCookie(HttpContext, 1, "guest_order", String.Join(",", orderIdList));
                 }
 
                 _session.DeleteSession(HttpContext, "order_cart");

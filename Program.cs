@@ -128,6 +128,7 @@ services.AddScoped<IImageUploadService, ImageUploadService>();
 
 services.AddScoped<IPaymentService, PaymentService>();
 services.AddScoped<IPointService, PointService>();
+services.AddSingleton<ICookieService, CookieService>();
 #endregion
 
 builder.Services.AddControllersWithViews();
