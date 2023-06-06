@@ -1,6 +1,7 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
+using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,15 +15,18 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<Coupon> _couponRepo;
         private readonly ICommonRepository<UserCoupon> _userCouponRepo;
         private readonly ICommonRepository<User> _userRepo;
+        private readonly IPointService _pointService;
 
         public CouponController(
             ICommonRepository<Coupon> couponRepo,
             ICommonRepository<UserCoupon> userCouponRepo,
-            ICommonRepository<User> userRepo)
+            ICommonRepository<User> userRepo,
+            IPointService pointService)
         {
             _couponRepo = couponRepo;
             _userCouponRepo = userCouponRepo;
             _userRepo = userRepo;
+            _pointService = pointService;
         }
 
         public async Task<IActionResult> Index()
@@ -135,9 +139,11 @@ namespace AutoServiceMVC.Controllers
 				return Json(new { success = false, message = "You collected this coupon before." });
 			}
 
-			if (user.Point < coupon.PointAmount)
+            var tradeRs = await _pointService.ChangePointAsync(userId, -coupon.PointAmount, "Trade point to get coupon.");
+
+			if (!tradeRs.IsSuccess)
             {
-				return Json(new { success = false, message = "Your point is not enough." });
+				return Json(new { success = false, message = tradeRs.Message });
 			}
 
 			UserCoupon userCoupon = new UserCoupon()

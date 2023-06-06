@@ -23,6 +23,7 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<Product> _productRepo;
 		private readonly ICommonRepository<User> _userRepo;
         private readonly ICommonRepository<UserCoupon> _userCouponRepo;
+        private readonly IPointService _pointService;
         private readonly ISessionCustom _session;
 		private readonly IPaymentService _payment;
 

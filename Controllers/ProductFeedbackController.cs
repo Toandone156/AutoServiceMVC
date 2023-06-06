@@ -2,6 +2,7 @@
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,18 @@ namespace AutoServiceMVC.Controllers
     public class ProductFeedbackController : Controller
     {
         private readonly ICommonRepository<ProductFeedback> _productFeedbackRepo;
+        private readonly IPointService _pointService;
         private readonly IImageUploadService _uploadService;
         private readonly AppDbContext _context;
 
         public ProductFeedbackController(
             AppDbContext context,
             ICommonRepository<ProductFeedback> productFeedbackRepo, 
+            IPointService pointService,
             IImageUploadService uploadService)
         {
             _productFeedbackRepo = productFeedbackRepo;
+            _pointService = pointService;
             _uploadService = uploadService;
             _context = context;
         }
@@ -63,7 +67,7 @@ namespace AutoServiceMVC.Controllers
             await _productFeedbackRepo.CreateAsync(feedback);
 
             //Get point
-            
+            var tradeRs = await _pointService.ChangePointAsync(userId, 200 , "Receive point from your feedback.");
 
             TempData["Message"] = "Thanks for your feedback!";
             return RedirectToAction("Details", "Product", feedback.ProductId);

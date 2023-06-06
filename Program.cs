@@ -127,6 +127,7 @@ services.AddHttpContextAccessor();
 services.AddScoped<IImageUploadService, ImageUploadService>();
 
 services.AddScoped<IPaymentService, PaymentService>();
+services.AddScoped<IPointService, PointService>();
 #endregion
 
 builder.Services.AddControllersWithViews();

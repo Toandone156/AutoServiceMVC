@@ -1,6 +1,7 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         private readonly ICommonRepository<OrderDetail> _detailRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly ICommonRepository<Status> _statusRepo;
+        private readonly IPointService _pointService;
         private readonly ISessionCustom _session;
 
         public OrderController(ICommonRepository<Product> productRepo,
@@ -25,6 +27,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                                 ICommonRepository<OrderDetail> detailRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 ICommonRepository<Status> statusRepo,
+                                IPointService pointService,
                                 ISessionCustom session)
         {
             _productRepo = productRepo;
@@ -32,6 +35,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             _detailRepo = detailRepo;
             _orderStatusRepo = orderStatusRepo;
             _statusRepo = statusRepo;
+            _pointService = pointService;
             _session = session;
         }
 
@@ -157,7 +161,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<JsonResult> UpdateStatus(int orderId)
         {
             var orderResult = await _orderRepo.GetByIdAsync(orderId);
-            var recentStatusId = (orderResult.Data as Order).Status.StatusId;
+            var order = orderResult.Data as Order;
+            var recentStatusId = order.Status.StatusId;
 
             OrderStatus newStatus = new OrderStatus()
             {
@@ -170,6 +175,12 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
             var newStatusObject = await _statusRepo.GetByIdAsync(recentStatusId + 1);
             var status = newStatusObject.Data as Status;
+
+            if(status.StatusId == 5 && order.UserId != null && order.UserId != 2)
+            {
+                //Add point
+                var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, (int)order.Amount / 10000, $"Receive point from order {order.OrderId}.");
+            }
 
             return Json(new { success = true, statusId = status.StatusId, statusName = status.StatusName });
         }
