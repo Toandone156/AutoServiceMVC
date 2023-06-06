@@ -179,7 +179,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             if(status.StatusId == 4 && order.UserId != null && order.UserId != 2)
             {
                 //Add point
-                var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, (int)order.Amount / 10000, $"Receive point from order {order.OrderId}.");
+                var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, Convert.ToInt32(order.Amount / 1_000), $"Receive point from order {order.OrderId}.");
             }
 
             return Json(new { success = true, statusId = status.StatusId, statusName = status.StatusName });

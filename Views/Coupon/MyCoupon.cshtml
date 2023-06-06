@@ -22,7 +22,7 @@
 							<div class="heading-section ftco-animate fadeInUp ftco-animated discount-maininfo">
 								<span class="subheading heading-discount">Discount</span>
 								<h2>
-									@(item.Coupon.DiscountValue?.ToString("N0") + " ₫" ?? item.Coupon.DiscountPercentage + "%")
+									@(item.Coupon.DiscountValue == null ? item.Coupon.DiscountPercentage + "%" : item.Coupon.DiscountValue?.ToString("N0") + " ₫")
 								</h2>
 								<h5 class="member-type">
 									@(item.Coupon.UserType?.UserTypeName ?? "All member")

@@ -198,7 +198,7 @@ namespace AutoServiceMVC.Services.Implement
 
         public async Task<StatusMessage> GetByUserIdAsync(int userId)
         {
-            var user = _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
 
             if(user == null)
             {
@@ -209,7 +209,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var result = _context.UserCoupons.Where(x => x.UserId == userId && x.IsUsed == false);
+            var result = await _context.PointTrading.Where(x => x.UserId == userId).ToListAsync();
 
             return new StatusMessage()
             {

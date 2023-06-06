@@ -43,6 +43,8 @@ namespace AutoServiceMVC.Services.System
                 };
             }
 
+            user.Point = afterChangePoint;
+
             PointTrading trading = new PointTrading()
             {
                 UserId = userId,
@@ -51,6 +53,7 @@ namespace AutoServiceMVC.Services.System
             };
 
             await _pointTrandingRepo.CreateAsync(trading);
+            await _userRepo.UpdateAsync(user);
 
             return new StatusMessage()
             {

@@ -24,33 +24,24 @@ namespace AutoServiceMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+            var user = await _userRepo.GetByIdAsync(userId);
             var rs = await ((PointTradingRepository) _pointTradingRepo).GetByUserIdAsync(userId);
 
             if(rs.IsSuccess)
             {
-                return View(rs.Data);
+                var tradeList = (rs.Data as List<PointTrading>);
+
+                if(tradeList != null)
+                {
+                    tradeList = tradeList.OrderByDescending(pt => pt.TradedAt).ToList();
+                }
+
+                ViewData["userPoint"] = (user.Data as User).Point;
+
+                return View(tradeList);
             }
 
             return View("Index", "Home");
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> ChangePoint(int amount)
-        {
-            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
-            var userRs = await _userRepo.GetByIdAsync(userId);
-            var user = userRs.Data as User;
-
-            user.Point += amount;
-
-            if(user.Point < 0)
-            {
-                return Json(new { success = false });
-            }
-
-            await _userRepo.UpdateAsync(user);
-
-            return Json(new { success = true });
         }
     }
 }

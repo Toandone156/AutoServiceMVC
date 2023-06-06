@@ -358,10 +358,13 @@ namespace AutoServiceMVC.Controllers
 
         public async Task AddGuestOrder(User user)
         {
-            var guestOrderIdList = _cookie.GetCookie(HttpContext, "guest_order").Split(",").ToList();
-            if(!guestOrderIdList.IsNullOrEmpty())
+            var guestOrderIdCookie = _cookie.GetCookie(HttpContext, "guest_order");
+            if(!guestOrderIdCookie.IsNullOrEmpty())
             {
-                foreach (var orderIdString in guestOrderIdList)
+                var guestOrderIdList = guestOrderIdCookie.Split(",").ToList();
+
+
+				foreach (var orderIdString in guestOrderIdList)
                 {
                     int orderId = Convert.ToInt32(orderIdString ?? "0");
                     var orderRs = await _orderRepo.GetByIdAsync(orderId);

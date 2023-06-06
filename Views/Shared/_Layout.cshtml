@@ -58,6 +58,7 @@
                             <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, @User.Identity.Name</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown04">
                                 <a asp-controller="Profile" asp-action="Index" class="dropdown-item">View profile</a>
+                                <a asp-controller="Point" asp-action="Index" class="dropdown-item">Trade history</a>
                                 <a asp-controller="Coupon" asp-action="MyCoupon" class="dropdown-item">My coupon</a>
                                 <a asp-controller="Auth" asp-action="Logout" class="dropdown-item">Logout</a>
                             </div>

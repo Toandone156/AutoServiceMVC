@@ -44,49 +44,8 @@
 							</div>
 							@if ( Model.Status.StatusId == 4 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
 							{
-								<div class="col-md-12 p-0">
-									<form asp-controller="ProductFeedback" asp-action="SendProductFeedback"
-										  class="contact-form w-100 row m-0" enctype="multipart/form-data">
-										<input type="hidden" name="ProductId" value="@item.ProductId" />
-										<input type="hidden" name="OrderId" value="@Model.OrderId" />
-										<div class="form-group col-md-6">
-											<textarea name="Comment" class="form-control" placeholder="Message" style="height: 100% !important;"></textarea>
-										</div>
-										<div class="uploader col-md-6">
-											<input id="file-upload" type="file" name="imageFile" accept="image/*" />
-
-											<label for="file-upload" id="file-drag">
-												<img id="file-image" src="#" alt="Preview" class="hidden">
-												<div id="start">
-													<i class="fa fa-download" aria-hidden="true"></i>
-													<div>Select a image or drag here</div>
-													<div id="notimage" class="hidden">Please select an image</div>
-												</div>
-												<div id="response" class="hidden">
-													<div id="messages"></div>
-												</div>
-											</label>
-										</div>
-
-										<div class="position col-md-6">
-											<div class="stars menu-star">
-												<input class="star star-5" id="star-5" type="radio" name="Rating" value="5" selected/>
-												<label class="star star-5" for="star-5"></label>
-												<input class="star star-4" id="star-4" type="radio" name="Rating" value="4" />
-												<label class="star star-4" for="star-4"></label>
-												<input class="star star-3" id="star-3" type="radio" name="Rating" value="3" />
-												<label class="star star-3" for="star-3"></label>
-												<input class="star star-2" id="star-2" type="radio" name="Rating" value="2" />
-												<label class="star star-2" for="star-2"></label>
-												<input class="star star-1" id="star-1" type="radio" name="Rating" value="1" />
-												<label class="star star-1" for="star-1"></label>
-											</div>
-										</div>
-
-										<div class="form-group col-md-6 text-right">
-											<input type="submit" value="Send" class="btn btn-primary py-2 px-3">
-										</div>
-									</form>
+								<div class="col-md-12 py-3 text-right">
+									<button type="button" class="btn btn-primary py-2 px-3" style="color: #fff !important;">Feedback for 200 point</button>
 								</div>
 							}
 						</div>
@@ -145,7 +104,10 @@
 						<span class="total">@Model.Amount.ToString("N0") ₫</span>
 					</p>
 				</div>
-				<p class="text-center"><a href="#" id="cancelButton" class="btn btn-danger py-3 px-4">Cancel order</a></p>
+				@if (Model.Status.StatusId < 3)
+				{
+					<p class="text-center"><a href="#" id="cancelButton" class="btn btn-danger py-3 px-4">Cancel order</a></p>
+				}
 			</div>
 		</div>
 	</div>

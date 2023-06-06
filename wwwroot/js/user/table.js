@@ -15,22 +15,28 @@ inputCode.addEventListener("keyup", e => {
     }
 })
 
-let html5QrcodeScanner = new Html5QrcodeScanner(
-    "reader",
-    { fps: 10, qrbox: 250 });
+const html5QrCode = new Html5Qrcode("reader");
+const config = { fps: 10, qrbox: 250 };
 
 function onScanSuccess(qrCodeMessage) {
     window.location.assign(qrCodeMessage);
-}
-
-function onScanFailure(error) {
-
+    html5QrCode.stop();
 }
 
 scanButton.addEventListener("click", e => {
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
 })
 
 closeModal.addEventListener("click", e => {
-    html5QrcodeScanner.clear();
+    html5QrCode.stop();
 })
+
+window.onclick = function (event) {
+    // Fix cannot hide the cartModal
+    if (
+        event.target == modal ||
+        event.target.classList.contains("no-gutters")
+    ) {
+        html5QrCode.stop();
+    }
+};
