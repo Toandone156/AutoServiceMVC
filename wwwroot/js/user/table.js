@@ -15,19 +15,6 @@ inputCode.addEventListener("keyup", e => {
     }
 })
 
-bookButton.style.display = "none";
-scanButton.style.display = "block";
-
-inputCode.addEventListener("focus", e => {
-    bookButton.style.display = "block";
-    scanButton.style.display = "none";
-})
-
-inputCode.addEventListener("blur", e => {
-    bookButton.style.display = "none";
-    scanButton.style.display = "block";
-})
-
 let html5QrcodeScanner = new Html5QrcodeScanner(
     "reader",
     { fps: 10, qrbox: 250 });
