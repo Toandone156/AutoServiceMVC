@@ -48,11 +48,11 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item @(ViewData["Title"].ToString() == "Home" ? "active" : "")"><a asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
                     <li class="nav-item @(ViewData["Title"].ToString() == "Menu" ? "active" : "")"><a asp-controller="Order" asp-action="Index" class="nav-link">Menu</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "My Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
 
                     @if (IsLogin)
                     {
                         <li class="nav-item @(ViewData["Title"].ToString() == "Coupon" ? "active" : "")"><a asp-controller="Coupon" asp-action="Index" class="nav-link">Coupon</a></li>
-                        <li class="nav-item @(ViewData["Title"].ToString() == "My Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
                         <li class="nav-item @(ViewData["Title"].ToString() == "Feedback" ? "active" : "")"><a asp-controller="ServiceFeedback" asp-action="Index" class="nav-link">Feedback</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, @User.Identity.Name</a>
@@ -137,7 +137,7 @@
     <script src="~/js/user/jquery.magnific-popup.min.js"></script>
     <script src="~/js/user/aos.js"></script>
     <script src="~/js/user/scrollax.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="~/js/user/mainfunction.js"></script>

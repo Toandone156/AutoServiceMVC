@@ -180,7 +180,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            //order.Note = entity.Note;
+            order.UserId = entity.UserId;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
