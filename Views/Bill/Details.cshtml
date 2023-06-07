@@ -4,6 +4,8 @@
 	ViewData["Title"] = "Order Detail";
 	var SubAmount = 0;
 
+	var IsLogin = User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme";
+
 	foreach(var item in Model.OrderDetails)
 	{
 		SubAmount += item.Product.Price * item.Quantity;
@@ -42,10 +44,11 @@
 
 								<div class="productTotal">@((item.Quantity * item.Product.Price).ToString("N0")) ₫</div>
 							</div>
-							@if ( Model.Status.StatusId == 4 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
+							@if (IsLogin && Model.Status.StatusId == 4 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
 							{
 								<div class="col-md-12 py-3 text-right">
-									<button type="button" class="btn btn-primary py-2 px-3" style="color: #fff !important;">Feedback for 200 point</button>
+									<button type="button" data-toggle="modal" data-target="#feedbackModal"
+										class="btn btn-primary py-2 px-3 send-feedback" style="color: #fff !important;">Feedback for 200 point</button>
 								</div>
 							}
 						</div>
@@ -113,7 +116,74 @@
 	</div>
 </section>
 
+<div id="feedbackModal" class="modal product-feedback">
+	<div class="container card border-0 p-0">
+		<form asp-controller="ProductFeedback" asp-action="SendProductFeedback" enctype="multipart/form-data">
+			<input type="hidden" name="ProductId" />
+			<input type="hidden" name="OrderId" value="@Model.OrderId"/>
+			<div class="card-header pt-3 bg-primary">
+				<h5 class="font-weight-bold card-title text-white m-0" id="exampleModalLabel">Product Feedback</h5>
+			</div>
+			<div class="card-body">
+				<section class="feedback-header d-flex flex-column justify-content-center text-black-50">
+					<div class="d-flex justify-content-center">
+						<span class="img rounded-circle d-block" id="product-feedback-img"></span>
+					</div>
+					<p class="feedback-text font-weight-bold mb-0" id="product-feedback-name"></p>
+				</section>
+				<div class="feedback-content">
+					<div class="stars menu-star">
+						<input class="star star-5" id="star-5" type="radio" name="Rating" value="5" checked/>
+						<label class="star feedbackstar mb-0 star-5" for="star-5"></label>
+						<input class="star star-4" id="star-4" type="radio" name="Rating" value="4" />
+						<label class="star feedbackstar mb-0 star-4" for="star-4"></label>
+						<input class="star star-3" id="star-3" type="radio" name="Rating" value="3" />
+						<label class="star feedbackstar mb-0 star-3" for="star-3"></label>
+						<input class="star star-2" id="star-2" type="radio" name="Rating" value="2" />
+						<label class="star feedbackstar mb-0 star-2" for="star-2"></label>
+						<input class="star star-1" id="star-1" type="radio" name="Rating" value="1" />
+						<label class="star feedbackstar mb-0 star-1" for="star-1"></label>
+					</div>
+					<!-- Message input -->
+					<div class="feedback-border form-outline mb-4 border border-secondary rounded">
+						<textarea name="Comment" class="form-control p-2 feedback-text" id="form4Example3" 
+						rows="4" placeholder="Enter your feedback to our product."></textarea>
+					</div>
+					<!-- Upload file -->
+					<div class="uploader">
+						<input id="file-upload" type="file" name="imageFile" accept="image/*" />
+						<label class="w-100 rounded" for="file-upload" id="file-drag">
+							<img id="file-image" src="#" alt="Preview" class="hidden">
+							<div id="start">
+								<i class="fa fa-download" aria-hidden="true"></i>
+								<div>Select a image or drag here</div>
+								<div id="notimage" class="hidden">Please select an image</div>
+							</div>
+							<div id="response" class="hidden">
+								<div id="messages"></div>
+							</div>
+						</label>
+					</div>
+				</div>
+			</div>
+			<section class="feedback-footer card-footer d-flex justify-content-end">
+				<button type="button" data-dismiss="modal" class="btn btn-secondary cancel-feedback">
+					Cancel
+				</button>
+				<button type="submit" class="btn ml-2 btn-primary">
+					Send <i class="icon-send"></i>
+				</button>
+			</section>
+		</form>
+	</div>
+</div>
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/user/feedback.css"/>
+}
+
 @section Scripts {
+	<script src="~/js/user/feedback.js"></script>
 	<script>
 		var cancelButton = document.getElementById("cancelButton");
 

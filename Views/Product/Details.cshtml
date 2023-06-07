@@ -94,7 +94,7 @@
 												<span class="star" aria-hidden="true"></span>
 												<span class="star" aria-hidden="true"></span>
 
-												<div class="front-stars" style="width: @(item.Rating/5*100)%">
+												<div class="front-stars" style="width: @(Convert.ToInt32(Model.ProductRating/5*100))%">
 													<span class="star" aria-hidden="true"></span>
 													<span class="star" aria-hidden="true"></span>
 													<span class="star" aria-hidden="true"></span>
@@ -144,8 +144,6 @@
 
 		addButton.addEventListener("click", e => {
 			e.preventDefault();
-
-			debugger
 
 			AddItemToCart("@Model.ProductId", "@Model.ProductName", "@Model.Price", "@Model.ProductImage", input.value);
 		});

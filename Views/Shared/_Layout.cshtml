@@ -33,8 +33,6 @@
     <link rel="stylesheet" href="~/css/user/style.css">
     <link rel="stylesheet" href="~/css/user/cart.css">
     <link rel="stylesheet" href="~/css/user/upload.css">
-    <!-- New CSS for styling feedback modal -->
-    <link rel="stylesheet" href="~/css/user/feedback.css">
 
     @await RenderSectionAsync("Styles", required: false)
 
@@ -76,65 +74,13 @@
             @if(ViewData["Title"] != "Payment")
             {
                 <ul class="navbar-nav justify-content-center">
-                    <li class="nav-item cart"><a id="cartButton" href="#" class="nav-link"><span class="icon icon-shopping_cart" data-value="0"></span></a></li>
+                    <li class="nav-item cart">
+                        <a id="cartButton" href="#" class="nav-link" data-toggle="modal" data-target="#cartModal">
+                        <span class="icon icon-shopping_cart" data-value="0"></span>
+                        </a>
+                    </li>
                 </ul>
             }
-            <article id="feedbackModal" class="product-feedback col-sm-12 col-md-6">
-                <div class="card border-0">
-                    <div class="card-header pt-3 bg-primary">
-                        <h5 class="font-weight-bold card-title text-white m-0" id="exampleModalLabel">Product Feedback</h5>
-                    </div>
-                    <div class="card-body">
-                        <section class="feedback-header d-flex flex-column justify-content-center text-black-50">
-                            <div class="d-flex justify-content-center">
-                                <span class="img rounded-circle d-block" id="product-feedback-img"></span>
-                            </div>
-                            <p class="feedback-text font-weight-bold mb-0" id="product-feedback-name">Bánh Crepe trái cây</p>
-                        </section>
-                        <div class="feedback-content">
-                            <div class="stars menu-star">
-                                <input class="star star-5" id="star-5" type="radio" name="star" />
-                                <label class="star mb-0 star-5" for="star-5"></label>
-                                <input class="star star-4" id="star-4" type="radio" name="star" />
-                                <label class="star mb-0 star-4" for="star-4"></label>
-                                <input class="star star-3" id="star-3" type="radio" name="star" />
-                                <label class="star mb-0 star-3" for="star-3"></label>
-                                <input class="star star-2" id="star-2" type="radio" name="star" />
-                                <label class="star mb-0 star-2" for="star-2"></label>
-                                <input class="star star-1" id="star-1" type="radio" name="star" />
-                                <label class="star mb-0 star-1" for="star-1"></label>
-                            </div>
-                            <!-- Message input -->
-                            <div class="feedback-border form-outline mb-4 border border-secondary rounded">
-                                <textarea class="form-control p-2 feedback-text" id="form4Example3" rows="4" placeholder="Nhận xét & góp ý về món ăn"></textarea>
-                            </div>
-                            <!-- Upload file -->
-                            <div class="uploader">
-                                <input id="file-upload" type="file" name="imageFile" accept="image/*" />
-                                <label class="w-100 rounded" for="file-upload" id="file-drag">
-                                    <img id="file-image" src="#" alt="Preview" class="hidden">
-                                    <div id="start">
-                                        <i class="fa fa-download" aria-hidden="true"></i>
-                                        <div>Select a image or drag here</div>
-                                        <div id="notimage" class="hidden">Please select an image</div>
-                                    </div>
-                                    <div id="response" class="hidden">
-                                        <div id="messages"></div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <section class="feedback-footer card-footer d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary cancel-feedback" onclick="HideFeedback();">
-                            Cancel
-                        </button>
-                        <button type="button" class="btn ml-2 btn-primary">
-                            Send <i class="icon-send"></i>
-                        </button>
-                    </section>
-                </div>
-            </article>
         </div>
     </nav>
 
@@ -206,7 +152,6 @@
     <script type="module" src="~/js/user/table.js"></script>
     @if (ViewData["Title"] != "Payment")
     {
-        <script src="~/js/user/feedback.js"></script>
         <script src="~/js/user/cart.js"></script>
     }
 

@@ -32,6 +32,7 @@ namespace AutoServiceMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+            var user = (await _userRepo.GetByIdAsync(userId)).Data as User;
             var userCouponRs = await _userCouponRepo.GetAllAsync();
             var couponRs = await _couponRepo.GetAllAsync();
 
@@ -41,7 +42,7 @@ namespace AutoServiceMVC.Controllers
                 var userCoupons = userCouponRs.Data as IEnumerable<UserCoupon>;
                 var couponsForUser = coupons.Where(c => (
                     (!userCoupons.Any(uc => uc.CouponId == c.CouponId))
-                    && ((c.UserTypeId == null) || (c.UserTypeId <= userId)) 
+                    && ((c.UserTypeId == null) || (c.UserTypeId == 1 && user.UserTypeId == 1) || (c.UserTypeId > 1 && c.UserTypeId <= user.UserTypeId)) 
                     && ((c.EndAt == null) || (c.EndAt >= DateTime.Now))
                     && (c.Quantity > 0)
                     )

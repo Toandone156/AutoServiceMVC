@@ -5,11 +5,7 @@
 
 /* Feedback modal section */
 #feedbackModal {
-	display: none;
-	position: fixed;
-	top: 40px;
-	left: 50%;
-	transform: translate(-50%, 0%);
+	z-index: 10;
 }
 
 #product-feedback-img {

@@ -70,7 +70,7 @@ namespace AutoServiceMVC.Controllers
             var tradeRs = await _pointService.ChangePointAsync(userId, 200 , "Receive point from your feedback.");
 
             TempData["Message"] = "Thanks for your feedback!";
-            return RedirectToAction("Details", "Product", feedback.ProductId);
+            return RedirectToAction("Details", "Bill", new {id = feedback.OrderId});
         }
     }
 }

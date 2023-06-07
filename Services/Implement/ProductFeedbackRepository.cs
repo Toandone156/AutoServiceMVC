@@ -195,5 +195,18 @@ namespace AutoServiceMVC.Services.Implement
                 Data = result
             };
         }
+
+        public async Task<StatusMessage> GetByOrderId(int orderId)
+        {
+			var productFeedback = await _context.ProductFeedbacks
+                .Where(c => c.OrderId == orderId).ToListAsync();
+
+			return new StatusMessage()
+			{
+				IsSuccess = true,
+				Message = Message.GET_SUCCESS,
+				Data = productFeedback
+			};
+		}
     }
 }

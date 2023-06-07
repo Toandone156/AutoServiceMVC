@@ -4,7 +4,7 @@
     bool IsCartEmpty = Model == null;
 }
 
-<div id="cartModal" class="modal bg-transparent pt-5" style="z-index: 100;" onclick="RemoveCartItem(event);">
+<div id="cartModal" class="modal pt-5" style="z-index: 100;" onclick="RemoveCartItem(event)">
     <div class="container cart-container bg-transparent p-0">
         <div class="row no-gutters justify-content-center">
             <div class="col-md-10 p-4 bg-light rounded">
@@ -15,7 +15,7 @@
                         </span>
                     </div>
                     <span class="close">
-                        <button type="button" class="btn btn-outline-danger font-weight-bold">&#9932</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-outline-danger font-weight-bold">&#9932</button>
                     </span>
                 </div>
                 <div class="cart-total d-flex justify-content-between align-items-center mt-3 p-2 cart-total-price rounded rounded">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="cart-footer">
                     <div class="d-flex justify-content-end align-items-center mt-3 rounded">
-                        <button type="button" class="btn btn-secondary close-footer font-weight-bold">Close</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary close-footer font-weight-bold">Close</button>
                         <a asp-controller="Order" asp-action="Payment" class="ml-2 btn btn-primary order">Payment</a>
                     </div>
                 </div>

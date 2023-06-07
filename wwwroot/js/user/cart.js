@@ -241,8 +241,6 @@ function ChangeQuantity(event) {
 	var id = event.target.closest(".cart-item").getAttribute("data-id");
 	updateCartAjax(id, quantityInput.value);
 
-	debugger
-
 	currentCartItem.getElementsByClassName("item-total-price")[0].innerText =
 		formatCurrency(convertCurrency(itemUnitPrice.innerText) * quantityInput.value);
 	UpdateCartTotalPrice();
@@ -270,9 +268,6 @@ function UpdateCartButtonQuantity() {
 }
 
 function UpdateCartTotalPrice() {
-
-	debugger
-
 	let cartItemList = cartBody.getElementsByClassName("cart-item");
 	let cartQuantity = cartHeader.getElementsByClassName("cart-quantity")[0];
 	UpdateCartButtonQuantity();

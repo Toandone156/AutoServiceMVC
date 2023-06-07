@@ -23,8 +23,6 @@ function checkCouponAjax(couponCode) {
 		data: { couponCode: couponCode },
 		success: function (response) {
 			if (response.success) {
-				showToast("Appy coupon success");
-
 				var coupon = JSON.parse(response.data);
 				document.getElementById("coupon-id").value = coupon.CouponId;
 
@@ -46,7 +44,7 @@ function applyCoupon(coupon) {
 	let subTotal = convertCurrency(document.querySelector(".subTotal").innerHTML);
 
 	if (coupon.MinimumOrderAmount != null && coupon.MinimumOrderAmount > subTotal) {
-		showToast("Subtotal must more than " + coupon.MinimumOrderAmount);
+		showToast("Subtotal must more than " + formatCurrency(coupon.MinimumOrderAmount));
 		return;
 	}
 
@@ -57,16 +55,18 @@ function applyCoupon(coupon) {
 	}
 	else {
 		let value = subTotal * (coupon.DiscountPercentage) / 100;
-		let discount = !coupon.MaximumDiscountAmount ? value :
+		discount = coupon.MaximumDiscountAmount == null ? value :
 			(value > coupon.MaximumDiscountAmount ? coupon.MaximumDiscountAmount : value);
 	}
+
+	showToast("Apply coupon success")
 
 	document.querySelector(".discount").innerHTML = formatCurrency(discount);
 	loadContent();
 }
 
-function tradeCouponAjax(couponId) {
-	var returnValue = false;
+function tradeCouponAjax(coupon) {
+	var couponId = coupon.getAttribute("data-value");
 
 	$.ajax({
 		url: '/Coupon/TradeCoupon',
@@ -75,7 +75,7 @@ function tradeCouponAjax(couponId) {
 		success: function (response) {
 			if (response.success) {
 				showToast("Trade coupon success.");
-				returnValue = true;
+				coupon.remove();
 			} else {
 				showToast(response.message);
 			}
@@ -84,8 +84,6 @@ function tradeCouponAjax(couponId) {
 			showToast("Fail to apply coupon")
 		}
 	});
-
-	return returnValue;
 }
 
 function changePasswordApi(mail) {

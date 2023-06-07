@@ -97,7 +97,7 @@
 							btnClass: 'btn-orange',
 							keys: ['enter'],
 							action: function(){
-								tradeCoupon(button.closest(".coupon-item"))
+								tradeCouponAjax(button.closest(".coupon-item"));
 							}
 						},
 						cancel: function () {
@@ -107,14 +107,6 @@
 				});
 			})
 		})
-
-		function tradeCoupon(couponItem){
-			debugger
-
-			if(tradeCouponAjax(couponItem.getAttribute("data-value"))){
-				couponItem.remove();
-			}
-		}
 	</script>
 }
 
