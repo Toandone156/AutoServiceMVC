@@ -123,8 +123,7 @@ namespace AutoServiceMVC.Controllers
 
                 await _mail.SendMailAsync(content);
 
-                TempData["Message"] = "Mail was sent. Pls check mail and spam box.";
-                return RedirectToAction("Login");
+                return RedirectToAction("VerifyEmail");
             }
             ModelState.AddModelError(String.Empty, "Some fields was wrong");
 
@@ -168,9 +167,7 @@ namespace AutoServiceMVC.Controllers
 
                     await _mail.SendMailAsync(content);
 
-                    TempData["Message"] = "Email to change password was sent to your mail and spam box";
-
-                    return RedirectToAction("Login", "Auth");
+                    return RedirectToAction("VerifyEmail");
                 }
 
                 TempData["Message"] = "Email was not register or login by Google";
@@ -223,6 +220,12 @@ namespace AutoServiceMVC.Controllers
         public async Task<IActionResult> ResetPassword([FromQuery] string token)
         {
             var data = _jwt.ValidateToken(token);
+
+            if (data == null)
+            {
+                return RedirectToAction("BadLink", "Auth");
+            }
+
             var user = JsonConvert.DeserializeObject<User>(data);
 
             if(user != null)
@@ -258,6 +261,12 @@ namespace AutoServiceMVC.Controllers
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
         {
             string data = _jwt.ValidateToken(token);
+
+            if (data == null)
+            {
+                return RedirectToAction("BadLink", "Auth");
+            }
+
             var register = JsonConvert.DeserializeObject<Register>(data);
 
             if (register != null)
@@ -354,7 +363,17 @@ namespace AutoServiceMVC.Controllers
 			await _auth.SignInAsync(user, HttpContext);
 
 			return RedirectToAction("Index", "Home");
-		}
+        }
+
+        public IActionResult VerifyEmail()
+        {
+            return View();
+        }
+
+        public IActionResult BadLink()
+        {
+            return View();
+        }
 
         public async Task AddGuestOrder(User user)
         {
