@@ -19,12 +19,20 @@
 		<div class="row d-md-flex">
 			<div class="col-lg-12 ftco-animate p-md-5">
 				<div class="row">
+					<div class="search-form col-md-12">
+						<div class="form-group">
+							<div class="icon">
+								<span class="icon-search"></span>
+							</div>
+							<input type="text" class="form-control search-bar" onkeyup="loadProduct();" placeholder="Search...">
+						</div>
+					</div>
 					<div class="col-md-12 nav-link-wrap mb-5">
 						<div class="nav ftco-animate nav-pills justify-content-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-							<a class="nav-link active" onclick="loadProduct(0, this);">All</a>
+							<a class="nav-link active" onclick="loadProduct(this);" data-categoryid="0">All</a>
 							@foreach(var category in categories)
 							{
-								<a class="nav-link" onclick="loadProduct(@category.CategoryId, this);">@category.CategoryName</a>
+								<a class="nav-link" onclick="loadProduct(this);" data-categoryid="@category.CategoryId">@category.CategoryName</a>
 							}
 						</div>
 					</div>
@@ -53,6 +61,8 @@
 														<span class="star" aria-hidden="true"></span>
 													</div>
 												</div>
+
+												<small class="pl-2" style="font-size: 60%;"> @item.ProductRating</small>
 											</div>
 											<p class="price"><span class="product-price">@item.Price.ToString("N0") ₫</span></p>
 											<p><a id="addtocart" href="#" class="btn btn-primary btn-outline-primary add-to-cart" data-id="@item.ProductId">Add to cart</a></p>

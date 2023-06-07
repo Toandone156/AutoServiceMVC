@@ -13976,3 +13976,9 @@ h5.modal-title {
 .tablecode:active + .scanbutton {
     display: none !important;
 }
+
+.search-bar {
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding-left: 10px;
+    border-radius: 10px;
+}
