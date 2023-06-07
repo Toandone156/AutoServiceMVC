@@ -82,6 +82,16 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var preCoupon = (await _couponRepo.GetByIdAsync(coupon.CouponId)).Data as Coupon;
+
+                if ((preCoupon.Remain + (coupon.Quantity - preCoupon.Quantity)) < 0)
+                {
+					ModelState.AddModelError(String.Empty, "Remain is not enough to decrease");
+					return RedirectToAction("Details", new {id = coupon.CouponId });
+				}
+
+                coupon.Remain = preCoupon.Remain + (coupon.Quantity - preCoupon.Quantity);
+
                 var result = await _couponRepo.UpdateAsync(coupon);
                 if (result.IsSuccess)
                 {
@@ -95,7 +105,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
-            return View("Details", coupon.CouponId);
+            return RedirectToAction("Details", coupon.CouponId);
         }
     }
 }

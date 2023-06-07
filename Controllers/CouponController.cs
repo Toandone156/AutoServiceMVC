@@ -43,7 +43,7 @@ namespace AutoServiceMVC.Controllers
                     (!userCoupons.Any(uc => uc.CouponId == c.CouponId))
                     && ((c.UserTypeId == null) || (c.UserTypeId == 1 && user.UserTypeId == 1) || (c.UserTypeId > 1 && c.UserTypeId <= user.UserTypeId)) 
                     && ((c.EndAt == null) || (c.EndAt >= DateTime.Now))
-                    && (c.Quantity > 0)
+                    && (c.Remain == null || c.Remain > 0)
                     )
                 ).OrderByDescending(c => c.StartAt);
 
@@ -125,7 +125,7 @@ namespace AutoServiceMVC.Controllers
                 return Json(new { success = false, message = "Coupon is not ready or ended." });
             }
 
-			if (coupon.Remain < 1)
+			if (coupon.Remain != null && coupon.Remain < 1)
 			{
 				return Json(new { success = false, message = "Coupon was not exist." });
 			}
@@ -155,8 +155,10 @@ namespace AutoServiceMVC.Controllers
 
             await _userCouponRepo.CreateAsync(userCoupon);
 
-            coupon.Remain--;
-            await _couponRepo.UpdateAsync(coupon);
+            if(coupon.Remain != null) { 
+                coupon.Remain = coupon.Remain - 1;
+                await _couponRepo.UpdateAsync(coupon);
+            }
 
 			return Json(new { success = true });
         }

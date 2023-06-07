@@ -29,6 +29,10 @@
                             <label asp-for="Quantity"></label>
                             <input asp-for="Quantity" class="form-control validate">
                             <span asp-validation-for="Quantity" class="text-white"></span>
+                            @if (Model.Quantity != null)
+                            {
+                                <p class="text-white">Coupon remaning: @Model.Remain</p>
+                            }
                         </div>
                         <div class="form-group mb-3">
                             <label asp-for="PointAmount"></label>

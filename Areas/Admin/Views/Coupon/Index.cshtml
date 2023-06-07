@@ -60,7 +60,7 @@
                                     @Html.DisplayFor(modelItem => item.StartAt)
                                 </td>
                                 <td scope="col">
-                                    @if (item.StartAt > DateTime.Now || item.EndAt < DateTime.Now)
+                                    @if ((item.Remain != null && item.Remain < 1) && (item.StartAt > DateTime.Now || item.EndAt < DateTime.Now))
                                     {
                                         <div class="tm-status-circle cancelled"></div>
                                         <span>Ended</span>
@@ -68,7 +68,7 @@
                                     else
                                     {
                                         <div class="tm-status-circle done"></div>
-                                        <span>On Using</span>
+                                        <span>Public</span>
                                     }
                                 </td>
                             </tr>
