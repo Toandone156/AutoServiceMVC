@@ -15,7 +15,7 @@
 		<div class=" row coupon-section">
             <div class="start-page col-12">
                 <div class="history-header">
-                    <h3>Your point: @ViewData["userPoint"] <img width="50" src="~/images/coin.png" style="padding-right: 15px;"></h3>
+                    <h3>My point: @ViewData["userPoint"] <img width="50" src="~/images/coin.png" style="padding-right: 15px;"></h3>
                 </div>
                 <div class="hispoint">
                     @if(Model != null && Model.Count() > 0)
@@ -26,7 +26,7 @@
 
                             <div class="row content-hispoint @(isPosNumber ? "positive" : "negative")">
                                 <div class="col-md-2 col-2 icon-hispoint">
-                                    <img src="~/images/@(isPosNumber ? "plus" : "minus").png">
+                                    <img src="~/images/@(isPosNumber ? (item.TradeDescription.ToLower().Contains("feedback") ? "feedback" : "order") : "minus").png">
                                 </div>
                                 <div class="col-md-6 col-6 title-hispoint">
                                     <h4>@item.TradeDescription</h4>
