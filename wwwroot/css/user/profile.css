@@ -193,11 +193,11 @@ h6 {
 }
 
 .user-profile[data-type="2"] {
-    background: linear-gradient(315deg, #facc6b 0%, #fabc3c 74%) !important;
+    background: linear-gradient(315deg, #d3d3d3 0%, #7f8c8d 74%) !important;
 }
 
 .user-profile[data-type="3"] {
-    background: linear-gradient(315deg, #d3d3d3 0%, #7f8c8d 74%) !important;
+    background: linear-gradient(315deg, #facc6b 0%, #fabc3c 74%) !important;
 }
 
 .user-profile[data-type="4"] {

@@ -33,13 +33,12 @@ namespace AutoServiceMVC.Controllers
         {
             var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             var user = (await _userRepo.GetByIdAsync(userId)).Data as User;
-            var userCouponRs = await _userCouponRepo.GetAllAsync();
+            var userCoupons = user.UserCoupons;
             var couponRs = await _couponRepo.GetAllAsync();
 
-            if (couponRs.IsSuccess && userCouponRs.IsSuccess)
+            if (couponRs.IsSuccess)
             {
                 var coupons = couponRs.Data as IEnumerable<Coupon>;
-                var userCoupons = userCouponRs.Data as IEnumerable<UserCoupon>;
                 var couponsForUser = coupons.Where(c => (
                     (!userCoupons.Any(uc => uc.CouponId == c.CouponId))
                     && ((c.UserTypeId == null) || (c.UserTypeId == 1 && user.UserTypeId == 1) || (c.UserTypeId > 1 && c.UserTypeId <= user.UserTypeId)) 
@@ -81,7 +80,7 @@ namespace AutoServiceMVC.Controllers
 
             if (!couponResult.IsSuccess)
             {
-                return Json(new {success = false});
+                return Json(new { success = false });
             }
 
             var coupon = couponResult.Data as Coupon;
@@ -98,7 +97,7 @@ namespace AutoServiceMVC.Controllers
 
             var userCoupons = userCouponRs.Data as List<UserCoupon>;
 
-            if(!userCoupons.Any(x => x.CouponId == coupon.CouponId))
+            if(!userCoupons.Any(x => x.CouponId == coupon.CouponId && x.IsUsed == false))
             {
                 return Json(new { success = false });
             }

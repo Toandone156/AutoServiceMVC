@@ -149,19 +149,19 @@
 }
 
 .coupon-card[data-type="2"], .coupon-card[data-type="2"] .member-type {
-    background-image: linear-gradient(315deg, #facc6b 0%, #fabc3c 74%) !important;
-}
-
-.coupon-card[data-type="2"] #cpnBtn {
-    color: #fabc3c;
-}
-
-.coupon-card[data-type="3"], .coupon-card[data-type="3"] .member-type {
     background-image: linear-gradient(315deg, #d3d3d3 0%, #7f8c8d 74%) !important;
 }
 
+    .coupon-card[data-type="2"] #cpnBtn {
+        color: #7f8c8d;
+    }
+
+.coupon-card[data-type="3"], .coupon-card[data-type="3"] .member-type {
+    background-image: linear-gradient(315deg, #facc6b 0%, #fabc3c 74%) !important;
+}
+
 .coupon-card[data-type="3"] #cpnBtn {
-    color: #7f8c8d;
+    color: #fabc3c;
 }
 
 .coupon-card[data-type="4"], .coupon-card[data-type="4"] .member-type {

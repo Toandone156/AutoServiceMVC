@@ -12,8 +12,6 @@ for(let button of sendFeedbackButtons) {
     button.addEventListener("click", e => {
         let productSection = e.target.closest(".order-item");
 
-        console.log(productSection)
-
         let productName = productSection.getElementsByClassName("product-name")[0];
         let productImg = productSection.querySelector(".image-prod .img");
         let productId = productSection.getAttribute("data-id");

@@ -9,7 +9,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int ProductFeedbackId { get; set; }
         [Column(TypeName = "ntext")]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
         [DataType(DataType.ImageUrl)]
         public string? Image { get; set; }
         [Column(TypeName = "tinyint")]

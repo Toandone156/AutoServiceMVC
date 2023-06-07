@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\CN5\SWP391\_AutoService\Code\AutoServiceMVC\Public</_PublishTargetUrl>
+    <History>True|2023-06-07T08:16:58.5701150Z;False|2023-06-07T15:16:09.8509063+07:00;True|2023-06-07T15:08:12.1614392+07:00;True|2023-06-07T14:40:58.0209535+07:00;</History>
+    <LastFailureDetails />
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="MSSQL">
+      <Value>Server=203.113.174.12\MSSQLSERVER2019, 1437%3bDatabase=gilvxwtrhosting_autoservice%3bUID=toandone_sa%3bPWD=Toandone%40123%3bTrustServerCertificate=True</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
