@@ -1,10 +1,12 @@
-﻿using AutoServiceMVC.Models;
+﻿using AutoServiceMVC.Hubs;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
 using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -20,6 +22,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly ICommonRepository<Status> _statusRepo;
         private readonly IPointService _pointService;
+        private readonly IHubContext<HubServer> _hub;
         private readonly ISessionCustom _session;
 
         public OrderController(ICommonRepository<Product> productRepo,
@@ -28,6 +31,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 ICommonRepository<Status> statusRepo,
                                 IPointService pointService,
+                                IHubContext<HubServer> hub,
                                 ISessionCustom session)
         {
             _productRepo = productRepo;
@@ -36,6 +40,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             _orderStatusRepo = orderStatusRepo;
             _statusRepo = statusRepo;
             _pointService = pointService;
+            _hub = hub;
             _session = session;
         }
 
@@ -181,6 +186,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 //Add point
                 var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, Convert.ToInt32(order.Amount / 1_000), $"Receive point from order {order.OrderId}.");
             }
+
+            await _hub.Clients.Group(newStatus.Order.UserId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
 
             return Json(new { success = true, statusId = status.StatusId, statusName = status.StatusName });
         }

@@ -1,4 +1,5 @@
 ﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
@@ -7,6 +8,7 @@ using AutoServiceMVC.Utils;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using System.Net;
@@ -23,6 +25,7 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<Product> _productRepo;
 		private readonly ICommonRepository<User> _userRepo;
         private readonly ICommonRepository<UserCoupon> _userCouponRepo;
+        private readonly IHubContext<HubServer> _hub;
         private readonly IPointService _pointService;
         private readonly ISessionCustom _session;
         private readonly ICookieService _cookie;
@@ -35,6 +38,7 @@ namespace AutoServiceMVC.Controllers
                                 ICommonRepository<Product> productRepo,
                                 ICommonRepository<User> userRepo,
                                 ICommonRepository<UserCoupon> userCouponRepo,
+                                IHubContext<HubServer> hub,
                                 ISessionCustom session,
                                 ICookieService cookie,
                                 IPaymentService payment)
@@ -46,6 +50,7 @@ namespace AutoServiceMVC.Controllers
             _productRepo = productRepo;
             _userRepo = userRepo;
             _userCouponRepo = userCouponRepo;
+            _hub = hub;
             _session = session;
             _cookie = cookie;
             _payment = payment;
@@ -187,6 +192,8 @@ namespace AutoServiceMVC.Controllers
 
                 _session.DeleteSession(HttpContext, "order_cart");
                 _session.DeleteSession(HttpContext, "doing_cart");
+
+                await _hub.Clients.Group("Employee").SendAsync("ReceiveOrder", $"New order at table {order.TableId}");
 
                 TempData["Message"] = "Order successfully";
 				return RedirectToAction("Index");

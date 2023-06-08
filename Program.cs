@@ -1,4 +1,5 @@
 using AutoServiceMVC.Data;
+using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
@@ -131,6 +132,10 @@ services.AddScoped<IPointService, PointService>();
 services.AddSingleton<ICookieService, CookieService>();
 #endregion
 
+services.AddSignalR(e => {
+    e.MaximumReceiveMessageSize = 102400000;
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -161,6 +166,8 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<HubServer>("/noti");
 
 app.UseEndpoints(endpoints =>
 {

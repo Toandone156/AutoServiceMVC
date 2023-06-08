@@ -1,4 +1,5 @@
 ﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using Newtonsoft.Json;
@@ -27,7 +29,8 @@ namespace AutoServiceMVC.Controllers
         private readonly ICookieService _cookie;
         private readonly AppDbContext _dbContext;
         private readonly IMailService _mail;
-		private readonly IHashPassword _hash;
+        private readonly IHubContext<HubServer> _hub;
+        private readonly IHashPassword _hash;
 		private readonly IJWTAuthentication _jwt;
 
         public AuthController(AppDbContext dbContext, 
@@ -37,6 +40,7 @@ namespace AutoServiceMVC.Controllers
                                 ICookieAuthentication auth,
                                 ICookieService cookie,
                                 IMailService mail,
+                                IHubContext<HubServer> hub,
                                 IHashPassword hash,
                                 IJWTAuthentication jwt)
         {
@@ -47,6 +51,7 @@ namespace AutoServiceMVC.Controllers
             _orderRepo = orderRepo;
             _cookie = cookie;
             _mail = mail;
+            _hub = hub;
             _hash = hash;
 			_jwt = jwt;
         }
