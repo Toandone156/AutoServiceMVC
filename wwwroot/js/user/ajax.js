@@ -111,7 +111,7 @@ function changePasswordApi(mail) {
 
 function accessTableAjax(tablecode) {
 	var notbookElement = document.querySelector(".notbooktable");
-	var bookContainer = document.querySelector(".book");
+	var bookElement = document.querySelector(".booktable");
 
 	$.ajax({
 		url: '/Order/AccessTableApi',
@@ -122,10 +122,9 @@ function accessTableAjax(tablecode) {
 				console.log(response)
 				showToast(response.message);
 
-				notbookElement.remove();
-				var existTable = document.createElement("h3");
-				existTable.innerHTML = "YOUR TABLE: " + response.name.toUpperCase();
-				bookContainer.append(existTable);
+				notbookElement.classList.add('d-none');
+				bookElement.innerHTML = `Your table: ${response.name} <a href="#" class="exit-table text-white" onclick="event.preventDefault(); exitTableAjax();"><i class="ion-ios-log-out"></i></a>`
+				bookElement.classList.remove('d-none');
 			} else {
 				showToast(response.message);
 				return null;
@@ -133,6 +132,33 @@ function accessTableAjax(tablecode) {
 		},
 		error: function (xhr, status, error) {
 			showToast("Fail to apply coupon")
+		}
+	});
+}
+
+function exitTableAjax() {
+	var notbookElement = document.querySelector(".notbooktable");
+	var bookElement = document.querySelector(".booktable");
+
+	$.ajax({
+		url: '/Order/ExitTableApi',
+		type: 'POST',
+		data: { },
+		success: function (response) {
+			if (response.success) {
+				console.log(response)
+				showToast("Exit table success");
+
+
+				bookElement.classList.add('d-none');
+				notbookElement.classList.remove('d-none');
+			} else {
+				showToast("Exit table fail");
+				return null;
+			}
+		},
+		error: function (xhr, status, error) {
+			showToast("Fail to send api")
 		}
 	});
 }

@@ -8,28 +8,25 @@
 <div class="container-wrap ftco-intro position-fixed" style="bottom: 0; right: 0; z-index:4;">
     <div class="wrap d-md-flex align-items-xl-end">
         <div class="book p-3" style="border-top-left-radius: 0.25em;">
-            @if(table == null)
-            {
-                <div class="notbooktable container-wrap ftco-intro position-fixed" style="bottom: 0; right: 0;">
-                    <div class="wrap d-md-flex align-items-xl-end">
-                        <div class="book p-3" style="border-top-left-radius: 0.25em; padding-bottom: 0px !important;">
-                            <h3>Book a Table</h3>
-                            <div class="appointment-form">
-                                <div class="d-md-flex row">
-                                    <div class="form-group col-md-12">
-                                        <input type="text" class="form-control tablecode" placeholder="Table Code">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-1">
-                                                <input type="button" value="Book" class="bookbutton btn btn-white btn-outline-white boxshadown-hover p-3">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <button type="button" data-toggle="modal" data-target="#scan_qr"
-                                                        class="scanbutton btn btn-white btn-outline-white boxshadown-hover p-3">
-                                                    Scan QR
-                                                </button>
-                                            </div>
+            <div class="notbooktable container-wrap ftco-intro position-fixed  @(table != null ? "d-none" : "")" style="bottom: 0; right: 0;">
+                <div class="wrap d-md-flex align-items-xl-end">
+                    <div class="book p-3" style="border-top-left-radius: 0.25em; padding-bottom: 0px !important; padding-top: 0px !important;">
+                        <h3 id="tableheader" style="padding-top: 15px; cursor: pointer;">Book a Table</h3>
+                        <div class="appointment-form table-form">
+                            <div class="d-md-flex row">
+                                <div class="form-group col-md-12">
+                                    <input type="text" class="form-control tablecode" placeholder="Table Code">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-1">
+                                            <input type="button" value="Book" class="bookbutton btn btn-white btn-outline-white boxshadown-hover p-3">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" data-toggle="modal" data-target="#scan_qr"
+                                                    class="scanbutton btn btn-white btn-outline-white boxshadown-hover p-3">
+                                                Scan QR
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -37,11 +34,11 @@
                         </div>
                     </div>
                 </div>
-            }
-            else
-            {
-                <h3>Your table: @table.TableName</h3>
-            }
+            </div>
+            <h3 class="booktable @(table == null ? "d-none" : "")">
+                    Your table: @table?.TableName
+                    <a href="#" class="exit-table text-white" onclick="event.preventDefault(); exitTableAjax();"><i class="ion-ios-log-out"></i></a>
+            </h3>
         </div>
     </div>
 </div>
@@ -62,7 +59,7 @@
                     </span>
                 </div>
                 <div class="cart-body">
-                    <div id="reader"></div>
+                    <div id="reader" class="mb-2"></div>
                 </div>
             </div>
         </div>

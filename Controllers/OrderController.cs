@@ -95,6 +95,13 @@ namespace AutoServiceMVC.Controllers
             return Json(new { success = false, message = "Table code is wrong" });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> ExitTableApi()
+        {
+            _session.DeleteSession(HttpContext, "table");
+            return Json(new {success = true});
+        }
+
         public async Task<IActionResult> Payment()
         {
             var cart = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart");
