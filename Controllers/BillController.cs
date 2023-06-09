@@ -26,7 +26,7 @@ namespace AutoServiceMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var orders = new List<Order>();
-            if(User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
+            if (User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
             {
                 var userId = Convert.ToInt32(User.FindFirstValue("Id"));
                 var userOrdersRs = await ((OrderRepository)_orderRepo).GetByUserIdAsync(userId);
@@ -57,6 +57,42 @@ namespace AutoServiceMVC.Controllers
 
             var orderduserOrders = orders?.OrderByDescending(o => o.CreatedAt);
             return View(orderduserOrders);
+        }
+
+        public async Task<IActionResult> GetOrderData()
+        {
+            var orders = new List<Order>();
+            if (User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
+            {
+                var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+                var userOrdersRs = await ((OrderRepository)_orderRepo).GetByUserIdAsync(userId);
+
+                if (userOrdersRs.IsSuccess)
+                {
+                    orders = userOrdersRs.Data as List<Order>;
+                }
+            }
+            else
+            {
+                var guestOrderIdCookie = _cookie.GetCookie(HttpContext, "guest_order");
+                if (!guestOrderIdCookie.IsNullOrEmpty())
+                {
+                    var guestOrderIdList = guestOrderIdCookie.Split(",").ToList();
+                    foreach (var orderIdString in guestOrderIdList)
+                    {
+                        int orderId = Convert.ToInt32(orderIdString ?? "0");
+                        var order = await _orderRepo.GetByIdAsync(orderId);
+
+                        if (order.IsSuccess)
+                        {
+                            orders.Add(order.Data as Order);
+                        }
+                    }
+                }
+            }
+
+            var orderduserOrders = orders?.OrderByDescending(o => o.CreatedAt);
+            return PartialView("_OrderData", orderduserOrders);
         }
 
         public async Task<IActionResult> Details(int id)

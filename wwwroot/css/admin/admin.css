@@ -473,22 +473,22 @@ input[type="checkbox"]:focus {
   color: #6d8ca6;
 }
 .custom-select {
-  width: 100%;
-  border: none;
-  color: #acc6de;
-  height: 50px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -o-appearance: none;
-  appearance: none;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
-  padding: 15px;
-  background: url(../img/arrow-down.png) 98% no-repeat #50657b;
+    width: 100%;
+    border: none;
+    color: #acc6de;
+    height: 50px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    padding: 15px;
+    background: url(../../img/admin/arrow-down.png) 98% no-repeat #50657b;
 }
 .custom-select:focus {
   outline: 0;

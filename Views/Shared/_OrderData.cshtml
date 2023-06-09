@@ -1,0 +1,86 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Order>
+
+@{
+}
+
+@if (Model != null)
+{
+    @foreach (var item in Model)
+    {
+        <div class="row p-3">
+            <div class="container">
+                <div class="historyRow row py-3 rounded text-left font-weight-bold">
+                    <section class="col-12 d-flex justify-content-between text-dark">
+                        <div>Table: <span class="total-cost text-dark">@item.Table.TableName</span></div>
+                        <div class="font-weight-light">Total cost: <span class="total-cost text-dark">@item.Amount.ToString("N0") ₫</span></div>
+                    </section>
+                    <section class="col-12 d-flex justify-content-between text-dark">
+                        <div>Code: <span class="bill-date text-dark">@item.OrderId</span></div>
+                        <div class="font-weight-light">Date: <span class="bill-date text-dark">@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span></div>
+                    </section>
+                    <div class="col-12 progress-bar-wrapper my-3">
+                        @if (item.Status.StatusId < 5)
+                        {
+                            <ul class="progressbar p-0 d-flex justify-content-center m-0">
+                                <li class="@(item.OrderStatuses.Any(os => os.StatusId == 1) ? "active" : "")">
+                                    <i class="progress-icon icon-send"></i>
+                                    <span>Send</span>
+                                    <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 1).CreatedAt.ToShortTimeString())</p>
+                                </li>
+                                <li class="@(item.OrderStatuses.Any(os => os.StatusId == 2) ? "active" : "")">
+                                    <i class="progress-icon h6 icon-get-pocket"></i>
+                                    <span>Receive</span>
+                                    <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 2)?.CreatedAt.ToShortTimeString())</p>
+                                </li>
+                                <li class="@(item.OrderStatuses.Any(os => os.StatusId == 3) ? "active" : "")">
+                                    <i class="progress-icon h6 icon-local_cafe"></i>
+                                    <span>In Progress</span>
+                                    <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 3)?.CreatedAt.ToShortTimeString())</p>
+                                </li>
+                                <li class="@(item.OrderStatuses.Any(os => os.StatusId == 4) ? "active" : "")">
+                                    <i class="progress-icon h6 ion-md-cloud-done"></i>
+                                    <span>Done</span>
+                                    <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 4)?.CreatedAt.ToShortTimeString())</p>
+                                </li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul class="progressbar p-0 d-flex justify-content-center m-0">
+                                <li class="@(item.OrderStatuses.Any(os => os.StatusId == 1) ? "cancel" : "")">
+                                    <i class="progress-icon icon-send"></i>
+                                    <span>Send</span>
+                                    <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 1).CreatedAt.ToShortTimeString())</p>
+                                </li>
+                                @if (item.OrderStatuses.Any(os => os.StatusId == 2))
+                                {
+                                    <li class="cancel">
+                                        <i class="progress-icon h6 icon-get-pocket"></i>
+                                        <span>Receive</span><br>
+                                        <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 2).CreatedAt.ToShortTimeString())</p>
+                                    </li>
+                                }
+                                <li class="cancel">
+                                    <i class="progress-icon h6 icon-cancel"></i>
+                                    <span>Cancel</span>
+                                    <p style="font-size: 10px;">@(item.OrderStatuses.FirstOrDefault(os => os.StatusId == 5).CreatedAt.ToShortTimeString())</p>
+                                </li>
+                            </ul>
+                        }
+                    </div>
+                    <div class="col-12 view-comment d-flex justify-content-end">
+                        @{
+                            var OrderDays = (DateTime.Now - item.CreatedAt).Days;
+                            var CanFeedback = (item.Status.StatusId == 4) && (OrderDays < 2) && ((item.ProductFeedbacks?.Count ?? 0) < item.OrderDetails.Count);
+                        }
+
+                        @if (item.Status.StatusId != 5)
+                        {
+                            <a asp-controller="Bill" asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-primary">@(CanFeedback ? "View & Feedback" : "View")</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

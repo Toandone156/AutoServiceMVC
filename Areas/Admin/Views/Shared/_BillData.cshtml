@@ -1,0 +1,67 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Order>
+
+@{
+}
+
+<table class="table table-hover tm-table-small tm-product-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Table)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="item" data-status="@item.Status.StatusId">
+                <td scope="col">
+                    <a asp-action="Details" asp-route-id="@item.OrderId"
+                       class="text-reset text-decoration-none">
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </a>
+                </td>
+                <td scope="col">
+                    @Html.DisplayFor(modelItem => item.Table.TableName)
+                </td>
+                <td scope="col">
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td scope="col">
+                    @Html.DisplayFor(modelItem => item.Employee.FullName)
+                </td>
+                <td scope="col">
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td scope="col">
+                    <div class="tm-status-circle @item.Status.StatusName.ToLower()"></div>
+                    <span>@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
+                </td>
+                <td scope="col">
+                    <a href="#" class="tm-product-delete-link @((item.Status.StatusId > 3) ? "achor-disable" : "")"
+                       title="Update status" onclick="updatestatus(@item.OrderId, this);">
+                        <i class="fas fa-arrow-up tm-product-delete-icon"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

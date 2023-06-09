@@ -30,6 +30,18 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View();
         }
 
+        public async Task<IActionResult> GetBillData()
+        {
+            var result = await _orderRepo.GetAllAsync();
+            if (result.IsSuccess)
+            {
+                var data = (result.Data as List<Order>).OrderByDescending(o => o.CreatedAt);
+                return PartialView("_BillData", data);
+            }
+
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> Details(int id)
         {
             var result = await _orderRepo.GetByIdAsync(id);

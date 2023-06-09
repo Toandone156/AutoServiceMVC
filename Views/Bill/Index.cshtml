@@ -20,8 +20,8 @@
                 }
             </div>
         </div>
-        <div class="container">
-            @if(Model != null)
+        <div id="dataContainer" class="container">
+            @if (Model != null)
             {
                 @foreach (var item in Model)
                 {
@@ -92,7 +92,7 @@
                                         var CanFeedback = (item.Status.StatusId == 4) && (OrderDays < 2) && ((item.ProductFeedbacks?.Count ?? 0) < item.OrderDetails.Count);
                                     }
 
-                                    @if(item.Status.StatusId != 5)
+                                    @if (item.Status.StatusId != 5)
                                     {
                                         <a asp-controller="Bill" asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-primary">@(CanFeedback ? "View & Feedback" : "View")</a>
                                     }

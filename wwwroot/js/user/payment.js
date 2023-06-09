@@ -118,7 +118,7 @@ paymentButton.addEventListener("click", e => {
 	if (products.length == 0) {
 		showToast("Please add some product before payment");
 		e.preventDefault();
-	} else if (document.querySelector(".tablecode") != null) {
+	} else if (document.querySelector(".booktable").classList.contains("d-none")) {
 		showToast("Please BOOK TABLE before payment");
 		e.preventDefault();
 	} else if (document.querySelector('.nav-link[href="/auth/login"]') != null) {
