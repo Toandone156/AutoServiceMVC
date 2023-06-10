@@ -81,13 +81,7 @@ services.AddAuthentication(options =>
         var googleConfig = builder.Configuration.GetSection("ExtenalLogin:Google");
         options.ClientId = googleConfig["ClientID"];
         options.ClientSecret = googleConfig["ClientSecret"];
-    })
-    .AddFacebook(options =>
-    {
-        var facebookConfig = builder.Configuration.GetSection("ExtenalLogin:Facebook");
-		options.AppId = facebookConfig["ClientID"];
-		options.AppSecret = facebookConfig["ClientSecret"];
-	});
+    });
 
 services.AddSingleton<ICookieAuthentication, CookieAuthentication>();
 #endregion

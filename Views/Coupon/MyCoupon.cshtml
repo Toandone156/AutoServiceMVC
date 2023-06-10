@@ -40,7 +40,7 @@
 								   id="cpnBtn">Copy code</a>
 							</div>
 							<div class="date-valid">
-								<p>@(item.Coupon.EndAt == null ? "" : "Expired at " + @item.Coupon.EndAt)</p>
+								<p>@(item.Coupon.EndAt == null ? "" : "Expired at " + @item.Coupon.EndAt?.ToString("dd/MM/yyyy HH:mm:ss"))</p>
 							</div>
 
 						</div>

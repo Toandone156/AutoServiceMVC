@@ -63,7 +63,7 @@
 								   id="cpnBtn" @(isStart ? "" : "disable")>@(isStart ? item.PointAmount + " points" : displayRemain)</a>
 							</div>
 							<div class="date-valid">
-								<p>@(item.EndAt == null ? "" : "Expired at " + @item.EndAt)</p>
+								<p>@(item.EndAt == null ? "" : "Expired at " + @item.EndAt?.ToString("dd/MM/yyyy HH:mm:ss"))</p>
 							</div>
 
 						</div>

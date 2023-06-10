@@ -11,7 +11,7 @@ bookButton.addEventListener("click", e => {
     accessTableAjax(inputCode.value);
 })
 
-tableheader.addEventListener("click", closetable);
+tableheader.addEventListener("click", opentable);
 
 function closetable() {
     let tableform = document.querySelector(".table-form");
