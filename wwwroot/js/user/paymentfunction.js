@@ -7,11 +7,12 @@ const totalInput = document.getElementById("input-total");
 // Coupon support variables
 let ProcessCouponTimeout;
 const doneTypingInterval = 1500;
-const doneUpdateCartInterval = 2000;
-const input = document.getElementById("coupon-code");
+const doneUpdateCartInterval = 0;
+const couponInput = document.getElementById("coupon-code");
 const loading = document.querySelector(".coupon-loading");
 
 function loadContent() {
+	lastTotal = totalInput.value;
 	// Display message
 	if (products.length == 0) {
 		document.getElementById("emptyMessage").classList.remove("d-none");
@@ -94,25 +95,38 @@ loadContent();
 
 //Coupon check
 function ProcessCouponIfUpdateCart() {
-	ProcessCoupon(doneUpdateCartInterval);
+	UpdateOrder();
+	ProcessCoupon(doneUpdateCartInterval, false);
 }
 
 function ProcessCouponIfInput() {
-	ProcessCoupon(doneTypingInterval);
+	InputCoupon();
+	ProcessCoupon(doneTypingInterval, true);
 }
 
-function ProcessCoupon(timeout) {
-	let isValid = input.value && (products != null && products.length > 0);
+function CheckSimilarCouponCode() {
+	let lastCachedCouponCode = cachedCoupon.CouponCode;
+	let inputCouponCode = couponInput.value;
+	return lastCachedCouponCode == inputCouponCode;
+}
+
+function ProcessCoupon(timeout, inputCoupon) {
+	let isValid = couponInput.value && (products != null && products.length > 0);
 	if (isValid) {
-		loading.classList.add("active");
+		if(inputCoupon) loading.classList.add("active");
 		clearTimeout(ProcessCouponTimeout);
 
 		// Timeout section
 		let handler = () => {
-			checkCouponAjax(input.value);
+			checkCouponAjax(couponInput.value);
 			loading.classList.remove("active");
 		};
-		ProcessCouponTimeout = setTimeout(handler, timeout);
+		if(inputCoupon) ProcessCouponTimeout = setTimeout(handler, timeout);
+		else if(hasUpdateOrder) {
+			loading.classList.remove("active");
+		 	if(cachedCoupon != null && CheckSimilarCouponCode()) applyCoupon(cachedCoupon);
+		}
+
 	}
 	else {
 		// Remove coupon-id from input
@@ -121,15 +135,15 @@ function ProcessCoupon(timeout) {
 
 		// Reset discount value to 0
 		document.querySelector(".discount").innerHTML = formatCurrency(0);
-		showToast("Please add some products to apply coupon");
+		if(couponInput.value) showToast("Please add some products to apply coupon");
 	}
 }
 
-if (input != null) {
-	input.onkeydown = clearTimeout(ProcessCouponTimeout);
+if (couponInput != null) {
+	couponInput.onkeydown = clearTimeout(ProcessCouponTimeout);
 
-	input.addEventListener("keyup", _ => {
-		let isValid = input.value && (products != null && products.length > 0);
+	couponInput.addEventListener("keyup", _ => {
+		let isValid = couponInput.value && (products != null && products.length > 0);
 		if (isValid) {
 			loading.classList.add("active");
 			clearTimeout(ProcessCouponTimeout);

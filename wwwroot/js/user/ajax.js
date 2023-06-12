@@ -1,5 +1,35 @@
+let hasUpdateOrder = true;
+let successCoupon = true;
+let hasCouponInput = true;
+let lastTotal = 0;
+var cachedCoupon;
+
+function InputCoupon() {
+	hasCouponInput = true;
+}
+
+function UpdateOrder() {
+	hasUpdateOrder = true;
+}
+
+function ConfirmUpdateOrder() {
+	hasUpdateOrder = false;
+}
+
+function ConfirmInputCoupon() {
+	hasCouponInput = false;
+}
+
+function ConfirmPopupToast() {
+	successCoupon = false;
+}
+
+function ResetPopupToast() {
+	successCoupon = true;
+}
+
 function updateCartAjax(id, quantity) {
-	var status = true;
+	let status = true;
 
 	$.ajax({
 		url: '/Order/AddToCart',
@@ -24,11 +54,10 @@ function checkCouponAjax(couponCode) {
 		success: function (response) {
 			if (response.success) {
 				console.log("Run here");
-				var coupon = JSON.parse(response.data);
-				document.getElementById("coupon-id").value = coupon.CouponId;
-
+				let coupon = JSON.parse(response.data);
+				// Cache the Coupon for later process
+				cachedCoupon = coupon;
 				applyCoupon(coupon);
-
 			} else {
 				showToast("Coupon was not exist");
 				ResetCoupon();
@@ -57,29 +86,47 @@ function applyCoupon(coupon) {
 
 	if (coupon.MinimumOrderAmount != null && coupon.MinimumOrderAmount > subTotal) {
 		ResetCoupon();
-		showToast("Subtotal must more than " + formatCurrency(coupon.MinimumOrderAmount));
+		ResetPopupToast();
+		if(totalInput.value > lastTotal) {
+			lastTotal = (lastTotal > totalInput.value) ? lastTotal : totalInput.value;
+			showToast("Subtotal must more than " + formatCurrency(coupon.MinimumOrderAmount));
+		}
 		return;
 	}
-
+	// If apply coupon success, reset last Total
+	lastTotal = 0;
+	// Set coupon id to input
+	document.getElementById("coupon-id").value = coupon.CouponId;
 	let discount = 0;
 
 	if (coupon.DiscountValue != null) {
 		discount = coupon.DiscountValue;
 	}
 	else {
-		let value = subTotal * (coupon.DiscountPercentage) / 100;
-		discount = coupon.MaximumDiscountAmount == null ? value :
-			(value > coupon.MaximumDiscountAmount ? coupon.MaximumDiscountAmount : value);
+		let discountValue = subTotal * (coupon.DiscountPercentage) / 100;
+		let afterProcessValue = (discountValue > coupon.MaximumDiscountAmount) ? coupon.MaximumDiscountAmount : discountValue;
+		discount = coupon.MaximumDiscountAmount == null ? discountValue : afterProcessValue;
 	}
 
-	showToast("Apply coupon success")
+	if(hasCouponInput) {
+		ConfirmInputCoupon();
+		ConfirmPopupToast();
+		showToast("Apply coupon success");
+	}
+	else if(hasUpdateOrder) {
+		ConfirmUpdateOrder();
+		if(successCoupon) {
+			ConfirmPopupToast();
+			showToast("Apply coupon success");
+		}
+	}
 
 	document.querySelector(".discount").innerHTML = formatCurrency(discount);
 	loadContent();
 }
 
 function tradeCouponAjax(coupon) {
-	var couponId = coupon.getAttribute("data-value");
+	let couponId = coupon.getAttribute("data-value");
 
 	$.ajax({
 		url: '/Coupon/TradeCoupon',
@@ -100,7 +147,7 @@ function tradeCouponAjax(coupon) {
 }
 
 function changePasswordApi(mail) {
-	var returnValue = false;
+	let changeSuccess = false;
 
 	$.ajax({
 		url: '/Auth/ChangePassword',
@@ -109,7 +156,7 @@ function changePasswordApi(mail) {
 		success: function (response) {
 			if (response.success) {
 				showToast(response.message);
-				returnValue = true;
+				changeSuccess = true;
 			} else {
 				showToast(response.message);
 			}
@@ -119,12 +166,12 @@ function changePasswordApi(mail) {
 		}
 	});
 
-	return returnValue;
+	return changeSuccess;
 }
 
 function accessTableAjax(tablecode) {
-	var notbookElement = document.querySelector(".notbooktable");
-	var bookElement = document.querySelector(".booktable");
+	let notebookElement = document.querySelector(".notbooktable");
+	let bookElement = document.querySelector(".booktable");
 
 	$.ajax({
 		url: '/Order/AccessTableApi',
@@ -135,7 +182,7 @@ function accessTableAjax(tablecode) {
 				console.log(response)
 				showToast(response.message);
 
-				notbookElement.classList.add('d-none');
+				notebookElement.classList.add('d-none');
 				bookElement.innerHTML = `Your table: ${response.name} <a href="#" class="exit-table text-white" onclick="event.preventDefault(); exitTableAjax();"><i class="ion-ios-log-out"></i></a>`
 				bookElement.classList.remove('d-none');
 			} else {
@@ -150,8 +197,8 @@ function accessTableAjax(tablecode) {
 }
 
 function exitTableAjax() {
-	var notbookElement = document.querySelector(".notbooktable");
-	var bookElement = document.querySelector(".booktable");
+	let notebookElement = document.querySelector(".notbooktable");
+	let bookElement = document.querySelector(".booktable");
 
 	$.ajax({
 		url: '/Order/ExitTableApi',
@@ -164,7 +211,7 @@ function exitTableAjax() {
 
 
 				bookElement.classList.add('d-none');
-				notbookElement.classList.remove('d-none');
+				notebookElement.classList.remove('d-none');
 			} else {
 				showToast("Exit table fail");
 				return null;
