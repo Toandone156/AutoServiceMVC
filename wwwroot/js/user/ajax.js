@@ -23,6 +23,7 @@ function checkCouponAjax(couponCode) {
 		data: { couponCode: couponCode },
 		success: function (response) {
 			if (response.success) {
+				console.log("Run here");
 				var coupon = JSON.parse(response.data);
 				document.getElementById("coupon-id").value = coupon.CouponId;
 
@@ -30,6 +31,7 @@ function checkCouponAjax(couponCode) {
 
 			} else {
 				showToast("Coupon was not exist");
+				ResetCoupon();
 				document.querySelector(".discount").innerHTML = formatCurrency(0);
 				loadContent();
 			}
@@ -40,10 +42,21 @@ function checkCouponAjax(couponCode) {
 	});
 }
 
+function ResetCoupon() {
+	// Remove coupon-id from input
+	document.getElementById("coupon-id").value = "";
+	document.getElementById("coupon-id").removeAttribute("value");
+
+	// Reset discount value to 0
+	document.querySelector(".discount").innerHTML = formatCurrency(0);
+	loadContent();
+}
+
 function applyCoupon(coupon) {
 	let subTotal = convertCurrency(document.querySelector(".subTotal").innerHTML);
 
 	if (coupon.MinimumOrderAmount != null && coupon.MinimumOrderAmount > subTotal) {
+		ResetCoupon();
 		showToast("Subtotal must more than " + formatCurrency(coupon.MinimumOrderAmount));
 		return;
 	}

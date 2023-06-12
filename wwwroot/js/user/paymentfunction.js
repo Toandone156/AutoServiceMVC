@@ -1,11 +1,18 @@
-var products = document.getElementsByClassName("order-item");
-var subTotal = document.querySelector(".subTotal");
-var discount = document.querySelector(".discount");
-var totalItem = document.querySelector(".total");
-var totalInput = document.getElementById("input-total");
+const products = document.getElementsByClassName("order-item");
+const subTotal = document.querySelector(".subTotal");
+const discount = document.querySelector(".discount");
+const totalItem = document.querySelector(".total");
+const totalInput = document.getElementById("input-total");
+
+// Coupon support variables
+let ProcessCouponTimeout;
+const doneTypingInterval = 1500;
+const doneUpdateCartInterval = 2000;
+const input = document.getElementById("coupon-code");
+const loading = document.querySelector(".coupon-loading");
 
 function loadContent() {
-
+	// Display message
 	if (products.length == 0) {
 		document.getElementById("emptyMessage").classList.remove("d-none");
 	} else {
@@ -31,8 +38,8 @@ function loadContent() {
 
 function updateQuantity(element, increment) {
 	let orderItem = element.closest(".order-item");
-	var inputField = orderItem.querySelector('input');
-	var quantity = parseInt(inputField.value, 10);
+	let inputField = orderItem.querySelector('input');
+	let quantity = parseInt(inputField.value, 10);
 
 	quantity += increment;
 
@@ -40,21 +47,19 @@ function updateQuantity(element, increment) {
 		return;
 	} else {
 		inputField.value = quantity;
-
-		var priceElement = orderItem.querySelector('.price');
-		var price = convertCurrency(priceElement.innerHTML);
-		var productTotalElement = orderItem.querySelector('.productTotal');
 	}
 
 	updateCartAjax(orderItem.getAttribute("data-id"), quantity);
 	loadContent();
+
+	// Process Coupon if has any update in cart
+	ProcessCouponIfUpdateCart();
 }
 
-var quantity = document.querySelectorAll("#quantity");
-
-var minusButtons = document.querySelectorAll('.quantity-left-minus');
-var plusButtons = document.querySelectorAll('.quantity-right-plus');
-var deleteButtons = document.querySelectorAll('.remove-payment-item');
+let quantity = document.querySelectorAll("#quantity");
+let minusButtons = document.querySelectorAll('.quantity-left-minus');
+let plusButtons = document.querySelectorAll('.quantity-right-plus');
+let deleteButtons = document.querySelectorAll('.remove-payment-item');
 
 minusButtons.forEach(function (button) {
 	button.addEventListener('click', function () {
@@ -70,53 +75,78 @@ plusButtons.forEach(function (button) {
 
 deleteButtons.forEach(button => {
 	button.addEventListener('click', function () {
-		var item = button.closest(".order-item");
-		updateCartAjax(item.getAttribute("data-id"), 0);
-		item.remove();
-
+		let orderItem = button.closest(".order-item");
+		updateCartAjax(orderItem.getAttribute("data-id"), 0);
+		orderItem.remove();
 		loadContent();
+		ProcessCouponIfUpdateCart();
 	})
 })
 
 quantity.forEach(p => {
-	p.addEventListener('keyup', loadContent);
+	p.addEventListener('keyup', function() {
+		loadContent();
+		ProcessCouponIfUpdateCart();
+	});
 })
 
 loadContent();
 
 //Coupon check
-var typingTimer;
-var doneTypingInterval = 1500;
-var input = document.getElementById("coupon-code");
-var loading = document.querySelector(".coupon-loading");
+function ProcessCouponIfUpdateCart() {
+	ProcessCoupon(doneUpdateCartInterval);
+}
+
+function ProcessCouponIfInput() {
+	ProcessCoupon(doneTypingInterval);
+}
+
+function ProcessCoupon(timeout) {
+	let isValid = input.value && (products != null && products.length > 0);
+	if (isValid) {
+		loading.classList.add("active");
+		clearTimeout(ProcessCouponTimeout);
+
+		// Timeout section
+		let handler = () => {
+			checkCouponAjax(input.value);
+			loading.classList.remove("active");
+		};
+		ProcessCouponTimeout = setTimeout(handler, timeout);
+	}
+	else {
+		// Remove coupon-id from input
+		document.getElementById("coupon-id").value = "";
+		document.getElementById("coupon-id").removeAttribute("value");
+
+		// Reset discount value to 0
+		document.querySelector(".discount").innerHTML = formatCurrency(0);
+		showToast("Please add some products to apply coupon");
+	}
+}
 
 if (input != null) {
-	input.addEventListener("keyup", e => {
-		loading.classList.add("active");
-		clearTimeout(typingTimer);
+	input.onkeydown = clearTimeout(ProcessCouponTimeout);
 
-		if (input.value) {
-			typingTimer = setTimeout(() => {
-				checkCouponAjax(input.value);
-				loading.classList.remove("active");
-			}, doneTypingInterval);
-		} else {
+	input.addEventListener("keyup", _ => {
+		let isValid = input.value && (products != null && products.length > 0);
+		if (isValid) {
+			loading.classList.add("active");
+			clearTimeout(ProcessCouponTimeout);
+			ProcessCouponIfInput();
+		}
+		else {
 			loading.classList.remove("active");
 			document.querySelector(".discount").innerHTML = formatCurrency(0);
 			loadContent();
 		}
-	})
-
-	input.addEventListener("keydown", e => {
-		clearTimeout(typingTimer);
-	})
+	});
 }
 
-var paymentButton = document.querySelector(".paymentbutton");
-
+const paymentButton = document.querySelector(".paymentbutton");
 paymentButton.addEventListener("click", e => {
 	if (products.length == 0) {
-		showToast("Please add some product before payment");
+		showToast("Please add some products before payment");
 		e.preventDefault();
 	} else if (document.querySelector(".booktable").classList.contains("d-none")) {
 		showToast("Please BOOK TABLE before payment");
