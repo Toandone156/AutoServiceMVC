@@ -87,8 +87,9 @@ function applyCoupon(coupon) {
 	if (coupon.MinimumOrderAmount != null && coupon.MinimumOrderAmount > subTotal) {
 		ResetCoupon();
 		ResetPopupToast();
+		console.log(lastTotal);
 		if(totalInput.value > lastTotal) {
-			lastTotal = (lastTotal > totalInput.value) ? lastTotal : totalInput.value;
+			lastTotal = totalInput.value;
 			showToast("Subtotal must more than " + formatCurrency(coupon.MinimumOrderAmount));
 		}
 		return;
