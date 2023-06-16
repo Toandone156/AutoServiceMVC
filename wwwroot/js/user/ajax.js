@@ -52,6 +52,7 @@ function checkCouponAjax(couponCode) {
 		type: 'POST',
 		data: { couponCode: couponCode },
 		success: function (response) {
+			lastTotal = 0;
 			if (response.success) {
 				console.log("Run here");
 				let coupon = JSON.parse(response.data);
@@ -87,9 +88,8 @@ function applyCoupon(coupon) {
 	if (coupon.MinimumOrderAmount != null && coupon.MinimumOrderAmount > subTotal) {
 		ResetCoupon();
 		ResetPopupToast();
-		console.log(lastTotal);
 		if(totalInput.value > lastTotal) {
-			lastTotal = totalInput.value;
+			lastTotal = coupon.MinimumOrderAmount;
 			showToast("Subtotal must more than " + formatCurrency(coupon.MinimumOrderAmount));
 		}
 		return;

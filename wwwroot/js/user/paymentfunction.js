@@ -12,7 +12,6 @@ const couponInput = document.getElementById("coupon-code");
 const loading = document.querySelector(".coupon-loading");
 
 function loadContent() {
-	lastTotal = totalInput.value;
 	// Display message
 	if (products.length == 0) {
 		document.getElementById("emptyMessage").classList.remove("d-none");
