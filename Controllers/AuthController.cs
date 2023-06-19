@@ -121,11 +121,11 @@ namespace AutoServiceMVC.Controllers
 				MailContent content = new MailContent()
 				{
 					To = register.Email,
-					Subject = "RESET PASSWORD IN AUTOSERVICE",
+					Subject = "CONFIRM EMAIL IN AUTOSERVICE",
 					Body = mailBody
 				};
 
-                await _mail.SendMailAsync(content);
+                Task.Run(async () => await _mail.SendMailAsync(content));
 
                 return RedirectToAction("VerifyEmail");
             }
@@ -300,7 +300,7 @@ namespace AutoServiceMVC.Controllers
             var result = await HttpContext.AuthenticateAsync("User_Scheme");
             var claims = result.Principal;
 
-            var user = _dbContext.Users.FirstOrDefault(x => x.Email == claims.FindFirstValue(ClaimTypes.Email) && x.HashPassword == null);
+            var user = _dbContext.Users.FirstOrDefault(x => x.Email == claims.FindFirstValue(ClaimTypes.Email));
 
             if(user == null)
             {

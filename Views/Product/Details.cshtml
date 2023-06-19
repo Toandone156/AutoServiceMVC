@@ -146,8 +146,8 @@
 
 		addButton.addEventListener("click", e => {
 			e.preventDefault();
-
 			AddItemToCart("@Model.ProductId", "@Model.ProductName", "@Model.Price", "@Model.ProductImage", input.value);
+			UpdateCartButtonQuantity();
 		});
 	</script>
 }

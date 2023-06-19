@@ -38,9 +38,6 @@ namespace AutoServiceMVC.Models
         public string FullName { get; set; }
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
-        [DataType(DataType.PhoneNumber)]
-        [DisplayName("Phone Number")]
-        public string? PhoneNum { get; set; }
         [DisplayName("Role")]
         public int? RoleId { get; set; }
     }

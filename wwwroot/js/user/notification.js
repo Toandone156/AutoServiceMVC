@@ -1,4 +1,3 @@
-//var audio = new Audio("noti.mp3");
 var connection = new signalR.HubConnectionBuilder()
     .withUrl("/noti")
     .build();
@@ -11,7 +10,7 @@ connection.start().then(function () {
 })
 
 connection.on("ReceiveStatus", message => {
-    //audio.play();
+    NotiAudio();
     showToast(message);
 
     if (window.location.href.endsWith("bill")) {
@@ -29,4 +28,17 @@ function GetOrderData() {
         dataType: 'html',
         success: function (result) { container.innerHTML = result }
     });
+}
+
+function NotiAudio() {
+    let audio = new Audio("noti.mp3");
+    let button = document.createElement("button");
+    button.classList.add("d-none");
+    button.addEventListener("click", e => {
+        e.preventDefault();
+        audio.play();
+    })
+
+    button.click();
+    button.remove();
 }

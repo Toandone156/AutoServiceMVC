@@ -25,12 +25,7 @@ services.AddRouting(options =>
 });
 
 #region Session
-services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.MaxValue;
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
+services.AddSession();
 
 services.AddSingleton<ISessionCustom, SessionCustom>();
 #endregion
@@ -55,7 +50,7 @@ services.AddDbContext<AppDbContext>(options =>
         .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
         .AddConsole();
     }));
-});
+}, ServiceLifetime.Singleton);
 #endregion
 
 #region Authentication
@@ -69,13 +64,16 @@ services.AddAuthentication(options =>
         options.LoginPath = "/auth/login";
         options.AccessDeniedPath = "/";
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.Cookie.MaxAge = options.ExpireTimeSpan;
+        options.SlidingExpiration = true;
     })
     .AddCookie("Admin_Scheme", options =>
     {
         options.LoginPath = "/admin/auth/login";
         options.AccessDeniedPath = "/admin/";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
-    })
+		options.Cookie.MaxAge = options.ExpireTimeSpan;
+	})
     .AddGoogle(options =>
     {
         var googleConfig = builder.Configuration.GetSection("ExtenalLogin:Google");
@@ -124,6 +122,8 @@ services.AddScoped<IImageUploadService, ImageUploadService>();
 services.AddScoped<IPaymentService, PaymentService>();
 services.AddScoped<IPointService, PointService>();
 services.AddSingleton<ICookieService, CookieService>();
+
+services.AddSingleton<IChatbotService, ChatbotService>();
 #endregion
 
 services.AddSignalR(e => {
@@ -145,9 +145,9 @@ if (!app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseSession();
-
 app.UseRouting();
+
+app.UseSession();
 
 #region currency
 var supportedCultures = new[] { "vi-VN" };

@@ -108,7 +108,7 @@ function AddItemToCart(productId, productTitle, productPrice, productImgURL, qua
 	for (const element of cartItemsList) {
 		if (element.getAttribute("data-id") == productId) {
 			showToast("This product was exist in cart");
-			return;
+			return false;
 		}
 	}
 
@@ -157,6 +157,8 @@ function AddItemToCart(productId, productTitle, productPrice, productImgURL, qua
 			}
 			UpdateCartTotalPrice();
 		});
+
+	return true;
 }
 
 function RemoveCartItem(event) {

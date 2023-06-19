@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Chatbot";
+}
+
+<section class="ftco-section contact-section">
+	<div class="container mt-5">
+		<div class="row justify-content-center mb-5">
+			<div class="col-md-7 heading-section text-center ftco-animate">
+				<span class="subheading">SelfCoffee</span>
+				<h2 class="mb-4">Service chatbot</h2>
+			</div>
+		</div>
+        <div class="row block-9 justify-content-md-center">
+            <div class="col-md-6 block--background cart-total m-0">
+                <div class="chatbot__overview">
+                    <ul class="chatlist">
+                        <li class="bot__output bot__output--standard">Hello, Welcome to SelfCoffee!</li>
+                    </ul>
+                </div>
+                <div class="chatbox-area">
+                    <form action="" id="chatform">
+                        <textarea placeholder="Talk to me!" class="chatbox" name="chatbox" resize: "none" minlength="2"></textarea>
+                        <input class="submit-button" type="submit" value="Send">
+                    </form>
+                </div>
+            </div>
+		</div>
+	</div>
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/user/botchat.css"/>
+}
+
+@section Scripts {
+    <script src="~/js/user/botchat.js"></script>
+}
