@@ -9,100 +9,144 @@
     var role = User.FindFirstValue(ClaimTypes.Role);
 }
 
-<div class="row mb-5">
-    <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
-        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="tm-block-title d-inline-block">Product detail</h2>
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-action="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">Product Management</span>
+    </a>
+</h1>
+<section class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Product Details</h6>
+    </div>
+    <form asp-action="Edit" class="tm-edit-product-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-white"></div>
+        <input type="hidden" asp-for="ProductId" />
+        <input type="hidden" asp-for="ProductImage" />
+        <div class="card-body row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ProductName"></label>
+                    <input asp-for="ProductName" class="form-control">
+                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductDescription"></label>
+                    <textarea asp-for="ProductDescription" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryId">Category</label>
+                    <select asp-for="CategoryId"
+                            asp-items="@dropdownlist"
+                            class="form-control">
+                    </select>
                 </div>
             </div>
-            <form asp-action="Edit" class="tm-edit-product-form" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-white"></div>
-                    <input type="hidden" asp-for="ProductId" />
-                    <input type="hidden" asp-for="ProductImage" />
-                    <div class="row tm-edit-product-row">
-                        <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="form-group mb-3">
-                                    <label asp-for="ProductName"></label>
-                                    <input asp-for="ProductName" class="form-control validate">
-                                    <span asp-validation-for="ProductName" class="text-white"></span>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="d-none d-md-block" style="opacity: 0;">Hidden</label>
+                    <input type="file" onchange="LoadFile(event)" class="form-control" id="image-upload" accept="image/*" hidden>
+                    <div class="border border-dark rounded text-center" style="border: 2.4px dotted!important;">
+                        @if(Model.ProductImage == string.Empty){
+                            <img class="d-inline-block" alt="" id="preview-img">
+                            <label for="image-upload" id="preview-upload">
+                                <span class="text-dark">
+                                    <i class="fas fa-upload h1 py-3"></i>
+                                </span>
+                                <div class="py-3">
+                                    Select a image or drag here
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="ProductDescription"></label>
-                                    <textarea asp-for="ProductDescription" class="form-control validate" rows="5"></textarea>
-                                    <span asp-validation-for="ProductDescription" class="text-white"></span>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="Price"></label>
-                                    <input asp-for="Price" class="form-control validate">
-                                    <span asp-validation-for="Price" class="text-white"></span>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="CategoryId">Category</label>
-                                    <select asp-for="CategoryId" 
-                                            asp-items="@dropdownlist" 
-                                            class="custom-select tm-select-accounts">
-                                    </select>
-                                </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
-                            <div class="tm-product-img-dummy mx-auto">
-                                @if(Model.ProductImage != string.Empty)
-                                {
-                                    <img id="preview" src="@Model.ProductImage" alt="Product image" class="img-fluid d-block mx-auto">
-                                }else{
-                                    <img id="preview" src="#" alt="Product image" class="img-fluid mx-auto" style="display:none;">
-                                    <i id="upload" class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
-                                }
-                            </div>
-
-                            @if(role == "Admin")
-                            {
-                                <div class="custom-file mt-3 mb-3">
-                                    <input id="fileInput" type="file" name="imageFile" style="display:none;" onchange="previewImage(event)">
-                                    <input type="button" class="btn btn-primary btn-block mx-auto" value="CHANGE IMAGE NOW" onclick="document.getElementById('fileInput').click();">
-                                </div>
-                            }
-                        </div>
-                        @if(role == "Admin"){
-                            <div class="col-12 mb-3">
-                                <button type="submit" class="btn btn-primary btn-block text-uppercase">Update now</button>
-                            </div>
-
-                            <div class="col-12">
-                                <button type="button" class="btn btn-danger btn-block text-uppercase"
-                                        data-toggle="modal" data-target="#deleteModal">
-                                    Delete
-                                </button>
-                            </div>
+                            </label>
+                        }
+                        else
+                        {
+                            <img src="@Model.ProductImage" class="d-inline-block w-100" alt="" id="preview-img">
                         }
                     </div>
-
-                <!-- Modal -->
-                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalCenterTitle">Are you sure?</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                You want to delete product <b>@Model.ProductName</b>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button asp-action="Delete" asp-route-id="@Model.ProductId"
-                                        class="btn btn-danger">
-                                    Sure, Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    @if(role == "Admin")
+                    {
+                        <label for="image-upload" class="mt-4 d-flex justify-content-between font-weight-bold btn btn-secondary btn-icon-split btn-block">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="text w-100">Change product image</span>
+                        </label>
+                    }
                 </div>
-                </form>
+            </div>
+            @if(role == "Admin")
+            {
+                <div class="col-md-12 mt-2">
+                    <button type="submit" class="btn btn-warning font-weight-bold btn-block">Update</button>
+                    <a href="#" data-toggle="modal" data-target="#deleteModal"
+                       class="btn btn-danger btn-block">Delete</a>
+                </div>
+            }
+        </div>
+    </form>
+</section>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-responsive table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Comment</th>
+                        <th>Image</th>
+                        <th>Rating</th>
+                        @if (role == "Admin")
+                        {
+                            <th scope="col">&nbsp;</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ProductFeedbacks)
+                    {
+                        <tr class="item">
+                            <td class="nameUser">@item.User.FullName</td>
+                            <td>
+                                <p class="feedbacks" style="margin: 0;">
+                                    @item.Comment
+                                </p>
+                            </td>
+                            <td>
+                                <img src="@item.Image" width="200" />
+                            </td>
+                            <td>
+                                <div class="rating">
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        <i class="fas fa-star" style="@(i < item.Rating ? "color: yellow!important" : "")"></i>
+                                    }
+                                </div>
+                            </td>
+                            @if (role == "Admin")
+                            {
+                                <td>
+                                    <a class="tm-product-delete-link btn btn-danger btn-block"
+                                       onclick="deleteProductFeedback(@item.ProductFeedbackId, this)">
+                                        <i class="fas fa-trash-alt tm-product-delete-icon"></i>
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -162,7 +206,27 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete product</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Lay Off" below if you are ready to delete this product.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" asp-action="LayOff" asp-route-id="@Model.ProductId">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
+    <script src="~/js/admin/upload-img.js"></script>
     <script>
         function updateStock(productId){
             $.ajax({

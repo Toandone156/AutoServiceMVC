@@ -2,74 +2,70 @@
 @inject ICommonRepository<Role> roleService
 @{
     ViewData["Title"] = "Register";
-    Layout = "_AuthenLayout";
     var result = await roleService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<Role>)result.Data, "RoleId", "RoleName");
 }
 
-<div class="row">
-    <div class="col-12 mx-auto tm-login-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="tm-block-title mb-4">Welcome to Dashboard, Register</h2>
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-area="Admin" asp-controller="Employee" asp-action="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">Employee Management</span>
+    </a>
+</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        Create Employee
+    </div>
+
+    <form asp-action="Register" method="post" class="tm-login-form">
+        <div asp-validation-summary="ModelOnly" class="text-white"></div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username"
+                           class="form-control"/>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password"
+                           class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AgainPassword"></label>
+                    <input asp-for="AgainPassword"
+                           class="form-control" />
+                    <span asp-validation-for="AgainPassword" class="text-danger"></span>
                 </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-12">
-                    <form asp-action="Register" method="post" class="tm-login-form">
-                        <div asp-validation-summary="ModelOnly" class="text-white"></div>
-                        <div class="form-group">
-                            <label asp-for="Username"></label>
-                            <input asp-for="Username"
-                                    class="form-control validate"
-                                    value="" />
-                            <span asp-validation-for="Username" class="text-white"></span>
-                        </div>
-                        <div class="form-group mt-3">
-                            <label asp-for="Password"></label>
-                            <input asp-for="Password"
-                                    class="form-control validate"
-                                    value="" />
-                            <span asp-validation-for="Password" class="text-white"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="AgainPassword"></label>
-                            <input asp-for="AgainPassword"
-                                    class="form-control validate"
-                                    value="" />
-                            <span asp-validation-for="AgainPassword" class="text-white"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="FullName"></label>
-                            <input asp-for="FullName"
-                                    class="form-control validate"
-                                    value="" />
-                            <span asp-validation-for="FullName" class="text-white"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Email"></label>
-                            <input asp-for="Email"
-                                    class="form-control validate"
-                                    value="" />
-                            <span asp-validation-for="Email" class="text-white"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="RoleId"></label>
-                            <select asp-for="RoleId"
-                                    asp-items="@dropdownlist"
-                                    class="custom-select tm-select-accounts">
-                            </select>
-                        </div>
-                        <div class="form-group mt-4">
-                            <button type="submit"
-                                    class="btn btn-primary btn-block text-uppercase w-100">
-                                Register
-                            </button>
-                        </div>
-                    </form>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FullName"></label>
+                    <input asp-for="FullName"
+                           class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email"
+                           class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoleId"></label>
+                    <select asp-for="RoleId"
+                            asp-items="@dropdownlist"
+                            class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 mt-2">
+                <button type="submit" class="btn btn-primary btn-block">Add Employee</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>

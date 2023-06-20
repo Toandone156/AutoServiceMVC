@@ -6,56 +6,76 @@
     var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
 }
 
-<div class="row">
-    <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
-        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="tm-block-title d-inline-block">Add Product</h2>
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-action="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">Product Management</span>
+    </a>
+</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 font-weight-bold">
+        Create Product
+    </div>
+
+    <form asp-action="Create" class="tm-edit-product-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-white"></div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ProductName"></label>
+                    <input asp-for="ProductName" class="form-control">
+                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductDescription"></label>
+                    <textarea asp-for="ProductDescription" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryId">Category</label>
+                    <select asp-for="CategoryId"
+                            asp-items="@dropdownlist"
+                            class="form-control">
+                    </select>
                 </div>
             </div>
-            <form asp-action="Create" class="tm-edit-product-form" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-white"></div>
-                    <div class="row tm-edit-product-row">
-                        <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="form-group mb-3">
-                                    <label asp-for="ProductName"></label>
-                                    <input asp-for="ProductName" class="form-control validate">
-                                    <span asp-validation-for="ProductName" class="text-white"></span>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="ProductDescription"></label>
-                                    <textarea asp-for="ProductDescription" class="form-control validate" rows="5"></textarea>
-                                    <span asp-validation-for="ProductDescription" class="text-white"></span>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="Price"></label>
-                                    <input asp-for="Price" class="form-control validate">
-                                    <span asp-validation-for="Price" class="text-white"></span>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="CategoryId">Category</label>
-                                    <select asp-for="CategoryId" 
-                                            asp-items="@dropdownlist"
-                                            class="custom-select tm-select-accounts">
-                                    </select>
-                                </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
-                            <div class="tm-product-img-dummy mx-auto">
-                                <img id="preview" src="#" alt="Product image" class="img-fluid mx-auto" style="display:none;">
-                                <i id="upload" class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
+            <div class="col-md-6">
+                <div class="form-group h-50">
+                    <label class="d-none d-md-block" style="opacity: 0;">Hidden</label>
+                    <input type="file" name="imageFile" onchange="LoadFile(event)" class="form-control" id="image-upload" accept="image/*" hidden>
+                    <div class="border border-dark rounded text-center" style="border: 2.4px dotted!important;">
+                        <img src="" class="d-inline-block w-100" alt="" id="preview-img">
+                        <label for="image-upload" id="preview-upload">
+                            <span class="text-dark">
+                                <i class="fas fa-upload h1 py-3"></i>
+                            </span>
+                            <div class="py-3">
+                                Select a image or drag here
                             </div>
-                            <div class="custom-file mt-3 mb-3">
-                                <input id="fileInput" name="imageFile" type="file" style="display:none;" accept="image/*" onchange="previewImage(event)">
-                                <input type="button" class="btn btn-primary btn-block mx-auto" value="UPLOAD PRODUCT IMAGE" onclick="document.getElementById('fileInput').click();">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Product Now</button>
-                        </div>
+                        </label>
                     </div>
-                </form>
+                    <label for="image-upload" class="mt-4 d-flex justify-content-between font-weight-bold btn btn-secondary btn-icon-split btn-block">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="text w-100">Upload product image</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12 mt-2">
+                <button type="submit" class="btn btn-primary btn-block">Add New Product</button>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
+
+@section Scripts {
+    <script src="~/js/admin/upload-img.js"></script>
+}

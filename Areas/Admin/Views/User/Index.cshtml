@@ -1,85 +1,55 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.User>
-@inject ICommonRepository<UserType> userTypeService
 @{
     ViewData["Title"] = "User";
-    var list = await userTypeService.GetAllAsync();
-    var selectList = new SelectList((IEnumerable<UserType>)list.Data, "UserTypeId", "UserTypeName");
 }
 
-<div class="row tm-content-row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-products">
-            <div class="form-group mb-3">
-                <label for="statusDropdown">Status</label>
-                <select id="statusDropdown"
-                        asp-items="@selectList"
-                        class="custom-select tm-select-accounts">
-                    <option value="All">All user</option>
-                </select>
-            </div>
-            <div class="tm-product-table-container">
-                <table class="table table-hover tm-table-small tm-product-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.FullName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Email)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Point)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.UserType)
-                            </th>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">User List</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FullName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Point)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UserType)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="item" data-type="@item.UserTypeId">
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.UserId"
+                                   class="font-weight-bold">
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Point)
+                            </td>
+                            <td>
+                                @item.UserType.UserTypeName
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr class="item" data-type="@item.UserTypeId">
-                                <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.UserId"
-                                       class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.FullName)
-                                    </a>
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Point)
-                                </td>
-                                <td scope="col">
-                                    @item.UserType.UserTypeName
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
+
 </div>
-
-@section scripts {
-    <script>
-        var dropdown = document.getElementById("statusDropdown");
-        dropdown.addEventListener("change", function () {
-            var selected = dropdown.value;
-            var productRows = document.getElementsByClassName("item");
-
-            for (var i = 0; i < productRows.length; i++) {
-                var row = productRows[i];
-                var rowdata = row.getAttribute("data-type");
-
-                if (selected === "All" || rowdata === selected) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        });
-    </script>
-}

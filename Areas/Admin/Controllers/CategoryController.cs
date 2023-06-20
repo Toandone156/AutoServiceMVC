@@ -1,8 +1,11 @@
-﻿using AutoServiceMVC.Models;
+﻿using AutoServiceMVC.Migrations;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using System;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
@@ -68,10 +71,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: CategoryControler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Edit(
             [Bind("CategoryId,CategoryName")] Category category)
         {
@@ -94,8 +95,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View("Details", category.CategoryId);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _categoryRepo.DeleteByIdAsync(id);

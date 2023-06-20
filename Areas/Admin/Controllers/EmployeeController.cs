@@ -57,8 +57,6 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return View("Details", employee.EmployeeId);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LayOff(int id)
         {
             var result = await _employeeRepo.GetByIdAsync(id);

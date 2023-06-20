@@ -3,36 +3,41 @@
     ViewData["Title"] = "Category";
 }
 
-<div class="row tm-content-row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-products">
-            <div class="tm-product-table-container">
-                <table class="table table-hover tm-table-small tm-product-table">
-                    <thead>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between">
+        <div class="h6 font-weight-bold text-primary align-self-center">Category List</div>
+        <a asp-action="Create" class="d-flex justify-content-between btn btn-success btn-icon-split">
+            <span class="text">Create</span>
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CategoryName)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
                         <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CategoryName)
-                            </th>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.CategoryId"
+                                   class="font-weight-bold">
+                                    @Html.DisplayFor(modelItem => item.CategoryName)
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.CategoryId"
-                                       class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.CategoryName)
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <!-- table container -->
-            <a asp-action="Create"
-               class="btn btn-primary btn-block text-uppercase mb-3">Add new category</a>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
+
 </div>
