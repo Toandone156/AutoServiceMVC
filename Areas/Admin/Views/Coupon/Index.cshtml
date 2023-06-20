@@ -2,109 +2,82 @@
 @using System.Security.Claims
 
 @{
-    ViewData["Title"] = "Coupon";
+    ViewData["Title"] = "Coupon Management";
     var role = User.FindFirstValue(ClaimTypes.Role);
 }
 
-<div class="row tm-content-row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-products">
-            <div class="form-group mb-3">
-                <label for="statusDropdown">Status</label>
-                <select id="statusDropdown"
-                        class="custom-select tm-select-accounts">
-                    <option value="All">All coupon</option>
-                    <option value="using">On using</option>
-                    <option value="ended">Ended</option>
-                </select>
-            </div>
-            <div class="tm-product-table-container">
-                <table class="table table-hover tm-table-small tm-product-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CouponCode)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Quantity)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PointAmount)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.StartAt)
-                            </th>
-                            <th>
-                                Status
-                            </th>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between">
+        <div class="h5 font-weight-bold text-primary align-self-center">Coupon Management</div>
+        <a asp-action="Create" class="d-flex justify-content-between btn btn-success btn-icon-split mt-2">
+            <span class="text">Create</span>
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CouponCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Quantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Remain)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PointAmount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.StartAt)
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="item"
+                            data-status="@((item.StartAt > DateTime.Now || item.EndAt < DateTime.Now) ? "ended" : "using")">
+                            <td scope="col">
+                                <a asp-action="Details" asp-route-id="@item.CouponId"
+                                   class="font-weight-bold">
+                                    @Html.DisplayFor(modelItem => item.CouponCode)
+                                </a>
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Remain)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.PointAmount)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.StartAt)
+                            </td>
+                            <td scope="col">
+                                @if ((item.Remain != null && item.Remain < 1) || (item.StartAt > DateTime.Now || item.EndAt < DateTime.Now))
+                                {
+                                    <span class="text-danger">Not Public</span>
+                                }
+                                else
+                                {
+                                    <span class="text-success">Public</span>
+                                }
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr class="item"
-                                data-status="@((item.StartAt > DateTime.Now || item.EndAt < DateTime.Now) ? "ended" : "using")">
-                                <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.CouponId"
-                                       class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.CouponCode)
-                                    </a>
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Quantity)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.PointAmount)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.StartAt)
-                                </td>
-                                <td scope="col">
-                                    @if ((item.Remain != null && item.Remain < 1) || (item.StartAt > DateTime.Now || item.EndAt < DateTime.Now))
-                                    {
-                                        <div class="tm-status-circle cancelled"></div>
-                                        <span>Not Public</span>
-                                    }
-                                    else
-                                    {
-                                        <div class="tm-status-circle done"></div>
-                                        <span>Public</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <!-- table container -->
-            @if(role == "Admin")
-            {
-                <a asp-action="Create"
-                   class="btn btn-primary btn-block text-uppercase mb-3">Add new coupon</a>
-            }
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-@section scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var dropdown = document.getElementById("statusDropdown");
-            dropdown.addEventListener("change", function () {
-                var selected = dropdown.value;
-                var productRows = document.getElementsByClassName("item");
-
-                for (var i = 0; i < productRows.length; i++) {
-                    var row = productRows[i];
-                    var rowdata = row.getAttribute("data-status");
-
-                    if (selected === "All" || rowdata === selected) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                }
-            });
-        });
-    </script>
-}

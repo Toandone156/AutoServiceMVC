@@ -3,7 +3,7 @@
 @using System.Security.Claims
 
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "Product Management";
     var result = await categoryService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
     var role = User.FindFirstValue(ClaimTypes.Role);
@@ -58,10 +58,10 @@
                                 @Html.DisplayFor(modelItem => item.Category.CategoryName)
                             </td>
                             <td class="text-center">
-                                <a href="#" class="tm-product-delete-link btn btn-circle btn-secondary"
+                                <button class="tm-product-delete-link btn btn-circle btn-secondary"
                                    title="Change stock" onclick="updateStock(@item.ProductId, this);">
                                     <i class="tm-product-delete-icon far @(item.IsInStock ? "fa-eye" : "fa-eye-slash")"></i>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     }

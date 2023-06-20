@@ -1,114 +1,90 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.Order>
 @inject ICommonRepository<Status> statusService
 @{
-    ViewData["Title"] = "Order";
+    ViewData["Title"] = "Order Management";
     var result = await statusService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<Status>)result.Data, "StatusId", "StatusName");
 }
 
-<div class="row tm-content-row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-products">
-            <div class="form-group mb-3">
-                <label for="statusDropdown">Status</label>
-                <select id="statusDropdown"
-                        asp-items="@dropdownlist"
-                        class="custom-select tm-select-accounts">
-                    <option value="All">All order</option>
-                </select>
-            </div>
-            <div id="dataContainer" class="tm-product-table-container">
-                <table class="table table-hover tm-table-small tm-product-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CreatedAt)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Table)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.User)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Employee)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Amount)
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                            <th>
-                                Action
-                            </th>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Orders List</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OrderId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedAt)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Table)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.User)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Employee)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Amount)
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th class="text-center">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="item">
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.OrderId"
+                                   class="font-weight-bold">
+                                    @Html.DisplayFor(modelItem => item.OrderId)
+                                </a>
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.CreatedAt)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Table.TableName)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.User.FullName)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Employee.FullName)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td scope="col">
+                                <span class="@item.Status.StatusName.ToLower()">@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-circle btn-secondary tm-product-delete-link" @((item.Status.StatusId > 3) ? "disabled" : "")
+                                   title="Update status" onclick="updatestatus(@item.OrderId, this);">
+                                    <i class="fas fa-arrow-up tm-product-delete-icon"></i>
+                                </button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr class="item" data-status="@item.Status.StatusId">
-                                <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.OrderId"
-                                       class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.CreatedAt)
-                                    </a>
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Table.TableName)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.User.FullName)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Employee.FullName)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Amount)
-                                </td>
-                                <td scope="col">
-                                    <div class="tm-status-circle @item.Status.StatusName.ToLower()"></div>
-                                    <span>@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
-                                </td>
-                                <td scope="col">
-                                    <a href="#" class="tm-product-delete-link @((item.Status.StatusId > 3) ? "achor-disable" : "")" 
-                                    title="Update status" onclick="updatestatus(@item.OrderId, this);">
-                                        <i class="fas fa-arrow-up tm-product-delete-icon"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 @section scripts {
     <script>
-        var dropdown = document.getElementById("statusDropdown");
-
-        function loadContent(){
-            var selected = dropdown.value;
-            var productRows = document.getElementsByClassName("item");
-
-            for (var i = 0; i < productRows.length; i++) {
-                var row = productRows[i];
-                var rowdata = row.getAttribute("data-status");
-
-                if (selected === "All" || rowdata === selected) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            dropdown.addEventListener("change", loadContent);
-        });
-
         function updatestatus(orderId, clickedItem) {
             $.ajax({
                 url: '/Admin/Order/UpdateStatus',
