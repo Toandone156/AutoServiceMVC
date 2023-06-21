@@ -84,9 +84,6 @@
     <None Include="wwwroot\images\person_2.jpg" />
     <None Include="wwwroot\images\person_3.jpg" />
     <None Include="wwwroot\images\person_4.jpg" />
-    <None Include="wwwroot\js\admin\demo\chart-area-demo.js" />
-    <None Include="wwwroot\js\admin\demo\chart-bar-demo.js" />
-    <None Include="wwwroot\js\admin\demo\chart-pie-demo.js" />
     <None Include="wwwroot\js\admin\demo\datatables-demo.js" />
     <None Include="wwwroot\scss\bootstrap\bootstrap-grid.scss" />
     <None Include="wwwroot\scss\bootstrap\bootstrap-reboot.scss" />
