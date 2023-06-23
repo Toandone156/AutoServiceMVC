@@ -9,7 +9,7 @@
    + Card name: NGUYEN VAN A
    + Release date: 07/15
    + OTP: 123456
- - Admin page: selfcoffee.store/admin
+ - Admin page: https://selfcoffee.store/admin
  - Admin
    + username: admin
    + password: Admin@123
