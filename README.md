@@ -3,6 +3,7 @@
  - User
    + username: toandone
    + password: Toanpham@123
+ - Tablecode: tableone, tabletwo,...
  - Test vnpay card:
    + Bank: NCB
    + Card num: 9704198526191432198
