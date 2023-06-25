@@ -16,13 +16,15 @@ namespace AutoServiceMVC.Services.System
     public class MailService : IMailService
     {
         private readonly MailSettings _mailSettings;
-        private readonly ILogger<IMailService> _logger;
+        //private readonly ILogger<IMailService> _logger;
 		private readonly IWebHostEnvironment _hostEnvironment;
 
-		public MailService(IOptions<MailSettings> mailSettings, ILogger<IMailService> logger, IWebHostEnvironment hostEnvironment) 
+		public MailService(IOptions<MailSettings> mailSettings,
+            //ILogger<IMailService> logger,
+            IWebHostEnvironment hostEnvironment) 
         {
             _mailSettings = mailSettings.Value;
-            _logger = logger;
+            //_logger = logger;
             _hostEnvironment = hostEnvironment;
 
 		}
@@ -33,6 +35,7 @@ namespace AutoServiceMVC.Services.System
 			string mailTemplate = File.ReadAllText(path);
             mailTemplate = mailTemplate.Replace("[username]", username);
 			mailTemplate = mailTemplate.Replace("[mailtype]", mailType);
+			mailTemplate = mailTemplate.Replace("[mailbutton]", mailType.ToUpper());
 			mailTemplate = mailTemplate.Replace("[resetlink]", link);
 
             return mailTemplate;
@@ -62,8 +65,8 @@ namespace AutoServiceMVC.Services.System
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("Send mail fail");
-                _logger.LogError(ex.Message);
+                //_logger.LogInformation("Send mail fail");
+                //_logger.LogError(ex.Message);
             }
 
             await smtp.DisconnectAsync(true);

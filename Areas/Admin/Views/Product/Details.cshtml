@@ -109,7 +109,7 @@
                         <th>Rating</th>
                         @if (role == "Admin")
                         {
-                            <th scope="col">&nbsp;</th>
+                            <th scope="col">Action</th>
                         }
                     </tr>
                 </thead>
@@ -124,7 +124,7 @@
                                 </p>
                             </td>
                             <td>
-                                <img src="@item.Image" width="200" />
+                                <img src="@item.Image"/>
                             </td>
                             <td>
                                 <div class="rating">
@@ -147,61 +147,6 @@
                     }
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<div class="row tm-content-row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-        <div class="tm-bg-primary-dark tm-block">
-            <div class="tm-product-table-container">
-                <table class="table tm-table-small tm-product-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">User</th>
-                            <th scope="col" colspan="30%">Comment</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Rating</th>
-                            @if(role == "Admin")
-                            {
-                                <th scope="col">&nbsp;</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach(var item in Model.ProductFeedbacks)
-                        {
-                            <tr class="item">
-                                <td class="nameUser">@item.User.FullName</td>
-                                <td colspan="30%">
-                                    <p class="feedbacks" style="margin: 0;">
-                                        @item.Comment
-                                    </p>
-                                </td>
-                                <td>
-                                    <img src="@item.Image" width="200px"/>
-                                </td>
-                                <td>
-                                    <div class="rating">
-                                        @for (int i = 0; i < 5; i++)
-                                        {
-                                            <i class="fas fa-star @(i < item.Rating ? "rating-star" : "")"></i>
-                                        }
-                                    </div>
-                                </td>
-                                @if(role == "Admin")
-                                {
-                                    <td>
-                                        <a class="tm-product-delete-link" onclick="deleteProductFeedback(@item.ProductFeedbackId, this)">
-                                            <i class="far fa-trash-alt tm-product-delete-icon"></i>
-                                        </a>
-                                    </td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 </div>

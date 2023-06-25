@@ -107,8 +107,19 @@ function AddItemToCart(productId, productTitle, productPrice, productImgURL, qua
 	let cartItemsList = cartBody.getElementsByClassName("cart-item");
 	for (const element of cartItemsList) {
 		if (element.getAttribute("data-id") == productId) {
+			let quantityElement = element.querySelector(".cart-quantity-input");
+
+			if (quantityElement.value != quantity) {
+				quantityElement.value = quantity;
+				UpdateCartTotalPrice();
+
+				showToast("Update quantity success");
+
+				return "Update quantity success";
+			}
+
 			showToast("This product was exist in cart");
-			return false;
+			return "Product was exist in cart";
 		}
 	}
 
@@ -158,6 +169,7 @@ function AddItemToCart(productId, productTitle, productPrice, productImgURL, qua
 			UpdateCartTotalPrice();
 		});
 
+	UpdateCartButtonQuantity();
 	return true;
 }
 

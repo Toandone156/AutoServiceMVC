@@ -10,12 +10,15 @@ var sendForm = document.querySelector('#chatform'),
     input,
     chatbotButton = document.querySelector(".submit-button")
 
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 sendForm.onkeydown = function (e) {
     if (e.keyCode == 13) {
         e.preventDefault();
 
         //No mix ups with upper and lowercases
-        var input = textInput.value.toLowerCase();
+        var input = textInput.value;
 
         //Empty textarea fix
         if (input.length > 0) {
@@ -28,7 +31,6 @@ sendForm.addEventListener('submit', function (e) {
     //so form doesnt submit page (no page refresh)
     e.preventDefault();
 
-    //No mix ups with upper and lowercases
     var input = textInput.value;
 
     //Empty textarea fix
@@ -58,14 +60,14 @@ var createBubble = function (input) {
     connection.invoke("AskChatbot", input);
 }
 
-connection.on("ChatbotAnswer", answer => {
+connection.on("ChatbotAnswer", async answer => {
     let message = JSON.parse(answer);
 
     debugger
 
     if (message.function_call) {
         let name = message.function_call.name;
-        let botContent = false;
+        let botContent = [];
 
         if (name == "add_to_cart") {
             let arguments = JSON.parse(message.function_call.arguments);
@@ -80,13 +82,15 @@ connection.on("ChatbotAnswer", answer => {
                     data: { id: detail.id },
                     success: function (res) {
                         response = res
-                        botContent = AddItemToCart(detail.id, response.name, response.price, response.image, detail.quantity);
+                        botContent.push(AddItemToCart(detail.id, response.name, response.price, response.image, detail.quantity));
                     },
                     error: function (xhr, status, error) {
                         showToast("Fail to send api")
                     },
                     async: false
                 });
+
+                await sleep(500);
             }
 
             connection.invoke("AskChatbot", botContent + "");
@@ -95,6 +99,8 @@ connection.on("ChatbotAnswer", answer => {
         responseText(message.content);
     }
 })
+
+
 
 function responseText(e) {
 

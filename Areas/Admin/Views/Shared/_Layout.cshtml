@@ -18,18 +18,17 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>@title - AutoService</title>
+    <title>@title - SelfCoffee</title>
 
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
 
-    <!-- Custom fonts for this template-->
     <link href="~/lib/admin/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this template-->
-    <link href="~/css/admin/readmin.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-    <!-- Custom styles for this page -->
+    <link href="~/css/admin/readmin.min.css" rel="stylesheet">
     <link href="~/lib/admin/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body id="page-top">
@@ -47,82 +46,87 @@
                 </div>
                 <div class="sidebar-brand-text mx-3">SELF COFFEE</div>
             </a>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <!-- Admin heading -->
-            <div class="sidebar-heading text-white">
-                Admin
-            </div>
-            <!-- Nav Item - Page Collapse Menu -->
-            <li class="nav-item @(title.Contains("Home") ? "active" : "")">
-                <a class="nav-link" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <!-- Nav Item - User Collapse Menu -->
-            <li class="nav-item @(title.Contains("User") ? "active" : "")">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
-                   aria-expanded="true" aria-controls="collapseUser">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>User</span>
-                </a>
-                <div id="collapseUser" class="collapse @(title.Contains("User") ? "show" : "")" aria-labelledby="headingUser" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">User</h6>
-                        <a class="collapse-item @(title.Contains("User") ? "active" : "")" asp-controller="User">Management</a>
-                    </div>
+            
+            @if(role == "Admin")
+            {
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <!-- Admin heading -->
+                <div class="sidebar-heading text-white">
+                    Admin
                 </div>
-            </li>
-            <!-- Nav Item - Categories Collapse Menu -->
-            <li class="nav-item @(title.Contains("Category") ? "active" : "")">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
-                   aria-expanded="true" aria-controls="collapseUser">
-                    <i class="fas fa-fw fa-list"></i>
-                    <span>Category</span>
-                </a>
-                <div id="collapseCategories" class="collapse @(title.Contains("Category") ? "show" : "")" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Categories</h6>
-                        <a class="collapse-item @(title.Contains("Create Category") ? "active" : "")" asp-controller="Category" asp-action="Create">Add new</a>
-                        <a class="collapse-item @(title.Contains("Category Management") ? "active" : "")" asp-controller="Category" asp-action="Index">Management</a>
+                <!-- Nav Item - Page Collapse Menu -->
+                <li class="nav-item @(title.Contains("Home") ? "active" : "")">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <!-- Nav Item - User Collapse Menu -->
+                <li class="nav-item @(title.Contains("User") ? "active" : "")">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
+                       aria-expanded="true" aria-controls="collapseUser">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>User</span>
+                    </a>
+                    <div id="collapseUser" class="collapse @(title.Contains("User") ? "show" : "")" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">User</h6>
+                            <a class="collapse-item @(title.Contains("User") ? "active" : "")" asp-controller="User">Management</a>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <!-- Nav Item - Table Collapse Menu -->
-            <li class="nav-item @(title.Contains("Table") ? "active" : "")">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable"
-                   aria-expanded="true" aria-controls="collapseUser">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Table</span>
-                </a>
-                <div id="collapseTable" class="collapse @(title.Contains("Table") ? "show" : "")" aria-labelledby="headingTable" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Tables</h6>
-                        <a class="collapse-item @(title.Contains("Create Table") ? "active" : "")" asp-controller="Table" asp-action="Create">Add new</a>
-                        <a class="collapse-item @(title.Contains("Table Management") ? "active" : "")" asp-controller="Table" asp-action="Index">Management</a>
+                </li>
+                <!-- Nav Item - Categories Collapse Menu -->
+                <li class="nav-item @(title.Contains("Category") ? "active" : "")">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
+                       aria-expanded="true" aria-controls="collapseUser">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Category</span>
+                    </a>
+                    <div id="collapseCategories" class="collapse @(title.Contains("Category") ? "show" : "")" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Categories</h6>
+                            <a class="collapse-item @(title.Contains("Create Category") ? "active" : "")" asp-controller="Category" asp-action="Create">Add new</a>
+                            <a class="collapse-item @(title.Contains("Category Management") ? "active" : "")" asp-controller="Category" asp-action="Index">Management</a>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <!-- Nav Item - Employee Collapse Menu -->
-            <li class="nav-item @(title.Contains("Employee") ? "active" : "")">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmployee"
-                   aria-expanded="true" aria-controls="collapseEmployee">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Employee</span>
-                </a>
-                <div id="collapseEmployee" class="collapse @(title.Contains("Employee") ? "show" : "")" aria-labelledby="headingEmployee" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Categories:</h6>
-                        <a class="collapse-item @(title.Contains("Create Employee") ? "active" : "")" asp-controller="Employee" asp-action="Create">Add new</a>
-                        <a class="collapse-item @(title.Contains("Employee Management") ? "active" : "")" asp-controller="Employee" asp-action="Index">Management</a>
+                </li>
+                <!-- Nav Item - Table Collapse Menu -->
+                <li class="nav-item @(title.Contains("Table") ? "active" : "")">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable"
+                       aria-expanded="true" aria-controls="collapseUser">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Table</span>
+                    </a>
+                    <div id="collapseTable" class="collapse @(title.Contains("Table") ? "show" : "")" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Tables</h6>
+                            <a class="collapse-item @(title.Contains("Create Table") ? "active" : "")" asp-controller="Table" asp-action="Create">Add new</a>
+                            <a class="collapse-item @(title.Contains("Table Management") ? "active" : "")" asp-controller="Table" asp-action="Index">Management</a>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
+                <!-- Nav Item - Employee Collapse Menu -->
+                <li class="nav-item @(title.Contains("Employee") ? "active" : "")">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmployee"
+                       aria-expanded="true" aria-controls="collapseEmployee">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Employee</span>
+                    </a>
+                    <div id="collapseEmployee" class="collapse @(title.Contains("Employee") ? "show" : "")" aria-labelledby="headingEmployee" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Categories:</h6>
+                            <a class="collapse-item @(title.Contains("Create Employee") ? "active" : "")" asp-controller="Auth" asp-action="Register">Add new</a>
+                            <a class="collapse-item @(title.Contains("Employee Management") ? "active" : "")" asp-controller="Employee" asp-action="Index">Management</a>
+                        </div>
+                    </div>
+                </li>
+            }
+
             <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading text-white">
                 Employee
             </div>
 
@@ -134,6 +138,25 @@
                 </a>
             </li>
             <!-- Nav Item - Product Collapse Menu -->
+            <!-- Nav Item - Order -->
+            <li class="nav-item @(title.Contains("Order") ? "active" : "")">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
+                   aria-expanded="true" aria-controls="collapseOrder">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Order</span>
+                </a>
+                <div id="collapseOrder" class="collapse @(title.Contains("Order") ? "show" : "")" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Orders</h6>
+                        <a class="collapse-item @(title.Contains("Sent Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="1">Sent</a>
+                        <a class="collapse-item @(title.Contains("Received Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="2">Received</a>
+                        <a class="collapse-item @(title.Contains("Processing Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="3">Processing</a>
+                        <a class="collapse-item @(title.Contains("Done Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="4">Done</a>
+                        <a class="collapse-item @(title.Contains("Cancelled Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="5">Cancelled</a>
+                    </div>
+                </div>
+            </li>
+
             <!-- Nav Item - Product -->
             <li class="nav-item @(title.Contains("Product") ? "active" : "")">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct"
@@ -144,7 +167,10 @@
                 <div id="collapseProduct" class="collapse @(title.Contains("Product") ? "show" : "")" aria-labelledby="headingProduct" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Products</h6>
-                        <a class="collapse-item @(title.Contains("Create Product") ? "active" : "")" asp-controller="Product" asp-action="Create">Add New</a>
+                        @if (role == "Admin")
+                        {
+                            <a class="collapse-item @(title.Contains("Create Product") ? "active" : "")" asp-controller="Product" asp-action="Create">Add New</a>
+                        }
                         <a class="collapse-item @(title.Contains("Product Management") ? "active" : "")" asp-controller="Product" asp-action="Index">Management</a>
                     </div>
                 </div>
@@ -160,26 +186,15 @@
                 <div id="collapseCoupon" class="collapse @(title.Contains("Coupon") ? "show" : "")" aria-labelledby="headingCoupon" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Coupons</h6>
-                        <a class="collapse-item @(title.Contains("Create Coupon") ? "active" : "")" asp-controller="Coupon" asp-action="Create">Add New</a>
+                        @if (role == "Admin")
+                        {
+                            <a class="collapse-item @(title.Contains("Create Coupon") ? "active" : "")" asp-controller="Coupon" asp-action="Create">Add New</a>
+                        }
                         <a class="collapse-item @(title.Contains("Coupon Management") ? "active" : "")" asp-controller="Coupon" asp-action="Index">Management</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Order -->
-            <li class="nav-item @(title.Contains("Order") ? "active" : "")">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
-                   aria-expanded="true" aria-controls="collapseOrder">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Order</span>
-                </a>
-                <div id="collapseOrder" class="collapse @(title.Contains("Order") ? "show" : "")" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Orders</h6>
-                        <a class="collapse-item @(title.Contains("Order Management") ? "active" : "")" asp-controller="Bill" asp-action="Index">View</a>
-                    </div>
-                </div>
-            </li>
             <!-- Nav Item - Feedback -->
             <li class="nav-item @(title.Contains("Feedback") ? "active" : "")">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFeedback"
@@ -233,9 +248,9 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" asp-controller="Auth" asp-action="Profile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Change password
+                                    View profile
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -294,32 +309,27 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
     <script src="~/lib/admin/jquery/jquery.min.js"></script>
     <script src="~/lib/admin/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
     <script src="~/lib/admin/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="~/js/admin/sb-admin-2.min.js"></script>
-
-
-    <!-- Page level plugins -->
+    <script src="~/js/admin/admincheck.min.js"></script>
     <script src="~/lib/admin/datatables/jquery.dataTables.min.js"></script>
     <script src="~/lib/admin/datatables/dataTables.bootstrap4.min.js"></script>
-
-
-    <!-- Page level custom scripts -->
-    <script src="~/js/admin/demo/datatables-demo.js"></script>
-
-    <!-- Page level plugins -->
+    <script src="~/js/admin/datatables-bootstrap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.min.js" 
     integrity="sha512-TJ7U6JRJx5IpyvvO9atNnBzwJIoZDaQnQhb0Wmw32Rj5BQHAmJG16WzaJbDns2Wk5VG6gMt4MytZApZG47rCdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <!-- Page level custom scripts -->
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
-    <script src="~/js/admin/notification.js"></script>
+    <script src="~/js/admin/notifi.js"></script>
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            showToast("@TempData["Message"]");
+        </script>
+    }
     @await Html.PartialAsync("_ValidationScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Cart", required: false)

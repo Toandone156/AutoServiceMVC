@@ -61,11 +61,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View();
@@ -81,15 +81,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _categoryRepo.UpdateAsync(category);
                 if (result.IsSuccess)
                 {
-                    TempData["Message"] = "Edit category success";
+                    TempData["Message"] = "Update success";
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View("Details", category.CategoryId);
@@ -98,7 +98,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _categoryRepo.DeleteByIdAsync(id);
-            TempData["Message"] = "Delete category success";
+
+            if(result.IsSuccess)
+            {
+                TempData["Message"] = "Delete category success";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Message"] = result.Message;
             return RedirectToAction("Index");
         }
     }

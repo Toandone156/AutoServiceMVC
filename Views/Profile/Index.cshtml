@@ -27,7 +27,7 @@
                                     {
                                         <h>Username: @Model.Username</h>
                                         <p>
-                                            Password: ****** <a href="#" id="changepasswordbutton" style="color: #fff;"><i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16 update-button"></i></a>
+                                            Password: ****** <a asp-controller="Auth" asp-action="ChangePassword" id="changepasswordbutton" style="color: #fff;"><i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16 update-button"></i></a>
                                         </p>
                                     }
 
@@ -81,33 +81,5 @@
 @section Scripts {
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script>
-        var changePassButton = document.getElementById("changepasswordbutton");
-
-        changePassButton.addEventListener("click", e => {
-            e.preventDefault();
-
-            $.confirm({
-                title: 'Change password',
-                content: 'You want to change password now?</br> We will send a email to change password.',
-                buttons: {
-                    confirm: {
-                        text: "Send mail",
-                        btnClass: 'btn-orange',
-                        keys: ['enter'],
-                        action: function () {
-                            debugger
-
-                            showToast("Email in way to you.");
-
-                            changePasswordApi(document.getElementById("user-email").innerHTML);
-                        }
-                    },
-                    cancel: function () {
-                        showToast("Cancelled change password.");
-                    }
-                }
-            });
-        })
     </script>
 }

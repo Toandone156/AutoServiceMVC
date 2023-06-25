@@ -30,7 +30,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            await _context.AddAsync<Order>(entity);
+            await _context.AddAsync<Order>(entity);  
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

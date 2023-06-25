@@ -31,7 +31,7 @@ function GetOrderData() {
 }
 
 function NotiAudio() {
-    let audio = new Audio("noti.mp3");
+    let audio = new Audio("./noti.mp3");
     let button = document.createElement("button");
     button.classList.add("d-none");
     button.addEventListener("click", e => {

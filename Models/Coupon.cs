@@ -13,8 +13,8 @@ namespace AutoServiceMVC.Models
         [Key]
 		[JsonProperty]
 		public int CouponId { get; set; }
-        [RegularExpression("^[a-zA-Z0-9]{6,}$", ErrorMessage = "Coupon Code is not valid")]
-        [StringLength(12)]
+        [RegularExpression("^[a-zA-Z0-9]{6,30}$", ErrorMessage = "Coupon Code is not valid")]
+        [StringLength(30)]
         [DisplayName("Coupon code")]
 		[JsonProperty]
 		public string CouponCode { get; set; }

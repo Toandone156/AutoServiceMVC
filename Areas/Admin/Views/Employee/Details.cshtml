@@ -4,6 +4,7 @@
     ViewData["Title"] = "Edit Employee";
     var result = await roleService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<Role>)result.Data, "RoleId", "RoleName");
+    var isLayOff = Model.EndDate < DateTime.Now;
 }
 
 <h1 class="h3 mb-4 text-gray-800">
@@ -19,13 +20,12 @@
         Employee Details
     </div>
     <form asp-action="Edit" class="tm-edit-product-form">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="EmployeeId" />
         <div class="card-body row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label asp-for="FullName"></label>
-                    <input asp-for="FullName" class="form-control">
+                    <input asp-for="FullName" class="form-control" disabled="@isLayOff">
                     <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -33,7 +33,7 @@
                     <label asp-for="RoleId"></label>
                     <select asp-for="RoleId"
                             asp-items="dropdownlist"
-                            class="form-control">
+                            class="form-control" disabled="@isLayOff">
                     </select>
                 </div>
                 <div class="form-group">
@@ -51,7 +51,7 @@
                     <input asp-for="Email" class="form-control" disabled>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-                @if (Model.EndDate < DateTime.Now)
+                @if (isLayOff)
                 {
                     <div class="form-group">
                         <label asp-for="EndDate"></label>
@@ -59,11 +59,14 @@
                     </div>
                 }
             </div>
-            <div class="col-md-12 mt-2">
-                <button type="submit" class="font-weight-bold btn btn-warning btn-block">Update</button>
-                <a href="#" data-toggle="modal" data-target="#deleteModal"
-                   class="btn btn-danger btn-block">Lay Off</a>
-            </div>
+            @if (!isLayOff)
+            {
+                <div class="col-md-12 mt-2">
+                    <button type="submit" class="font-weight-bold btn btn-warning btn-block">Update</button>
+                    <a href="#" data-toggle="modal" data-target="#deleteModal"
+                        class="btn btn-danger btn-block">Lay Off</a>
+                </div>
+            }
         </div>
     </form>
 </div>

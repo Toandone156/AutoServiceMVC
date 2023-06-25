@@ -18,12 +18,12 @@
                     <input asp-for="Username" class="form-control form-control-user"
                            id="exampleInputEmail" aria-describedby="emailHelp"
                            placeholder="Enter Username or Email">
-                    <span asp-validation-for="Username" class="text-white"></span>
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input asp-for="Password" class="form-control form-control-user"
                            id="exampleInputPassword" placeholder="Password">
-                    <span asp-validation-for="Password" class="text-white"></span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <button type="submit" class="font-weight-bold btn btn-primary btn-user btn-block">
                     Login
@@ -31,7 +31,7 @@
             </form>
             <hr>
             <div class="text-center">
-                <a class="small font-weight-bold" href="forgot-password.html">Forgot Password?</a>
+                <a class="small font-weight-bold" asp-action="ForgotPassword">Forgot Password?</a>
             </div>
         </div>
     </div>

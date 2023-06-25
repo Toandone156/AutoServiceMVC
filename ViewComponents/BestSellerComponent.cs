@@ -19,7 +19,7 @@ namespace AutoServiceMVC.ViewComponents
             var products = rs.Data as List<Product>;
 
             var data = products.Where(x => x.IsInStock)
-                                .OrderByDescending(x => x.ProductRating)
+                                .OrderByDescending(x => x.SellerQuantity)
                                 .ThenByDescending(x => x.Price)
                                 .Take(4)
                                 .ToList();

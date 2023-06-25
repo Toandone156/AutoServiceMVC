@@ -55,7 +55,7 @@
                                 @item.Price.ToString("N0") ₫
                             </td>
                             <td scope="col">
-                                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                                @(item.Category?.CategoryName ?? "")
                             </td>
                             <td class="text-center">
                                 <button class="tm-product-delete-link btn btn-circle btn-secondary"

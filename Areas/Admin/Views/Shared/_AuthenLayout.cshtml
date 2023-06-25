@@ -9,15 +9,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>@ViewData["Title"] - SelfCoffee</title>
 
-    <!-- Custom fonts for this template-->
-    <link href="~/lib/admin/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
-    <!-- Custom styles for this template-->
-    <link href="~/css/admin/sb-admin-2.min.css" rel="stylesheet">
 
+    <link href="~/lib/admin/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="~/css/admin/readmin.min.css" rel="stylesheet"/>
 </head>
 
 <body class="bg-gradient-primary">
@@ -34,13 +33,18 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
     <script src="~/lib/admin/jquery/jquery.min.js"></script>
     <script src="~/lib/admin/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Core plugin JavaScript-->
     <script src="~/lib/admin/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Custom scripts for all pages-->
-    <script src="~/js/admin/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="~/js/admin/admincheck.min.js"></script>
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            showToast("@TempData["Message"]");
+        </script>
+    }
 
     @await Html.PartialAsync("_ValidationScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)

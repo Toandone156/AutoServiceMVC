@@ -93,8 +93,17 @@ function buildStatusChart() {
     });
 
     const config = {
-        type: 'pie',
-        data: data
+        type: 'bar',
+        data: data,
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        },
     }
 
     let BuildedProductChart = new Chart(statusChart, config);

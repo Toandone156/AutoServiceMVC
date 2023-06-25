@@ -55,14 +55,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _tableRepo.CreateAsync(table);
                 if (result.IsSuccess)
                 {
+                    TempData["Message"] = "Create table success";
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View();
@@ -79,14 +80,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _tableRepo.UpdateAsync(table);
                 if (result.IsSuccess)
                 {
+                    TempData["Message"] = "Update success";
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View("Details", table.TableId);
@@ -97,6 +99,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _tableRepo.DeleteByIdAsync(id);
+
+            if (result.IsSuccess)
+            {
+                TempData["Message"] = "Delete table success";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Message"] = result.Message;
             return RedirectToAction("Index");
         }
     }

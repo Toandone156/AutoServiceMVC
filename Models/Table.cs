@@ -12,7 +12,7 @@ namespace AutoServiceMVC.Models
         [Column(TypeName = "nvarchar(100)")]
         [DisplayName("Table name")]
         public string TableName { get; set; }
-        [StringLength(100)]
+        [StringLength(30)]
         [RegularExpression("^[a-zA-Z0-9]{6,30}$", ErrorMessage = "Table Code is not valid")]
         [DisplayName("Table code")]
         public string TableCode { get; set; }

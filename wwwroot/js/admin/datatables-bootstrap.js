@@ -5,6 +5,6 @@ $(document).ready(function() {
             [10, 15, 20, -1],
             [10, 15, 20, 'All'],
         ],
-        ordering: false
+        order: []
     });
 });

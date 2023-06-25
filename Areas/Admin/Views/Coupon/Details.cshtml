@@ -4,6 +4,7 @@
     ViewData["Title"] = "Edit Coupon";
     var result = await userTypeService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<UserType>)result.Data, "UserTypeId", "UserTypeName");
+    var isEnded = Model.EndAt < DateTime.Now;
 }
 
 <h1 class="h3 mb-4 text-gray-800">
@@ -109,8 +110,11 @@
             </div>
             <div class="col-md-12 mt-2">
                 <button type="submit" class="btn btn-primary btn-block">Update</button>
-                <a href="#" data-toggle="modal" data-target="#deleteModal"
-                   class="btn btn-danger btn-block">Stop now</a>
+                @if(!isEnded)
+                {
+                    <a href="#" data-toggle="modal" data-target="#deleteModal"
+                        class="btn btn-danger btn-block">Stop now</a>
+                }
             </div>
         </div>
     </form>

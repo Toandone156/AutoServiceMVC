@@ -26,6 +26,7 @@ namespace AutoServiceMVC.Controllers
         private readonly ICookieAuthentication _auth;
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICookieService _cookie;
+        private readonly ISessionCustom _session;
         private readonly AppDbContext _dbContext;
         private readonly IMailService _mail;
         private readonly IHubContext<HubServer> _hub;
@@ -38,6 +39,7 @@ namespace AutoServiceMVC.Controllers
                                 ICommonRepository<Order> orderRepo,
                                 ICookieAuthentication auth,
                                 ICookieService cookie,
+                                ISessionCustom session,
                                 IMailService mail,
                                 IHubContext<HubServer> hub,
                                 IHashPassword hash,
@@ -49,6 +51,7 @@ namespace AutoServiceMVC.Controllers
             _auth = auth;
             _orderRepo = orderRepo;
             _cookie = cookie;
+            _session = session;
             _mail = mail;
             _hub = hub;
             _hash = hash;
@@ -114,7 +117,9 @@ namespace AutoServiceMVC.Controllers
                 var data = JsonConvert.SerializeObject(register);
                 var token = _jwt.GenerateToken(data);
 
-				var confirmEmail = Url.Action("ConfirmEmail","Auth", new { token = token }, Request.Scheme);
+                _session.AddToSession(HttpContext, "RegisterMailData", data);
+
+                var confirmEmail = Url.Action("ConfirmEmail","Auth", new { token = token }, Request.Scheme);
 
                 var mailBody = _mail.GetMailFromContent(register.FullName, "confirm email", confirmEmail);
 
@@ -125,7 +130,9 @@ namespace AutoServiceMVC.Controllers
 					Body = mailBody
 				};
 
-                Task.Run(async () => await _mail.SendMailAsync(content));
+                await _mail.SendMailAsync(content);
+
+                TempData["SendMailAgainURL"] = Url.Action("SendRegisterMailAgain");
 
                 return RedirectToAction("VerifyEmail");
             }
@@ -158,6 +165,8 @@ namespace AutoServiceMVC.Controllers
                     var data = JsonConvert.SerializeObject(user);
                     var token = _jwt.GenerateToken(data);
 
+                    _session.AddToSession(HttpContext, "IdentityMailData", data);
+ 
                     var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
 
                     var mailBody = _mail.GetMailFromContent(identity.Username, "reset password", resetUrl);
@@ -169,7 +178,9 @@ namespace AutoServiceMVC.Controllers
                         Body = mailBody
 					};
 
-                    await _mail.SendMailAsync(content);
+                    _mail.SendMailAsync(content);
+
+                    TempData["SendMailAgainURL"] = Url.Action("SendIdentityMailAgain");
 
                     return RedirectToAction("VerifyEmail");
                 }
@@ -180,45 +191,94 @@ namespace AutoServiceMVC.Controllers
             return View();
         }
 
-        //Change password api
+        [HttpPost]
+        public async Task<JsonResult> SendIdentityMailAgain()
+        {
+            var data = _session.GetSessionValue<string>(HttpContext, "IdentityMailData");
+            var identity = JsonConvert.DeserializeObject<User>(data);
+
+            var token = _jwt.GenerateToken(data);
+
+            var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
+
+            var mailBody = _mail.GetMailFromContent(identity.Username, "reset password", resetUrl);
+
+            MailContent content = new MailContent()
+            {
+                To = identity.Email,
+                Subject = "CONFIRM EMAIL IN AUTOSERVICE",
+                Body = mailBody
+            };
+
+            await _mail.SendMailAsync(content);
+
+            return Json(new { success = true, message = "Sent mail success" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendRegisterMailAgain()
+        {
+            var data = _session.GetSessionValue<string>(HttpContext, "RegisterData");
+            var register = JsonConvert.DeserializeObject<Register>(data);
+
+            var token = _jwt.GenerateToken(data);
+
+            _session.AddToSession(HttpContext, "RegisterMailData", data);
+
+            var confirmEmail = Url.Action("ConfirmEmail", "Auth", new { token = token }, Request.Scheme);
+
+            var mailBody = _mail.GetMailFromContent(register.FullName, "confirm email", confirmEmail);
+
+            MailContent content = new MailContent()
+            {
+                To = register.Email,
+                Subject = "CONFIRM EMAIL IN AUTOSERVICE",
+                Body = mailBody
+            };
+
+            await _mail.SendMailAsync(content);
+
+            return Json(new { success = true, message = "Sent mail success" });
+        }
+
+        [Authorize(AuthenticationSchemes = "User_Scheme")]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var id = Convert.ToInt32(User.FindFirstValue("Id"));
+            var userRs = await _userService.GetByIdAsync(id);
+            var user = userRs.Data as User;
+            ViewData["Id"] = user.UserId;
+            ViewData["Username"] = user.Username;
+            return View();
+        }
+
         [HttpPost]
         [Authorize(AuthenticationSchemes = "User_Scheme")]
-        public async Task<JsonResult> ChangePassword(string mail)
+        public async Task<IActionResult> ChangePassword([Bind("UserId,OldPassword,Password,AgainPassword")] ChangePassword changePassword)
         {
-            if (!mail.IsNullOrEmpty())
+            if (ModelState.IsValid)
             {
-                var identity = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == mail && x.HashPassword != null);
-
-                if (identity != null)
+                var result = await _userService.GetByIdAsync(changePassword.UserId);
+                if (result.IsSuccess)
                 {
-                    var user = new User
+                    var user = result.Data as User;
+
+                    if (user.HashPassword != _hash.GetHashPassword(changePassword.OldPassword))
                     {
-                        UserId = identity.UserId,
-                        Username = identity.Username,
-                        Email = mail
-                    };
+                        TempData["Message"] = "Old password is wrong";
+                        return RedirectToAction("ChangePassword");
+                    }
 
-                    var data = JsonConvert.SerializeObject(user);
-                    var token = _jwt.GenerateToken(data);
+                    user.HashPassword = _hash.GetHashPassword(changePassword.Password);
 
-                    var resetUrl = Url.Action("ResetPassword", "Auth", new { token = token }, Request.Scheme);
+                    await _userService.UpdateAsync(user);
 
-                    var mailBody = _mail.GetMailFromContent(identity.FullName, "change password", resetUrl);
-
-                    MailContent content = new MailContent()
-                    {
-                        To = mail,
-                        Subject = "CHANGE PASSWORD IN AUTOSERVICE",
-                        Body = mailBody
-					};
-
-                    await _mail.SendMailAsync(content);
-
-                    return Json(new { success = true, message = "Email to change password was sent to your mail and spam box." });
+                    TempData["Message"] = "Change password success";
+                    return RedirectToAction("Index", "Profile");
                 }
             }
 
-            return Json(new { success = false, message = "Send mail fail."});
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> ResetPassword([FromQuery] string token)
@@ -230,6 +290,7 @@ namespace AutoServiceMVC.Controllers
                 return RedirectToAction("BadLink", "Auth");
             }
 
+            _session.DeleteSession(HttpContext, "IdentityMailData");
             var user = JsonConvert.DeserializeObject<User>(data);
 
             if(user != null)
@@ -255,6 +316,7 @@ namespace AutoServiceMVC.Controllers
 
                     await _userService.UpdateAsync(user);
 
+                    TempData["Message"] = "Change password successful";
                     return RedirectToAction("Login");
                 }
             }
@@ -271,6 +333,7 @@ namespace AutoServiceMVC.Controllers
                 return RedirectToAction("BadLink", "Auth");
             }
 
+            _session.DeleteSession(HttpContext, "RegisterMailData");
             var register = JsonConvert.DeserializeObject<Register>(data);
 
             if (register != null)

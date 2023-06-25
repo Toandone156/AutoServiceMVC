@@ -2,6 +2,7 @@
 using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Net;
 using System.Security.Claims;
 
 namespace AutoServiceMVC.Hubs
@@ -9,10 +10,14 @@ namespace AutoServiceMVC.Hubs
     public class HubServer : Hub
     {
         private readonly IChatbotService _chatbot;
+        private readonly ICookieService _cookie;
 
-        public HubServer(IChatbotService chatbot) 
+        public HubServer(
+            IChatbotService chatbot,
+            ICookieService cookie) 
         { 
             _chatbot = chatbot;
+            _cookie = cookie;
         }
         public async Task JoinRoom(string type)
         {
@@ -22,10 +27,22 @@ namespace AutoServiceMVC.Hubs
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.FindFirstValue("Id"));
                 }
-            }else if (type == "employee")
+                else
+                {
+                    var guestOrder = _cookie.GetCookie(Context.GetHttpContext(), "guest_order");
+                    var orderIdList = string.IsNullOrEmpty(guestOrder) ? new List<string>() : guestOrder.Split(",").ToList();
+
+                    foreach (var orderId in orderIdList)
+                    {
+                        await Groups.AddToGroupAsync(Context.ConnectionId, orderId);
+                    }
+                }
+            }
+            else if (type == "employee")
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, "Employee");
             }
+            
         }
 
         public async Task AskChatbot(string message)

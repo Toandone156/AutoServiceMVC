@@ -20,19 +20,23 @@ namespace AutoServiceMVC.Services.System
     {
         private readonly string _apiPath = "https://api.openai.com/v1/chat/completions";
         private readonly string _imagePath = "https://api.openai.com/v1/images/generations";
-        private readonly string _apiKey = "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";
+        private readonly string _apiKey = "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";
         private readonly string _model = "gpt-3.5-turbo-0613";
         private readonly List<BotMessage> messages = new List<BotMessage>();
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly IHubContext<HubServer> _hub;
-        private readonly ISessionCustom _session;
 
         public ChatbotService(
-            IWebHostEnvironment hostEnv, 
-            AppDbContext context,
-            IHubContext<HubServer> hub) 
+            IServiceScopeFactory scopeFactory,
+            IHubContext<HubServer> hub)
         {
+            _scopeFactory = scopeFactory;
             _hub = hub;
+            InitMessage();
+        }
 
+        public async Task InitMessage()
+        {
             messages.Add(new BotMessage
             {
                 role = "system",
@@ -42,17 +46,23 @@ namespace AutoServiceMVC.Services.System
 
             StringBuilder menuInfo = new StringBuilder();
 
-            var products = context.Products.ToList();
-
-            products.ForEach(p =>
+            using(var scope = _scopeFactory.CreateScope())
             {
-                menuInfo.Append($"Id:{p.ProductId},Name:{p.ProductName},Price:{p.Price};");
-            });
+                var product = scope.ServiceProvider.GetRequiredService<ICommonRepository<Product>>();
+
+                StatusMessage statusMessage = await product.GetAllAsync();
+                var products = statusMessage.Data as List<Product>;
+
+                products.ForEach(p =>
+                {
+                    menuInfo.Append($"Id:{p.ProductId},Name:{p.ProductName},Price:{p.Price};");
+                });
+            }
 
             messages.Add(new BotMessage
             {
                 role = "system",
-                content = "Menu information:" + menuInfo.ToString() + ". Do not send id and image for customers."
+                content = "Menu information:" + menuInfo.ToString() + ". Do not send id for customers."
             });
 
             messages.Add(new BotMessage
@@ -61,7 +71,7 @@ namespace AutoServiceMVC.Services.System
                 content = "Your primary role is to engage in natural and helpful conversations with customers, assisting them with their orders. " +
                 "You should provide menu options, gather customer preferences, invoke the appropriate functions, and guide customers through the ordering and payment process." +
                 "Remember to provide clear and concise information, handle errors gracefully, and offer assistance in a friendly manner. " +
-                "Now, go ahead and assist the customers of SelfCoffee shop with their inquiries and requests. " +
+                "If customer want order more product that already in cart, you can invoke function with new quantity." +
                 "You do not listed all products in shop, just provice products list if customers need it and product not more than 10 products to opimize response speed." +
                 "You do need use html format to in your response. Use <ol> and <li> to list product and make product name is bold style."
             });

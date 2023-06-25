@@ -99,12 +99,12 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             if (productRs.IsSuccess)
             {
                 var products = productRs.Data as IEnumerable<Product>;
-                var top10products = products.OrderByDescending(p => p.OrderDetails.Sum(od => od.Quantity))
+                var top10products = products.OrderByDescending(p => p.SellerQuantity)
                                     .Take(10);
                 foreach(var product in top10products)
                 {
                     labels.Add(product.ProductName);
-                    productsData.Add(product.OrderDetails.Sum(od => od.Quantity));
+                    productsData.Add(product.SellerQuantity);
                 }
             }
 

@@ -44,13 +44,13 @@ services.AddDbContext<AppDbContext>(options =>
 {
     options.UseLazyLoadingProxies()
             .UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
-    options.UseLoggerFactory(LoggerFactory.Create(builder =>
-    {
-        builder
-        .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
-        .AddConsole();
-    }));
-}, ServiceLifetime.Singleton);
+    //options.UseLoggerFactory(LoggerFactory.Create(builder =>
+    //{
+    //    builder
+    //    .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
+    //    .AddConsole();
+    //}));
+});
 #endregion
 
 #region Authentication

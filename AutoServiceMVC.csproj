@@ -84,7 +84,7 @@
     <None Include="wwwroot\images\person_2.jpg" />
     <None Include="wwwroot\images\person_3.jpg" />
     <None Include="wwwroot\images\person_4.jpg" />
-    <None Include="wwwroot\js\admin\demo\datatables-demo.js" />
+    <None Include="wwwroot\js\admin\datatables-bootstrap.js" />
     <None Include="wwwroot\scss\bootstrap\bootstrap-grid.scss" />
     <None Include="wwwroot\scss\bootstrap\bootstrap-reboot.scss" />
     <None Include="wwwroot\scss\bootstrap\bootstrap.scss" />

@@ -53,4 +53,11 @@
     e.preventDefault();
   });
 
-})(jQuery); // End of use strict
+})(jQuery); 
+
+function showToast(message) {
+    Toastify({
+        text: message,
+        duration: 3000
+    }).showToast();
+}

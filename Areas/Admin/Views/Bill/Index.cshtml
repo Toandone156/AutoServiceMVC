@@ -1,14 +1,13 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.Order>
-@inject ICommonRepository<Status> statusService
 @{
-    ViewData["Title"] = "Order Management";
-    var result = await statusService.GetAllAsync();
-    var dropdownlist = new SelectList((IEnumerable<Status>)result.Data, "StatusId", "StatusName");
+    var statusid = Convert.ToInt16(ViewData["StatusId"]);
+    var statusname = ViewData["StatusName"];
+    ViewData["Title"] = $"{statusname} Orders";
 }
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Orders List</h6>
+        <h6 class="m-0 font-weight-bold text-primary">@statusname Orders List</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -36,9 +35,12 @@
                         <th>
                             Status
                         </th>
-                        <th class="text-center">
-                            Action
-                        </th>
+                        @if(statusid < 4)
+                        {
+                            <th class="text-center">
+                                Action
+                            </th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -69,12 +71,15 @@
                             <td scope="col">
                                 <span class="@item.Status.StatusName.ToLower()">@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
                             </td>
-                            <td class="text-center">
-                                <button class="btn btn-circle btn-secondary tm-product-delete-link" @((item.Status.StatusId > 3) ? "disabled" : "")
-                                   title="Update status" onclick="updatestatus(@item.OrderId, this);">
-                                    <i class="fas fa-arrow-up tm-product-delete-icon"></i>
-                                </button>
-                            </td>
+                            @if (statusid < 4)
+                            {
+                                <td class="text-center">
+                                    <button class="btn btn-circle btn-secondary tm-product-delete-link" @((item.Status.StatusId > 3) ? "disabled" : "")
+                                            title="Update status" onclick="updatestatus(@item.OrderId, this);">
+                                        <i class="fas fa-arrow-up tm-product-delete-icon"></i>
+                                    </button>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -91,29 +96,12 @@
                 type: 'POST',
                 data: { orderId: orderId },
                 success: function (response) {
-                    console.log('Update status!');
-
+                    showToast('Update success!');
                     var row = clickedItem.closest(".item");
-
-                    console.log(response);
-
-                    row.setAttribute("data-status", response.statusId);
-                    var statusCell = row.querySelector(".tm-status-circle");
-                    var statusText = row.querySelector("span");
-
-                    // Update the status circle and status text
-                    statusCell.className = "tm-status-circle " + response.statusName.toLowerCase();
-                    statusText.textContent = response.statusName;
-
-                    if(response.statusId > 3){
-                        row.querySelector(".tm-product-delete-link").className += " achor-disable";
-                    }
-
-                    loadContent();
+                    row.remove();
                 },
                 error: function (xhr, status, error) {
-                    // Handle the error response
-                    console.log('Error update status: ' + error);
+                    showToast('Update fail!');
                 }
             });
         }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace AutoServiceMVC.Models
@@ -35,7 +36,8 @@ namespace AutoServiceMVC.Models
         [Required]
         [StringLength(255)]
         [DisplayName("Full name")]
-        public string FullName { get; set; }
+		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+)*$", ErrorMessage = "Fullname is not valid")]
+		public string FullName { get; set; }
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
         [DisplayName("Role")]
@@ -52,7 +54,27 @@ namespace AutoServiceMVC.Models
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Again password not match")]
+        [Compare("Password", ErrorMessage = "Password is not match")]
+        [DisplayName("Re-enter Password")]
+        public string AgainPassword { get; set; }
+    }
+
+    public class ChangePassword
+    {
+        public int UserId { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()\\-=_+{}[\\]:;|\"',<.>/?]).{8,32}$",
+                ErrorMessage = "Password is not valid")]
+        public string OldPassword { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()\\-=_+{}[\\]:;|\"',<.>/?]).{8,32}$",
+                ErrorMessage = "Password is not valid")]
+        public string Password { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Password is not match")]
         [DisplayName("Re-enter Password")]
         public string AgainPassword { get; set; }
     }

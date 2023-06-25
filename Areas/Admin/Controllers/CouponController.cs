@@ -107,5 +107,22 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
             return RedirectToAction("Details", coupon.CouponId);
         }
+
+        public async Task<IActionResult> Stop(int id)
+        {
+            var couponRs = await _couponRepo.GetByIdAsync(id);
+            if(couponRs.IsSuccess)
+            {
+                var coupon = couponRs.Data as Coupon;
+                coupon.EndAt = DateTime.Now;
+                await _couponRepo.UpdateAsync(coupon);
+
+                TempData["Message"] = "Coupon was ended success";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Message"] = couponRs.Message;
+            return RedirectToAction("Details", id);
+        }
     }
 }

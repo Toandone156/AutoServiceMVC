@@ -47,6 +47,19 @@ namespace AutoServiceMVC.Data
                     p.CouponId
                 });
             });
+
+            modelBuilder
+                .Entity<Product>()
+                .HasOne(e => e.Category)
+                .WithMany(e => e.Products)
+                .OnDelete(deleteBehavior: DeleteBehavior.SetNull);
+
+
+            modelBuilder
+                .Entity<Order>()
+                .HasOne(e => e.Table)
+                .WithMany(e => e.Orders)
+                .OnDelete(deleteBehavior: DeleteBehavior.NoAction);
         }
     }
 }

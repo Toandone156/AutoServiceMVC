@@ -64,14 +64,24 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Tables.Remove(table);
-            await _context.SaveChangesAsync();
-
-            return new StatusMessage()
+            try
             {
-                IsSuccess = true,
-                Message = Message.DELETE_SUCCESS
-            };
+                _context.Tables.Remove(table);
+                await _context.SaveChangesAsync();
+
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = Message.DELETE_SUCCESS
+                };
+            }catch(Exception ex)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = "Can not delete this table"
+                };
+            }
         }
 
         public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)

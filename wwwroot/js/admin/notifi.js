@@ -7,9 +7,9 @@ connection.start().then(function () {
     connection.invoke("JoinRoom", "employee");
 })
 
-connection.on("ReceiveOrder", message => {
+connection.on("ReceiveOrder", (message, orderId) => {
     NotiAudio();
-    alert(message);
+    showToast(message);
 
     if (window.location.href.endsWith("bill")) {
         GetBillData();
@@ -29,7 +29,7 @@ function GetBillData() {
 }
 
 function NotiAudio() {
-    let audio = new Audio("noti.mp3");
+    let audio = new Audio("/noti.mp3");
     let button = document.createElement("button");
     button.classList.add("d-none");
     button.addEventListener("click", e => {
