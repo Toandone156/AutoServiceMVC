@@ -67,7 +67,7 @@ namespace AutoServiceMVC.Controllers
             await _productFeedbackRepo.CreateAsync(feedback);
 
             //Get point
-            var tradeRs = await _pointService.ChangePointAsync(userId, 200 , "Receive point from your feedback.");
+            var tradeRs = await _pointService.ChangePointAsync(userId, 50 , "Receive point from your feedback.");
 
             TempData["Message"] = "Thanks for your feedback!";
             return RedirectToAction("Details", "Bill", new {id = feedback.OrderId});
