@@ -15,13 +15,14 @@ namespace AutoServiceMVC.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         [DisplayName("Date")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string TableName { get; set; }
         [Column(TypeName = "ntext")]
         public string? Note { get; set; }
 
         //Foreign Keys
         public int? UserId { get; set; }
         public int? EmployeeId { get; set; }
-        public int TableId { get; set; }
+        public int? TableId { get; set; }
         public int? ApplyCouponId { get; set; }
         public int PaymentMethodId { get; set; }
 

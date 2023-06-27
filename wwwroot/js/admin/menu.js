@@ -80,6 +80,7 @@ function AddToCart(event) {
 	if (!isExist) {
 		AddToCartList(productId, productName, productPrice);
 		addToCart(productId, 1);
+		showToast("Add product success");
 	} else {
 		showToast("Product was exist in cart");
 	}
@@ -108,7 +109,10 @@ function ChangeQuantity(event) {
 	}
 	if (isMinus) {
 		currentQuantity--;
-		if (currentQuantity == 0) orderItem.remove();
+		if (currentQuantity == 0) {
+			orderItem.remove();
+			showToast("Remove product success");
+		}
 	}
 
 	addToCart(productId, currentQuantity);
@@ -144,7 +148,7 @@ function addToCart(productId, quantity) {
 		type: 'POST',
 		data: { productId: productId, quantity: quantity },
 		success: function (response) {
-			showToast("Add product success");
+			
 		},
 		error: function (xhr, status, error) {
 			showToast("Send api fail");

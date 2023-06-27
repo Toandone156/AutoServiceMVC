@@ -21,6 +21,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         private readonly ICommonRepository<OrderDetail> _detailRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly ICommonRepository<Status> _statusRepo;
+        private readonly ICommonRepository<Table> _tableRepo;
         private readonly IPointService _pointService;
         private readonly IHubContext<HubServer> _hub;
         private readonly ISessionCustom _session;
@@ -30,6 +31,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                                 ICommonRepository<OrderDetail> detailRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 ICommonRepository<Status> statusRepo,
+                                ICommonRepository<Table> tableRepo,
                                 IPointService pointService,
                                 IHubContext<HubServer> hub,
                                 ISessionCustom session)
@@ -39,6 +41,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             _detailRepo = detailRepo;
             _orderStatusRepo = orderStatusRepo;
             _statusRepo = statusRepo;
+            _tableRepo = tableRepo;
             _pointService = pointService;
             _hub = hub;
             _session = session;
@@ -79,6 +82,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var newDetail = new OrderDetail()
             {
                 ProductId = productId,
+                Price = product.Price,
                 Quantity = quantity
             };
 
@@ -118,6 +122,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         {
             int employeeId = Convert.ToInt32(User.FindFirstValue("Id"));
             var tableId = 8; //Table for employee order
+            var table = (await _tableRepo.GetByIdAsync(tableId)).Data as Table;
+
+
             var paymentMethodId = 2; //Cash
 
             //Order details
@@ -134,6 +141,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             {
                 EmployeeId = employeeId,
                 TableId = tableId,
+                TableName = table.TableName,
                 Note = Note,
                 PaymentMethodId = paymentMethodId
             };

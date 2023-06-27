@@ -90,7 +90,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                         Body = mailBody
                     };
 
-                    await _mail.SendMailAsync(content);
+                    _mail.SendMailAsync(content);
 
                     TempData["Message"] = "Reset link was sent in email";
                     return RedirectToAction("Login");

@@ -106,7 +106,7 @@ label.radio input:checked + span {
 
 @media screen and (max-width: 587px) {
 	.cart-item {
-	--responsive-width: 80%;
+	--responsive-width: 90%;
     --responsive-padding: 0.4rem;
 		display: flex;
 		flex-direction: column;

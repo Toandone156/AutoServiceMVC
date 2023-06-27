@@ -22,6 +22,9 @@
                             @Html.DisplayNameFor(model => model.FullName)
                         </th>
                         <th>
+                            @Html.DisplayNameFor(model => model.Role)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.Email)
                         </th>
                         <th>
@@ -41,6 +44,9 @@
                                    class="text-reset text-decoration-none">
                                     @Html.DisplayFor(modelItem => item.FullName)
                                 </a>
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Role.RoleName)
                             </td>
                             <td scope="col">
                                 @Html.DisplayFor(modelItem => item.Email)

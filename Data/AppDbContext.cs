@@ -59,7 +59,7 @@ namespace AutoServiceMVC.Data
                 .Entity<Order>()
                 .HasOne(e => e.Table)
                 .WithMany(e => e.Orders)
-                .OnDelete(deleteBehavior: DeleteBehavior.NoAction);
+                .OnDelete(deleteBehavior: DeleteBehavior.SetNull);
         }
     }
 }

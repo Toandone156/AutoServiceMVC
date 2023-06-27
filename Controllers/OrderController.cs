@@ -132,8 +132,8 @@ namespace AutoServiceMVC.Controllers
                 return RedirectToAction("Payment");
             }
 
-            var tableId = table.TableId;
-            order.TableId = tableId;
+            order.TableId = table.TableId;
+            order.TableName = table.TableName;
 
             //Order details
             var detailsList = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart");
@@ -173,7 +173,7 @@ namespace AutoServiceMVC.Controllers
                 await _orderStatusRepo.CreateAsync(new OrderStatus()
                 {
                     OrderId = orderid,
-                    StatusId = 1 //sended
+                    StatusId = 1 //sent
                 });
 
                 var applyCouponId = order.ApplyCouponId;
@@ -209,7 +209,7 @@ namespace AutoServiceMVC.Controllers
             {
 				_session.DeleteSession(HttpContext, "doing_cart");
 
-				TempData["Message"] = $"Payment fail. ERROR: {paymentResult.status} {paymentResult.responseCode}";
+				TempData["Message"] = $"Payment fail";
 				return RedirectToAction("Payment");
 			}
 		}
@@ -223,6 +223,7 @@ namespace AutoServiceMVC.Controllers
             var newDetail = new OrderDetail()
             {
                 ProductId = productId,
+                Price = product.Price,
                 Quantity = quantity
             };
 

@@ -130,7 +130,7 @@ namespace AutoServiceMVC.Controllers
 					Body = mailBody
 				};
 
-                await _mail.SendMailAsync(content);
+                _mail.SendMailAsync(content);
 
                 TempData["SendMailAgainURL"] = Url.Action("SendRegisterMailAgain");
 

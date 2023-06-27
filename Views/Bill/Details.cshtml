@@ -8,7 +8,7 @@
 
 	foreach(var item in Model.OrderDetails)
 	{
-		SubAmount += item.Product.Price * item.Quantity;
+		SubAmount += item.Price * item.Quantity;
 	}
 }
 
@@ -32,7 +32,7 @@
 
 							<div class="product-name col-md-6 order-item-info">
 								<h3>@item.Product.ProductName</h3>
-								<p class="price">@item.Product.Price.ToString("N0") ₫</p>
+								<p class="price">@item.Price.ToString("N0") ₫</p>
 							</div>
 							<div class="col-md-3 order-item-info">
 								<div class="quantity">

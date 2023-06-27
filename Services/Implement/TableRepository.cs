@@ -173,7 +173,19 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            table.TableName = entity.TableName;
+            //Update table name for orders
+            if(table.TableName != entity.TableName)
+            {
+                var ordersByTable = table.Orders;
+
+                foreach(var order in ordersByTable)
+                {
+                    order.TableName = table.TableName;
+                }
+
+                table.TableName = entity.TableName;
+            }
+
             table.TableCode = entity.TableCode;
             await _context.SaveChangesAsync();
 

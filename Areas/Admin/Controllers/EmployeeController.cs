@@ -25,7 +25,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _employeeRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                var emplList = (result.Data as List<Employee>).SkipWhile(e => e.EmployeeId == EmplId);
+                var emplList = (result.Data as List<Employee>).Where(e => e.EmployeeId != EmplId);
                 return View(emplList);
             }
 
