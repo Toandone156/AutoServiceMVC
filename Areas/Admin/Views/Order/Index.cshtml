@@ -60,15 +60,19 @@
 </section>
 <!-- End Order Sidebar -->
 <!-- Begin Product List content -->
-<div class="container-fluid">
+<div>
     <!-- Page Heading -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div class="form-group d-flex align-items-center mb-0">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap">
+        <div class="form-group d-flex align-items-center mb-1">
             <select class="form-control"
                     asp-items="dropdownlist"
-                    id="categoryDropdown">
+                    id="categoryDropdown" onchange="loadProduct()">
                 <option value="All">All Category</option>
             </select>
+        </div>
+        <div class="form-group my-auto mb-1">
+            <input type="search" class="form-control" id="searchbox" onkeyup="loadProduct()"
+                placeholder="Enter product name..."/>
         </div>
         <div id="order-sidebar-btn" class="btn position-relative mr-3 mr-md-5">
             <i class="h3 mb-0 font-weight-bold fa fa-fw fa-cart-plus"></i>
@@ -81,12 +85,12 @@
         
         @foreach(var product in Model)
         {
-            <div class="product-item col-xl-3 col-md-6 mb-4 item" data-category="@product.CategoryId">
+            <div class="product-item col-xl-3 col-md-4 col-6 mb-4 item" data-category="@product.CategoryId">
                 <div class="card border-left-warning shadow h-100">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col-12 text-center">
-                                <img class="w-100 rounded" style="height: 216px;" src="@product.ProductImage"
+                                <img class="w-100 rounded img-fluid" style="height: clamp(100px, 20vh , 270px); object-fit: cover;" src="@product.ProductImage"
                                      alt="@product.ProductName">
                             </div>
                         </div>
@@ -140,28 +144,35 @@
 }
 
 @section Scripts {
-    <script src="~/js/admin/menu.js"></script>
+    <script src="https://unpkg.com/diacritic"></script>
+    <script src="~/js/admin/adminMenu.js"></script>
 
     <script>
         function payment(){
             $("#paymentForm").submit();
         }
 
-        var dropdown = document.getElementById("categoryDropdown");
-        dropdown.addEventListener("change", function () {
-            var selected = dropdown.value;
-            var productRows = document.getElementsByClassName("item");
+        function loadProduct() {
+
+            let dropdown = document.getElementById("categoryDropdown");
+            let searchbox = document.getElementById("searchbox");
+
+            let productRows = document.getElementsByClassName("product-item");
+            let categoryId = dropdown.value;
 
             for (var i = 0; i < productRows.length; i++) {
                 var row = productRows[i];
-                var rowdata = row.getAttribute("data-category");
+                var category = row.getAttribute("data-category");
 
-                if (selected === "All" || rowdata === selected) {
+                var productName = row.querySelector(".product-name").innerHTML;
+
+                if ((categoryId == "All" || category == categoryId)
+                    && Diacritics.clean(productName).toLowerCase().includes(Diacritics.clean(searchbox.value).toLowerCase())) {
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
                 }
             }
-        });
+        }
     </script>
 }

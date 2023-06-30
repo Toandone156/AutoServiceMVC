@@ -1,7 +1,8 @@
 /* Order Main section */
 #order-sidebar {
     display: none;
-    min-width: 24rem;
+    width: 100%;
+    max-width: 24rem;
     top: 0;
     bottom: 0;
     right: 0!important;

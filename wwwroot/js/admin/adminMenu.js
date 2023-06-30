@@ -130,6 +130,8 @@ function UpdateOrder() {
 		totalPrice += convertCurrency(itemPrice) * itemQuantity;
 	}
 	let totalDivs = document.getElementsByClassName(total);
+	let paymentButton = totalDivs[0].closest(".payment-button");
+	paymentButton.disabled = totalPrice == 0;
 	for (let item of totalDivs) item.innerHTML = formatCurrency(totalPrice);
 }
 

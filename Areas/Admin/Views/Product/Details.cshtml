@@ -39,15 +39,24 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Price"></label>
-                    <input asp-for="Price" class="form-control">
+                    <div class="input-group">
+                        <input asp-for="Price" class="form-control validate">
+                        <div class="input-group-append">
+                            <span class="input-group-text"> VND </span>
+                        </div>
+                    </div>
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="CategoryId">Category</label>
                     <select asp-for="CategoryId"
                             asp-items="@dropdownlist"
-                            class="form-control">
+                            class="form-control"
+                            data-val="true"
+                            data-val-required="The Category field is required.">
+                        <option value="">Select new category</option>
                     </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-6">
@@ -56,7 +65,7 @@
                     <input type="file" onchange="LoadFile(event)" class="form-control" id="image-upload" accept="image/*" hidden>
                     <div class="border border-dark rounded text-center" style="border: 2.4px dotted!important;">
                         @if(Model.ProductImage == string.Empty){
-                            <img class="d-inline-block" alt="" id="preview-img">
+                            <img class="d-inline-block" alt="" id="preview-img" style="max-height: 300px; object-fit: contain;">
                             <label for="image-upload" id="preview-upload">
                                 <span class="text-dark">
                                     <i class="fas fa-upload h1 py-3"></i>
@@ -68,7 +77,7 @@
                         }
                         else
                         {
-                            <img src="@Model.ProductImage" class="d-inline-block w-100" alt="" id="preview-img">
+                            <img src="@Model.ProductImage" class="d-inline-block w-100" alt="" id="preview-img" style="max-height: 300px; object-fit: contain;">
                         }
                     </div>
                     @if(role == "Admin")

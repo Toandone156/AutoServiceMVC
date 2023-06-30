@@ -10,10 +10,12 @@ namespace AutoServiceMVC.Models
         [Key]
         public int ProductId { get; set; }
         [Column(TypeName = "nvarchar(255)")]
+        [StringLength(255)]
         [DisplayName("Name")]
-		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+)*$", ErrorMessage = "Name is not valid")]
+		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\\d]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\\d]+)*$", ErrorMessage = "Name is not valid")]
 		public string ProductName { get; set; }
         [DataType(DataType.Currency)]
+        [RegularExpression("^\\d+$", ErrorMessage = "Price must a unsign number. Ex: 10000")]
         public int Price { get; set; }
         [Column(TypeName = "ntext")]
         [DisplayName("Decription")]

@@ -37,7 +37,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>
@@ -92,7 +92,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserTypeId");
 
-                    b.ToTable("Coupons");
+                    b.ToTable("Coupons", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Employee", b =>
@@ -132,7 +132,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Order", b =>
@@ -183,7 +183,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.OrderDetail", b =>
@@ -204,7 +204,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.OrderStatus", b =>
@@ -235,7 +235,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("OrderStatus");
+                    b.ToTable("OrderStatus", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.PaymentMethod", b =>
@@ -252,7 +252,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("PaymentMethodId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.PointTrading", b =>
@@ -280,7 +280,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PointTrading");
+                    b.ToTable("PointTrading", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Product", b =>
@@ -324,7 +324,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.ProductFeedback", b =>
@@ -364,7 +364,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProductFeedbacks");
+                    b.ToTable("ProductFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Role", b =>
@@ -381,7 +381,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.ServiceFeedback", b =>
@@ -409,7 +409,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ServiceFeedbacks");
+                    b.ToTable("ServiceFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Status", b =>
@@ -426,7 +426,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("StatusId");
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Table", b =>
@@ -448,7 +448,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("TableId");
 
-                    b.ToTable("Tables");
+                    b.ToTable("Tables", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.User", b =>
@@ -488,7 +488,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserTypeId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.UserCoupon", b =>
@@ -506,7 +506,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("CouponId");
 
-                    b.ToTable("UserCoupons");
+                    b.ToTable("UserCoupons", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.UserType", b =>
@@ -526,7 +526,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("UserTypeId");
 
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserTypes", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>

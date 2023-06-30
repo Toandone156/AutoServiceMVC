@@ -9,6 +9,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int ServiceFeedbackId { get; set; }
         [Column(TypeName = "ntext")]
+        [RegularExpression("^(?!^\\s+$).+$", ErrorMessage = "Feedback can not empty")]
         public string Comment { get; set; }
         [DataType(DataType.ImageUrl)]
         public string? Image { get; set; }

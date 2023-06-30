@@ -20,7 +20,8 @@ namespace AutoServiceMVC.Models
 		public string CouponCode { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Discount value")]
-		[JsonProperty]
+        [RegularExpression("^\\d+$", ErrorMessage = "Discount value must a unsign number")]
+        [JsonProperty]
 		public int? DiscountValue { get; set; }
         [RegularExpression("^(?:100(?:\\.0{1,2})?|\\d{1,2}(?:\\.\\d{1,2})?)$", ErrorMessage = "Percentage is not valid")]
         [DisplayName("Discount percentage")]
@@ -28,17 +29,19 @@ namespace AutoServiceMVC.Models
 		public int? DiscountPercentage { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Minimum order")]
-		[JsonProperty]
+        [RegularExpression("^\\d+$", ErrorMessage = "Min Order must a unsign number")]
+        [JsonProperty]
 		public int? MinimumOrderAmount { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Maximum discount")]
-		[JsonProperty]
+        [RegularExpression("^\\d+$", ErrorMessage = "Max Discount must a unsign number")]
+        [JsonProperty]
 		public int? MaximumDiscountAmount { get; set; }
 		[RegularExpression("^\\d+$", ErrorMessage = "Quantity must a unsign number")]
 		public int? Quantity { get; set; }
 		[RegularExpression("^\\d+$", ErrorMessage = "Remain must a unsign number")]
 		public int? Remain { get; set; }
-        [RegularExpression("^\\d+$", ErrorMessage = "Point Amount must a unsign number")]
+        [RegularExpression("^\\d+$", ErrorMessage = "Point must a unsign number")]
         [DisplayName("Point amount")]
         public int PointAmount { get; set; }
         [DataType(DataType.DateTime)]

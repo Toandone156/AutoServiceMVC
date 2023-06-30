@@ -369,12 +369,6 @@ namespace AutoServiceMVC.Controllers
             {
                 var checkStatus = await _userAuth.CheckEmailAndUsernameAsync(claims.FindFirstValue(ClaimTypes.Email), null);
 
-                if ((bool)checkStatus.Data)
-                {
-                    TempData["Message"] = "Email was register";
-                    return RedirectToAction("Login", "Auth");
-                }
-
                 user = new User()
                 {
                     FullName = claims.FindFirstValue(ClaimTypes.Name),
@@ -400,6 +394,30 @@ namespace AutoServiceMVC.Controllers
         public IActionResult BadLink()
         {
             return View();
+        }
+
+        public async Task<IActionResult> ValidateExistEmail(string email)
+        {
+            var result = await _userAuth.CheckEmailAndUsernameAsync(email, null);
+
+            if (result.IsSuccess)
+            {
+                return Json((bool)result.Data ? "Email address was existed." : "true");
+            }
+
+            return Json("Uncheck");
+        }
+
+        public async Task<IActionResult> ValidateExistUsername(string username)
+        {
+            var result = await _userAuth.CheckEmailAndUsernameAsync(username, username);
+
+            if (result.IsSuccess)
+            {
+                return Json((bool)result.Data ? "Username was existed." : "true");
+            }
+
+            return Json("Uncheck");
         }
 
         public async Task AddGuestOrder(User user)

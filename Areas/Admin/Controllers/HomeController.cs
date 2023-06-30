@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Cryptography.X509Certificates;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
@@ -15,14 +16,17 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
     {
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICommonRepository<Product> _productRepo;
+        private readonly IMemoryCache _cache;
 
         public HomeController(
             ICommonRepository<Order> orderRepo,
-            ICommonRepository<Product> productRepo
+            ICommonRepository<Product> productRepo,
+            IMemoryCache cache
             )
         {
             _orderRepo = orderRepo;
             _productRepo = productRepo;
+            _cache = cache;
         }
 
         public async Task<IActionResult> Index()

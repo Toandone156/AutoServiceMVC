@@ -240,7 +240,7 @@ namespace AutoServiceMVC.Services.Implement
                 return new StatusMessage()
                 {
                     IsSuccess = false,
-                    Message = "Username or Email was wrong"
+                    Message = "Username, Email or Password was wrong"
                 };
             }
             
@@ -249,8 +249,8 @@ namespace AutoServiceMVC.Services.Implement
                 return new StatusMessage()
                 {
                     IsSuccess = false,
-                    Message = "Username or Email was wrong"
-				};
+                    Message = "Username, Email or Password was wrong"
+                };
             }
 
             return new StatusMessage()

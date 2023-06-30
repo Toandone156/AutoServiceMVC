@@ -35,24 +35,35 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Price"></label>
-                    <input asp-for="Price" class="form-control">
+                    <div class="input-group">
+                        <input asp-for="Price" class="form-control validate">
+                        <div class="input-group-append">
+                            <span class="input-group-text"> VND </span>
+                        </div>
+                    </div>
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="CategoryId">Category</label>
                     <select asp-for="CategoryId"
                             asp-items="@dropdownlist"
-                            class="form-control">
+                            class="form-control"
+                            data-val="true"
+                            data-val-required="The Category field is required."
+                            >
+                        <option value="">Select category</option>
                     </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group h-50">
                     <label class="d-none d-md-block" style="opacity: 0;">Hidden</label>
-                    <input type="file" name="imageFile" onchange="LoadFile(event)" 
-                        class="form-control" id="image-upload" accept="image/*"hidden>
+                    <input type="file" name="imageFile" onchange="LoadFile(event)"
+                           class="form-control input-validation-error" id="image-upload" accept="image/*" hidden
+                           data-val="true" data-val-required="The Image field is required.">
                     <div class="border border-dark rounded text-center" style="border: 2.4px dotted!important;">
-                        <img src="" class="d-inline-block w-100" alt="" id="preview-img">
+                        <img src="" class="d-inline-block w-100" alt="" id="preview-img" style="max-height: 300px; object-fit: contain;">
                         <label for="image-upload" id="preview-upload">
                             <span class="text-dark">
                                 <i class="fas fa-upload py-3" style="font-size: 30px;"></i>
@@ -68,6 +79,8 @@
                         </span>
                         <span class="text w-100">Upload product image</span>
                     </label>
+
+                    <span data-valmsg-for="imageFile" data-valmsg-replace="true" class="text-danger field-validation-error"></span>
                 </div>
             </div>
             <div class="col-md-12 mt-2">
@@ -79,4 +92,9 @@
 
 @section Scripts {
     <script src="~/js/admin/upload-img.js"></script>
+    <script>
+        $.validator.setDefaults({
+            ignore: []
+        });
+    </script>
 }

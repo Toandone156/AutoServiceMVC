@@ -256,5 +256,29 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        public async Task<IActionResult> ValidateExistEmail(string email)
+        {
+            var result = await _emplService.CheckEmailAndUsernameAsync(email, null);
+
+            if (result.IsSuccess)
+            {
+                return Json((bool)result.Data ? "Email address was existed." : "true");
+            }
+
+            return Json("Uncheck");
+        }
+
+        public async Task<IActionResult> ValidateExistUsername(string username)
+        {
+            var result = await _emplService.CheckEmailAndUsernameAsync(username, username);
+
+            if (result.IsSuccess)
+            {
+                return Json((bool)result.Data ? "Username was existed." : "true");
+            }
+
+            return Json("Uncheck");
+        }
+
     }
 }

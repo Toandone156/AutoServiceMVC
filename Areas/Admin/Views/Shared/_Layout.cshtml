@@ -31,13 +31,13 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
-<body id="page-top">
+<body id="page-top" class="sidebar-toggled">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
@@ -69,7 +69,7 @@
                         <i class="fas fa-fw fa-user"></i>
                         <span>User</span>
                     </a>
-                    <div id="collapseUser" class="collapse @(title.Contains("User") ? "show" : "")" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+                    <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">User</h6>
                             <a class="collapse-item @(title.Contains("User") ? "active" : "")" asp-controller="User">Management</a>
@@ -83,7 +83,7 @@
                         <i class="fas fa-fw fa-list"></i>
                         <span>Category</span>
                     </a>
-                    <div id="collapseCategories" class="collapse @(title.Contains("Category") ? "show" : "")" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
+                    <div id="collapseCategories" class="collapse" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Categories</h6>
                             <a class="collapse-item @(title.Contains("Create Category") ? "active" : "")" asp-controller="Category" asp-action="Create">Add new</a>
@@ -98,7 +98,7 @@
                         <i class="fas fa-fw fa-table"></i>
                         <span>Table</span>
                     </a>
-                    <div id="collapseTable" class="collapse @(title.Contains("Table") ? "show" : "")" aria-labelledby="headingTable" data-parent="#accordionSidebar">
+                    <div id="collapseTable" class="collapse" aria-labelledby="headingTable" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Tables</h6>
                             <a class="collapse-item @(title.Contains("Create Table") ? "active" : "")" asp-controller="Table" asp-action="Create">Add new</a>
@@ -113,7 +113,7 @@
                         <i class="fas fa-fw fa-users"></i>
                         <span>Employee</span>
                     </a>
-                    <div id="collapseEmployee" class="collapse @(title.Contains("Employee") ? "show" : "")" aria-labelledby="headingEmployee" data-parent="#accordionSidebar">
+                    <div id="collapseEmployee" class="collapse" aria-labelledby="headingEmployee" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Categories:</h6>
                             <a class="collapse-item @(title.Contains("Create Employee") ? "active" : "")" asp-controller="Auth" asp-action="Register">Add new</a>
@@ -145,7 +145,7 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span>Order</span>
                 </a>
-                <div id="collapseOrder" class="collapse @(title.Contains("Order") ? "show" : "")" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
+                <div id="collapseOrder" class="collapse" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Orders</h6>
                         <a class="collapse-item @(title.Contains("Sent Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="1">Sent</a>
@@ -164,7 +164,7 @@
                     <i class="fas fa-fw fa-tag"></i>
                     <span>Product</span>
                 </a>
-                <div id="collapseProduct" class="collapse @(title.Contains("Product") ? "show" : "")" aria-labelledby="headingProduct" data-parent="#accordionSidebar">
+                <div id="collapseProduct" class="collapse" aria-labelledby="headingProduct" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Products</h6>
                         @if (role == "Admin")
@@ -183,7 +183,7 @@
                     <i class="fa fa-receipt"></i>
                     <span>Coupon</span>
                 </a>
-                <div id="collapseCoupon" class="collapse @(title.Contains("Coupon") ? "show" : "")" aria-labelledby="headingCoupon" data-parent="#accordionSidebar">
+                <div id="collapseCoupon" class="collapse" aria-labelledby="headingCoupon" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Coupons</h6>
                         @if (role == "Admin")
@@ -202,7 +202,7 @@
                     <i class="fas fa-comment"></i>
                     <span>Feedback</span>
                 </a>
-                <div id="collapseFeedback" class="collapse @(title.Contains("Feedback") ? "show" : "")" aria-labelledby="headingFeedback" data-parent="#accordionSidebar">
+                <div id="collapseFeedback" class="collapse" aria-labelledby="headingFeedback" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Feedback</h6>
                         <a class="collapse-item  @(title.Contains("Feedback") ? "active" : "")" asp-controller="Feedback" asp-action="Index">View</a>
@@ -330,6 +330,19 @@
             showToast("@TempData["Message"]");
         </script>
     }
+
+    <script>
+        $('input,select,textarea').each(function () {
+            var req = $(this).attr('data-val-required');
+            if (undefined != req) {
+                var label = $('label[for="' + $(this).attr('name') + '"]');
+                var text = label.text();
+                if (text.length > 0) {
+                    label.append('<span style="color:red"> *</span>');
+                }
+            }
+        });
+    </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>

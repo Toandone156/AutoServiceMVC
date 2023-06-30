@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,6 +23,7 @@ namespace AutoServiceMVC.Models
         [Required]
         [StringLength(100)]
         [RegularExpression("^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{0,29}$", ErrorMessage = "Username is not valid")]
+        [Remote("ValidateExistUsername", "Auth")]
         public string Username { get; set; }
         [Required]
         [DataType(DataType.Password)]
@@ -30,8 +32,8 @@ namespace AutoServiceMVC.Models
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Again password not match")]
-        [DisplayName("Re-enter Password")]
+        [Compare("Password", ErrorMessage = "Password is not match")]
+        [DisplayName("Again password")]
         public string AgainPassword { get; set; }
         [Required]
         [StringLength(255)]
@@ -39,7 +41,8 @@ namespace AutoServiceMVC.Models
 		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+)*$", ErrorMessage = "Fullname is not valid")]
 		public string FullName { get; set; }
         [DataType(DataType.EmailAddress)]
-        public string? Email { get; set; }
+        [Remote("ValidateExistEmail", "Auth")]
+        public string Email { get; set; }
         [DisplayName("Role")]
         public int? RoleId { get; set; }
     }
@@ -75,7 +78,7 @@ namespace AutoServiceMVC.Models
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password is not match")]
-        [DisplayName("Re-enter Password")]
+        [DisplayName("Again password")]
         public string AgainPassword { get; set; }
     }
 }

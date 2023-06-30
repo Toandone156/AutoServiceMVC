@@ -59,14 +59,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _couponRepo.CreateAsync(coupon);
                 if (result.IsSuccess)
                 {
+                    TempData["Message"] = "Create coupon success";
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View();

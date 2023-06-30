@@ -3,6 +3,7 @@ using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
@@ -19,8 +20,7 @@ namespace AutoServiceMVC.Services.System
     public class ChatbotService : IChatbotService
     {
         private readonly string _apiPath = "https://api.openai.com/v1/chat/completions";
-        private readonly string _imagePath = "https://api.openai.com/v1/images/generations";
-        private readonly string _apiKey = "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";
+        private readonly string _apiKey;
         private readonly string _model = "gpt-3.5-turbo-0613";
         private readonly List<BotMessage> messages = new List<BotMessage>();
         private readonly IServiceScopeFactory _scopeFactory;
@@ -28,10 +28,12 @@ namespace AutoServiceMVC.Services.System
 
         public ChatbotService(
             IServiceScopeFactory scopeFactory,
-            IHubContext<HubServer> hub)
+            IHubContext<HubServer> hub,
+            IOptionsMonitor<AppSettings> monitor)
         {
             _scopeFactory = scopeFactory;
             _hub = hub;
+            _apiKey = monitor.CurrentValue.ApiKey;
             InitMessage();
         }
 

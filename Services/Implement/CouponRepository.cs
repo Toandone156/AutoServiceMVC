@@ -32,6 +32,15 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
+            if(entity.EndAt != null && entity.EndAt > entity.StartAt)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = "End date must large than Start date"
+                };
+            }
+
             if(entity.Quantity != null)
             {
                 entity.Remain = entity.Quantity;
