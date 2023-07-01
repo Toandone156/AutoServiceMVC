@@ -5,44 +5,33 @@
 }
 
 <div class="row">
-    <div class="col-12 mx-auto tm-login-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="tm-block-title mb-4">Welcome to Dashboard, Login</h2>
-                </div>
+    <div class="col-lg-6 d-none d-lg-block">
+        <img src="~/img/admin/undraw_login_re_4vu2.svg" class="w-100 h-100" alt="" srcset="">
+    </div>
+    <div class="col-lg-6">
+        <div class="p-5">
+            <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4 font-weight-bold">Welcome Back!</h1>
             </div>
-            <div class="row mt-2">
-                <div class="col-12">
-                    <form asp-action="Login" method="post" class="tm-login-form">
-                        <div asp-validation-summary="ModelOnly" class="text-white"></div>
-                        <div class="form-group">
-                            <label asp-for="Username"></label>
-                            <input asp-for="Username"
-                                    class="form-control validate"
-                                    id="username"
-                                    value=""
-                                    required />
-                            <span asp-validation-for="Username" class="text-white"></span>
-                        </div>
-                        <div class="form-group mt-3">
-                            <label asp-for="Password"></label>
-                            <input asp-for="Password"
-                                    class="form-control validate"
-                                    id="password"
-                                    value=""
-                                    required />
-                            <span asp-validation-for="Password" class="text-white"></span>
-                        </div>
-                        <div class="form-group mt-4">
-                            <button type="submit"
-                                    class="btn btn-primary btn-block text-uppercase w-100"
-                                    >
-                                Login
-                            </button>
-                        </div>
-                    </form>
+            <form class="user" asp-action="Login" method="post">
+                <div class="form-group">
+                    <input asp-for="Username" class="form-control form-control-user"
+                           id="exampleInputEmail" aria-describedby="emailHelp"
+                           placeholder="Enter Username or Email">
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
+                <div class="form-group">
+                    <input asp-for="Password" class="form-control form-control-user"
+                           id="exampleInputPassword" placeholder="Password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <button type="submit" class="font-weight-bold btn btn-primary btn-user btn-block">
+                    Login
+                </button>
+            </form>
+            <hr>
+            <div class="text-center">
+                <a class="small font-weight-bold" asp-action="ForgotPassword">Forgot Password?</a>
             </div>
         </div>
     </div>

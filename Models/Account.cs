@@ -11,13 +11,14 @@ namespace AutoServiceMVC.Models
     {
         //Common Attributes
         [StringLength(100)]
-        [RegularExpression("^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{0,29}$", ErrorMessage = "Username is not valid")]
+        [RegularExpression("^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{0,100}$", ErrorMessage = "Username is not valid")]
         public string? Username { get; set; }
         [StringLength(255)]
         public string? HashPassword { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         [DisplayName("Full name")]
-        public string FullName { get; set; }
+		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+)*$", ErrorMessage = "Fullname is not valid")]
+		public string FullName { get; set; }
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
     }

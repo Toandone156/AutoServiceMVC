@@ -10,6 +10,7 @@ namespace AutoServiceMVC.Models
         [Key]
         public int UserId { get; set; }
         public int Point { get; set; } = 0;
+        public long TotalAmount { get; set; } = 0;
 
         //Foreign Keys
         public int UserTypeId { get; set; }

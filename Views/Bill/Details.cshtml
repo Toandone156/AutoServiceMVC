@@ -1,0 +1,212 @@
+﻿@model AutoServiceMVC.Models.Order
+
+@{
+	ViewData["Title"] = "Order Detail";
+	var SubAmount = 0;
+
+	var IsLogin = User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme";
+
+	foreach(var item in Model.OrderDetails)
+	{
+		SubAmount += item.Price * item.Quantity;
+	}
+}
+
+<section class="ftco-section ftco-cart">
+	<div class="container mt-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-7 heading-section ftco-animate text-center">
+				<span class="subheading">Bill</span>
+				<h2 class="mb-4">Thanks for your order!</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 ftco-animate">
+				<div class="cart-list" style="overflow-x: hidden;">
+					@foreach (var item in Model.OrderDetails)
+					{
+						<div class="text-center row order-item align-items-center" data-id="@item.Product.ProductId">
+							<div class="image-prod col-md-3 order-item-info">
+								<div class="img col-md-4" style="background-image:url(@item.Product.ProductImage);"></div>
+							</div>
+
+							<div class="product-name col-md-6 order-item-info">
+								<h3>@item.Product.ProductName</h3>
+								<p class="price">@item.Price.ToString("N0") ₫</p>
+							</div>
+							<div class="col-md-3 order-item-info">
+								<div class="quantity">
+									<div class="input-group d-flex mb-3">
+										<input type="text" id="quantity" name="quantity" class="form-control input-number" 
+										value="@item.Quantity" disabled>
+									</div>
+								</div>
+
+								<div class="productTotal">@((item.Quantity * item.Product.Price).ToString("N0")) ₫</div>
+							</div>
+							@if (IsLogin && Model.Status.StatusId == 4 && ((DateTime.Now - Model.CreatedAt).Days) <= 2 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
+							{
+								<div class="col-md-12 py-3 text-right">
+									<button type="button" data-toggle="modal" data-target="#feedbackModal"
+										class="btn btn-primary py-2 px-3 send-feedback" style="color: #fff !important;">Feedback for 50 point</button>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-end">
+			<div class="col-lg-9 col-md-6 mt-5">
+				<div class="cart-total mb-3 row d-flex">
+					<div class="col-md-6">
+						<div class="cart-detail text-left">
+							<label class="mb-4">Payment Method</label>
+							<div class="form-group">
+								<div class="col-md-12 p-0">
+									<div class="radio">
+										<label><input type="radio" name="PaymentMethodId" value="3" class="mr-2" checked disabled>VNPAY</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group text-left">
+							<label>Note for order</label>
+							<textarea name="Note" class="form-control" rows="5" disabled>@Model.Note</textarea>
+						</div>
+					</div>
+					@if (Model.ApplyCouponId != null)
+					{
+						<div class="col-md-6">
+							<div class="form-group text-left">
+								<label>Enter coupon code</label>
+								<input id="coupon-code" class="form-control" style="text-transform:uppercase;"
+								value="@Model.ApplyCoupon.CouponCode" disabled />
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
+				<div class="cart-total mb-3">
+					<h3>Cart Totals</h3>
+					<p class="d-flex">
+						<span>Subtotal</span>
+						<span class="subTotal">@SubAmount.ToString("N0") ₫<span>
+					</p>
+					<p class="d-flex">
+						<span>Discount</span>
+						<span class="discount">@((SubAmount - Model.Amount).ToString("N0")) ₫</span>
+					</p>
+					<hr>
+					<p class="d-flex total-price">
+						<span>Total</span>
+						<span class="total">@Model.Amount.ToString("N0") ₫</span>
+					</p>
+				</div>
+				@if (Model.Status.StatusId < 3)
+				{
+					<p class="text-center"><a href="#" id="cancelButton" class="btn btn-danger py-3 px-4">Cancel order</a></p>
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<div id="feedbackModal" class="modal product-feedback">
+	<div class="container card border-0 p-0">
+		<form asp-controller="ProductFeedback" asp-action="SendProductFeedback" enctype="multipart/form-data">
+			<input type="hidden" name="ProductId" />
+			<input type="hidden" name="OrderId" value="@Model.OrderId"/>
+			<div class="card-header pt-3 bg-primary">
+				<h5 class="font-weight-bold card-title text-white m-0" id="exampleModalLabel">Product Feedback</h5>
+			</div>
+			<div class="card-body">
+				<section class="feedback-header d-flex flex-column justify-content-center text-black-50">
+					<div class="d-flex justify-content-center">
+						<span class="img rounded-circle d-block" id="product-feedback-img"></span>
+					</div>
+					<p class="feedback-text font-weight-bold mb-0" id="product-feedback-name"></p>
+				</section>
+				<div class="feedback-content">
+					<div class="stars menu-star">
+						<input class="star star-5" id="star-5" type="radio" name="Rating" value="5" checked/>
+						<label class="star feedbackstar mb-0 star-5" for="star-5"></label>
+						<input class="star star-4" id="star-4" type="radio" name="Rating" value="4" />
+						<label class="star feedbackstar mb-0 star-4" for="star-4"></label>
+						<input class="star star-3" id="star-3" type="radio" name="Rating" value="3" />
+						<label class="star feedbackstar mb-0 star-3" for="star-3"></label>
+						<input class="star star-2" id="star-2" type="radio" name="Rating" value="2" />
+						<label class="star feedbackstar mb-0 star-2" for="star-2"></label>
+						<input class="star star-1" id="star-1" type="radio" name="Rating" value="1" />
+						<label class="star feedbackstar mb-0 star-1" for="star-1"></label>
+					</div>
+					<!-- Message input -->
+					<div class="feedback-border form-outline mb-4 border border-secondary rounded">
+						<textarea name="Comment" class="form-control p-2 feedback-text" id="form4Example3" 
+						rows="4" placeholder="Enter your feedback to our product."></textarea>
+					</div>
+					<!-- Upload file -->
+					<div class="uploader">
+						<input id="file-upload" type="file" name="imageFile" accept="image/*" />
+						<label class="w-100 rounded" for="file-upload" id="file-drag">
+							<img id="file-image" src="#" alt="Preview" class="hidden">
+							<div id="start">
+								<i class="fa fa-download" aria-hidden="true"></i>
+								<div>Select a image or drag here</div>
+								<div id="notimage" class="hidden">Please select an image</div>
+							</div>
+							<div id="response" class="hidden">
+								<div id="messages"></div>
+							</div>
+						</label>
+					</div>
+				</div>
+			</div>
+			<section class="feedback-footer card-footer d-flex justify-content-end">
+				<button type="button" data-dismiss="modal" class="btn btn-secondary cancel-feedback">
+					Cancel
+				</button>
+				<button type="submit" class="btn ml-2 btn-primary">
+					Send <i class="icon-send"></i>
+				</button>
+			</section>
+		</form>
+	</div>
+</div>
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/user/feedback.css"/>
+}
+
+@section Scripts {
+	<script src="~/js/user/feedback.js"></script>
+	<script>
+		var cancelButton = document.getElementById("cancelButton");
+
+		cancelButton.addEventListener("click", e => {
+			e.preventDefault();
+
+			$.confirm({
+				title: 'Cancel order',
+				content: 'You really want to cancel this order?<br>After cancel, go to staff to receive money.',
+				buttons: {
+					confirm: {
+						text: "Cancel now",
+						btnClass: 'btn-orange',
+						keys: ['enter'],
+						action: function () {
+							window.location.assign("@Url.Action("CancelOrder", "Bill", new {id = Model.OrderId})")
+						}
+					},
+					cancel: function () {
+						showToast("Cancelled confirm.")
+					}
+				}
+			});
+		})
+	</script>
+}

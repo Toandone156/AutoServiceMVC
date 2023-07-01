@@ -21,7 +21,7 @@ namespace AutoServiceMVC.Controllers
             _feedbackRepo = feedbackRepo;
         }
 
-        public async Task<IActionResult> Detail([FromRoute] int id)
+        public async Task<IActionResult> Details([FromRoute] int id)
         {
             var status = await _productRepo.GetByIdAsync(id);
 
@@ -31,6 +31,19 @@ namespace AutoServiceMVC.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<JsonResult> DetailApi(int id)
+        {
+            var status = await _productRepo.GetByIdAsync(id);
+
+            if (status.IsSuccess)
+            {
+                var product = status.Data as Product;
+                return Json(new { success = true, name = product.ProductName, price = product.Price, image = product.ProductImage });
+            }
+
+            return Json(new { success = false });
         }
     }
 }

@@ -7,6 +7,8 @@ namespace AutoServiceMVC.Models
         //Attributes
         public int OrderId { get; set; }
         public int ProductId { get; set; }
+        [DataType(DataType.Currency)]
+        public int Price { get; set; }
         public int Quantity { get; set; }
 
         //Relations

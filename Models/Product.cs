@@ -10,9 +10,12 @@ namespace AutoServiceMVC.Models
         [Key]
         public int ProductId { get; set; }
         [Column(TypeName = "nvarchar(255)")]
+        [StringLength(255)]
         [DisplayName("Name")]
-        public string ProductName { get; set; }
+		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\\d]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\\d]+)*$", ErrorMessage = "Name is not valid")]
+		public string ProductName { get; set; }
         [DataType(DataType.Currency)]
+        [RegularExpression("^\\d+$", ErrorMessage = "Price must a unsign number. Ex: 10000")]
         public int Price { get; set; }
         [Column(TypeName = "ntext")]
         [DisplayName("Decription")]
@@ -20,11 +23,12 @@ namespace AutoServiceMVC.Models
         [DataType(DataType.ImageUrl)]
         public string? ProductImage { get; set; }
         public decimal ProductRating { get; set; } = 5;
+        public int SellerQuantity { get; set; } = 0;
         public bool IsAvailable { get; set; } = true;
         public bool IsInStock { get; set; } = true;
 
         //Foreign Key
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         //Relations
         [ForeignKey("CategoryId")]

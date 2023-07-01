@@ -152,7 +152,8 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == entity.ProductId);
+            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == entity.ProductId && c.IsAvailable);
+
             if (product == null)
             {
                 return new StatusMessage()
@@ -162,35 +163,15 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            if (product.Price == entity.Price)
-            {
-                //If price not change => update data entity
-                product.ProductName = entity.ProductName;
-                product.ProductDescription = entity.ProductDescription;
-                product.ProductImage = entity.ProductImage;
-                product.IsAvailable = entity.IsAvailable;
-                product.IsInStock = entity.IsInStock;
-                product.CategoryId = entity.CategoryId;
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                //If price change => Remove and create new product
-                product.IsAvailable = false;
-                await _context.SaveChangesAsync();
+            product.Price = entity.Price;
+            product.ProductName = entity.ProductName;
+            product.ProductDescription = entity.ProductDescription;
+            product.ProductImage = entity.ProductImage;
+            product.IsAvailable = entity.IsAvailable;
+            product.IsInStock = entity.IsInStock;
+            product.CategoryId = entity.CategoryId;
 
-                product.ProductId = 0;
-                product.Price = entity.Price;
-
-                product.ProductName = entity.ProductName;
-                product.ProductDescription = entity.ProductDescription;
-                product.ProductImage = entity.ProductImage;
-                product.IsAvailable = entity.IsAvailable;
-                product.IsInStock = entity.IsInStock;
-                product.CategoryId = entity.CategoryId;
-
-                await CreateAsync(product);
-            }
+			await _context.SaveChangesAsync();
 
             return new StatusMessage()
             {

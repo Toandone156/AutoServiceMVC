@@ -64,14 +64,24 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Tables.Remove(table);
-            await _context.SaveChangesAsync();
-
-            return new StatusMessage()
+            try
             {
-                IsSuccess = true,
-                Message = Message.DELETE_SUCCESS
-            };
+                _context.Tables.Remove(table);
+                await _context.SaveChangesAsync();
+
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = Message.DELETE_SUCCESS
+                };
+            }catch(Exception ex)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = "Can not delete this table"
+                };
+            }
         }
 
         public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)
@@ -163,7 +173,19 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            table.TableName = entity.TableName;
+            //Update table name for orders
+            if(table.TableName != entity.TableName)
+            {
+                var ordersByTable = table.Orders;
+
+                foreach(var order in ordersByTable)
+                {
+                    order.TableName = table.TableName;
+                }
+
+                table.TableName = entity.TableName;
+            }
+
             table.TableCode = entity.TableCode;
             await _context.SaveChangesAsync();
 

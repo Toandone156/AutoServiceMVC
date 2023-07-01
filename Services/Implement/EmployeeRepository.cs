@@ -242,9 +242,11 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
-        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string? email, string? username)
+        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string email, string? username)
         {
-            if (_context.Employees.Any(x => (x.Email == email) || (x.Username == username)))
+            if (_context.Employees.Any(x => (x.Email == email) 
+                                            || ((username != null) 
+                                                && (x.Username == username))))
             {
                 return new StatusMessage()
                 {

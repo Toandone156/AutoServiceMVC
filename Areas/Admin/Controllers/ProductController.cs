@@ -34,7 +34,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _productRepo.GetAllAsync();
-            return View(result.Data);
+
+            if (result.IsSuccess)
+            {
+                var products = (result.Data as List<Product>).OrderByDescending(o => o.ProductId);
+                return View(products);
+            }
+
+            TempData["Message"] = "Get data fail";
+            return View();
         }
 
         public async Task<IActionResult> Details([FromRoute]int id)
@@ -77,11 +85,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View();
@@ -109,11 +117,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View("Details",product.ProductId);

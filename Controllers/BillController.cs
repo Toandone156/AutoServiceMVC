@@ -1,34 +1,107 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
+using AutoServiceMVC.Services.System;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
-    [Authorize(AuthenticationSchemes = "User_Scheme")]
     public class BillController : Controller
     {
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
+        private readonly ICookieService _cookie;
 
         public BillController(ICommonRepository<Order> orderRepo,
-                                ICommonRepository<OrderStatus> orderStatusRepo)
+                                ICommonRepository<OrderStatus> orderStatusRepo,
+                                ICookieService cookie)
         {
             _orderRepo = orderRepo;
             _orderStatusRepo = orderStatusRepo;
+            _cookie = cookie;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var orders = new List<Order>();
+            if (User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
+            {
+                var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+                var userOrdersRs = await ((OrderRepository)_orderRepo).GetByUserIdAsync(userId);
+
+                if (userOrdersRs.IsSuccess)
+                {
+                    orders = userOrdersRs.Data as List<Order>;
+                }
+            }
+            else
+            {
+                var guestOrderIdCookie = _cookie.GetCookie(HttpContext, "guest_order");
+                if (!guestOrderIdCookie.IsNullOrEmpty())
+                {
+                    var guestOrderIdList = guestOrderIdCookie.Split(",").ToList();
+                    foreach (var orderIdString in guestOrderIdList)
+                    {
+                        int orderId = Convert.ToInt32(orderIdString ?? "0");
+                        var order = await _orderRepo.GetByIdAsync(orderId);
+
+                        if (order.IsSuccess)
+                        {
+                            orders.Add(order.Data as Order);
+                        }
+                    }
+                }
+            }
+
+            var orderduserOrders = orders?.OrderByDescending(o => o.CreatedAt);
+            return View(orderduserOrders);
         }
 
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> GetOrderData()
+        {
+            var orders = new List<Order>();
+            if (User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")
+            {
+                var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+                var userOrdersRs = await ((OrderRepository)_orderRepo).GetByUserIdAsync(userId);
+
+                if (userOrdersRs.IsSuccess)
+                {
+                    orders = userOrdersRs.Data as List<Order>;
+                }
+            }
+            else
+            {
+                var guestOrderIdCookie = _cookie.GetCookie(HttpContext, "guest_order");
+                if (!guestOrderIdCookie.IsNullOrEmpty())
+                {
+                    var guestOrderIdList = guestOrderIdCookie.Split(",").ToList();
+                    foreach (var orderIdString in guestOrderIdList)
+                    {
+                        int orderId = Convert.ToInt32(orderIdString ?? "0");
+                        var order = await _orderRepo.GetByIdAsync(orderId);
+
+                        if (order.IsSuccess)
+                        {
+                            orders.Add(order.Data as Order);
+                        }
+                    }
+                }
+            }
+
+            var orderduserOrders = orders?.OrderByDescending(o => o.CreatedAt);
+            return PartialView("_OrderData", orderduserOrders);
+        }
+
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _orderRepo.GetByIdAsync(id);
 
             if(result.IsSuccess)
             {
-                return View(result);
+                return View(result.Data);
             }
 
             return View("Index", "Home");
@@ -42,7 +115,7 @@ namespace AutoServiceMVC.Controllers
             {
                 var status = (result.Data as Order).Status;
 
-                if(status.StatusId > 2) // Can cancel if in receive
+                if(status.StatusId < 3) // Can cancel if in receive
                 {
                     await _orderStatusRepo.CreateAsync(new OrderStatus()
                     {
@@ -51,11 +124,13 @@ namespace AutoServiceMVC.Controllers
                     });
 
                     TempData["Message"] = "Cancel order success";
-                    return View("Index");
+                    return RedirectToAction("Index");
                 }
+
+                TempData["Message"] = "Your order was prepared. Cancel fail.";
             }
 
-            return View("Detail", id);
+            return RedirectToAction("Details", new {id = id });
         }
     }
 }

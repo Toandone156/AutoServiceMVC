@@ -23,9 +23,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _couponRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                return View(result.Data);
+                var coupons = (result.Data as List<Coupon>)
+                    .OrderBy(c => c.EndAt)
+                    .ThenByDescending(c => c.StartAt);
+
+                return View(coupons);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 
@@ -59,14 +64,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var result = await _couponRepo.CreateAsync(coupon);
                 if (result.IsSuccess)
                 {
+                    TempData["Message"] = "Create coupon success";
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(String.Empty, result.Message);
+                TempData["Message"] = result.Message;
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "Some fields is invalid");
+                TempData["Message"] = "Some fields is invalid";
             }
 
             return View();
@@ -82,6 +88,16 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var preCoupon = (await _couponRepo.GetByIdAsync(coupon.CouponId)).Data as Coupon;
+
+                if ((preCoupon.Remain + (coupon.Quantity - preCoupon.Quantity)) < 0)
+                {
+					ModelState.AddModelError(String.Empty, "Remain is not enough to decrease");
+					return RedirectToAction("Details", new {id = coupon.CouponId });
+				}
+
+                coupon.Remain = preCoupon.Remain + (coupon.Quantity - preCoupon.Quantity);
+
                 var result = await _couponRepo.UpdateAsync(coupon);
                 if (result.IsSuccess)
                 {
@@ -95,7 +111,24 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 ModelState.AddModelError(String.Empty, "Some fields is invalid");
             }
 
-            return View("Details", coupon.CouponId);
+            return RedirectToAction("Details", coupon.CouponId);
+        }
+
+        public async Task<IActionResult> Stop(int id)
+        {
+            var couponRs = await _couponRepo.GetByIdAsync(id);
+            if(couponRs.IsSuccess)
+            {
+                var coupon = couponRs.Data as Coupon;
+                coupon.EndAt = DateTime.Now;
+                await _couponRepo.UpdateAsync(coupon);
+
+                TempData["Message"] = "Coupon was ended success";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Message"] = couponRs.Message;
+            return RedirectToAction("Details", id);
         }
     }
 }

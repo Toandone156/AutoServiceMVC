@@ -8,126 +8,171 @@
     var dropdownlist = new SelectList((IEnumerable<Category>)result.Data, "CategoryId", "CategoryName");
 }
 
-<header class="row tm-content-row">
-    <div class="form-group col-xl-6 col-lg-6 col-md-12">
-        <select id="categoryDropdown"
-                asp-items="@dropdownlist"
-                class="custom-select tm-select-accounts" style="background-color: #567086;">
-            <option value="All">All category</option>
-        </select>
-    </div>
-
-    <div class="shopping col-xl-6 col-lg-6 col-md-12">
-        <i class="fas fa-shopping-cart" data-value="0"></i>
-    </div>
-</header>
-
-
-<div class="list">
-    @foreach(var item in Model)
-    {
-        <div class="item" data-category="@item.CategoryId">
-            <img src="@item.ProductImage">
-            <div class="title">@item.ProductName</div>
-            <div class="price">@item.Price</div>
-            <button class="btn btn-primary" onclick="addToCart(@item.ProductId, 1);">Add To Card</button>
-        </div>
-    }
-</div>
-
-@section Cart {
-    <div class="card" id="cardVs">
-        <h1>Card</h1>
-        <ul class="listCard">
-            @foreach(var item in cartList)
+<div id="hideOrder">.</div>
+<section id="order-sidebar" class="shadow vh-100 position-fixed bg-gradient-dark">
+    <div class="h-100 position-relative">
+        <section class="order-header h-auto" onclick="HideOrder();">
+            <a class="text-decoration-none py-2 d-flex justify-content-between mb-0 bg-primary text-white h2">
+                <i class="pl-3 fas fa-fw fa-angle-double-right"></i>
+                <h4 class="mb-0 pr-3">
+                    <span class="font-weight-bold">Cart Details</span>
+                </h4>
+            </a>
+        </section>
+        <ul class="order-list mt-4 mb-0 px-3" onclick="ChangeQuantity(event);">
+            @foreach(var order in cartList)
             {
-                <li data-id="@item.ProductId">
-                    <div class="left-container">
-                        <div>@item.Product.ProductName</div>
-                        <div class="order-price">@item.Product.Price</div>
-                    </div>
-                    <div class="right-container">
-                        <button class="btn-dark" onclick="changeQuantity(@item.ProductId, 'minus')">-</button>
-                        <div class="count">@item.Quantity</div>
-                        <button class="btn-dark" onclick="changeQuantity(@item.ProductId, 'plus')">+</button>
-                    </div>
+                <li class="list-group my-4 order-item">
+                    <section class="text-decoration-none py-2 d-flex justify-content-between mb-0 text-white">
+                        <div class="d-flex flex-column item-content">
+                            <span class="product-id" style="display:none!important;">@order.ProductId</span>
+                            <span class="item-name">@order.Product.ProductName</span>
+                            <span class="item-price">@order.Product.Price.ToString("N0") ₫</span>
+                        </div>
+                        <div class="btn-group flex-shrink-1 item-action" role="group">
+                            <button type="button" class="item-minus btn btn-secondary py-0 px-1">
+                                <i class="fas fa-fw fa-minus-square"></i>
+                            </button>
+                            <button class="btn px-0 btn-secondary item-quantity">@order.Quantity</button>
+                            <button type="button" class="item-plus btn btn-secondary py-0 px-1">
+                                <i class="fas fa-fw fa-plus-square"></i>
+                            </button>
+                        </div>
+                    </section>
                 </li>
             }
         </ul>
-
-        <form id="paymentForm" asp-area="Admin" asp-controller="Order" asp-action="Payment" method="post">
-            <div class="form-group mb-3 m-5">
-                <textarea id="Note" name="Note" class="form-control validate" rows="5" placeholder="Note here..."></textarea>
-            </div>
-        </form>
-
-        <div class="checkOut">
-            <div class="total" onclick="openModal()">0</div>
-            <div class="closeShopping">Close</div>
+        <section class="order-footer position-absolute w-100" style="bottom: 0;">
+            <form id="paymentForm" asp-action="Payment" method="post">
+                <div class="w-100 px-3 rounded-top">
+                    <textarea class="w-100 rounded bg-gray-500 font-weight-bold text-dark p-3"
+                                name="Note" id="order-note"
+                                style="resize: none;" cols="30" rows="3" placeholder="Write order note..."></textarea>
+                </div>
+            </form>
+            <a href="#" data-toggle="modal" data-target="#sendOrderModal"
+               class="mt-3 text-decoration-none text-dark py-3 d-flex justify-content-between mb-0 bg-warning text-white h2 payment-button">
+                <i class="pl-3 fas fa-fw fa-money-check-alt"></i>
+                <h4 class=" font-weight-bold align-self-center mb-0 pr-3"><span class="order-total">2.000.000</span></h4>
+            </a>
+        </section>
+    </div>
+</section>
+<!-- End Order Sidebar -->
+<!-- Begin Product List content -->
+<div>
+    <!-- Page Heading -->
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap">
+        <div class="form-group d-flex align-items-center mb-1">
+            <select class="form-control"
+                    asp-items="dropdownlist"
+                    id="categoryDropdown" onchange="loadProduct()">
+                <option value="All">All Category</option>
+            </select>
+        </div>
+        <div class="form-group my-auto mb-1">
+            <input type="search" class="form-control" id="searchbox" onkeyup="loadProduct()"
+                placeholder="Enter product name..."/>
+        </div>
+        <div id="order-sidebar-btn" class="btn position-relative mr-3 mr-md-5">
+            <i class="h3 mb-0 font-weight-bold fa fa-fw fa-cart-plus"></i>
+            <span id="order-quantity" class="badge badge-danger position-absolute">2</span>
         </div>
     </div>
 
+    <!-- Product List Section -->
+    <section class="row product-list" onclick="AddToCart(event);">
+        
+        @foreach(var product in Model)
+        {
+            <div class="product-item col-xl-3 col-md-4 col-6 mb-4 item" data-category="@product.CategoryId">
+                <div class="card border-left-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-12 text-center">
+                                <img class="w-100 rounded img-fluid" style="height: clamp(100px, 20vh , 270px); object-fit: cover;" src="@product.ProductImage"
+                                     alt="@product.ProductName">
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center mt-4">
+                            <div class="col mr-2">
+                                <input type="text" class="product-id" value="@product.ProductId" hidden>
+                                <div class="product-name text-xs font-weight-bold mb-1 text-uppercase">
+                                    @product.ProductName
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span class="product-price">@product.Price.ToString("N0") ₫</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <span class="add-to-cart btn btn-warning font-weight-bold">
+                                    Add <i class="fas fa-plus-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
+    </section>
+</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">You want to order</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Total: <b id="total"></b>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
-                    <button type="submit"
-                            class="btn btn-success"
-                            onclick="payment()">
-                        Send order
-                    </button>
-                </div>
+<div class="modal fade" id="sendOrderModal" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Send Order now?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Total: <span class="order-total">20000</span></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <a class="btn btn-warning font-weight-bold" href="#" onclick="payment()">
+                    Send Order <i class="fas fa-fw fa-forward"></i>
+                </a>
             </div>
         </div>
     </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin/menu.css"/>
 }
 
 @section Scripts {
-    <script src="~/js/admin/app.js"></script>
+    <script src="https://unpkg.com/diacritic"></script>
+    <script src="~/js/admin/adminMenu.js"></script>
 
     <script>
-        function openModal(){
-            var total = document.getElementById("total");
-            total.textContent = document.querySelector(".total").textContent;
-            $("#orderModal").modal("show");
-        }
-        
-        function closeModal(){
-            $("#orderModal").modal("hide");
-        }
-
         function payment(){
             $("#paymentForm").submit();
         }
 
-        var dropdown = document.getElementById("categoryDropdown");
-        dropdown.addEventListener("change", function () {
-            var selected = dropdown.value;
-            var productRows = document.getElementsByClassName("item");
+        function loadProduct() {
+
+            let dropdown = document.getElementById("categoryDropdown");
+            let searchbox = document.getElementById("searchbox");
+
+            let productRows = document.getElementsByClassName("product-item");
+            let categoryId = dropdown.value;
 
             for (var i = 0; i < productRows.length; i++) {
                 var row = productRows[i];
-                var rowdata = row.getAttribute("data-category");
+                var category = row.getAttribute("data-category");
 
-                if (selected === "All" || rowdata === selected) {
+                var productName = row.querySelector(".product-name").innerHTML;
+
+                if ((categoryId == "All" || category == categoryId)
+                    && Diacritics.clean(productName).toLowerCase().includes(Diacritics.clean(searchbox.value).toLowerCase())) {
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
                 }
             }
-        });
+        }
     </script>
 }

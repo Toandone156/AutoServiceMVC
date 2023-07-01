@@ -234,13 +234,13 @@ namespace AutoServiceMVC.Services.Implement
 
         async Task<StatusMessage> IAuthenticateService<User>.ValidateLoginAsync(Login login)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => (u.Username == login.Username) || (u.Email == login.Username));
             if(user == null)
             {
                 return new StatusMessage()
                 {
                     IsSuccess = false,
-                    Message = "Username is wrong"
+                    Message = "Username, Email or Password was wrong"
                 };
             }
             
@@ -249,22 +249,24 @@ namespace AutoServiceMVC.Services.Implement
                 return new StatusMessage()
                 {
                     IsSuccess = false,
-                    Message = "Password is wrong"
+                    Message = "Username, Email or Password was wrong"
                 };
             }
 
             return new StatusMessage()
             {
                 IsSuccess = true,
-                Message = "Username and Password is valid",
+                Message = "Login success",
                 Data = user
             };
         }
 
-        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string? email, string? username)
+        public async Task<StatusMessage> CheckEmailAndUsernameAsync(string email, string? username)
         {
-            if (_context.Users.Any(x => (x.Email == email) || (x.Username == username)))
-            {
+            if (_context.Users.Any(x => (x.Email == email)
+											|| ((username != null)
+												&& (x.Username == username))))
+			{
                 return new StatusMessage()
                 {
                     IsSuccess = true,

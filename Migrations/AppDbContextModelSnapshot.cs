@@ -37,7 +37,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>
@@ -50,8 +50,8 @@ namespace AutoServiceMVC.Migrations
 
                     b.Property<string>("CouponCode")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
@@ -77,6 +77,9 @@ namespace AutoServiceMVC.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Remain")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
@@ -89,7 +92,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserTypeId");
 
-                    b.ToTable("Coupons");
+                    b.ToTable("Coupons", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Employee", b =>
@@ -129,7 +132,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Order", b =>
@@ -158,8 +161,12 @@ namespace AutoServiceMVC.Migrations
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TableId")
+                    b.Property<int?>("TableId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -176,7 +183,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.OrderDetail", b =>
@@ -187,6 +194,9 @@ namespace AutoServiceMVC.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -194,7 +204,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.OrderStatus", b =>
@@ -225,7 +235,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("OrderStatus");
+                    b.ToTable("OrderStatus", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.PaymentMethod", b =>
@@ -242,7 +252,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("PaymentMethodId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.PointTrading", b =>
@@ -270,7 +280,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PointTrading");
+                    b.ToTable("PointTrading", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Product", b =>
@@ -281,7 +291,7 @@ namespace AutoServiceMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAvailable")
@@ -307,11 +317,14 @@ namespace AutoServiceMVC.Migrations
                     b.Property<decimal>("ProductRating")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("SellerQuantity")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductId");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.ProductFeedback", b =>
@@ -323,11 +336,16 @@ namespace AutoServiceMVC.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductFeedbackId"), 1L, 1);
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("ntext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -340,11 +358,13 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("ProductFeedbackId");
 
+                    b.HasIndex("OrderId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProductFeedbacks");
+                    b.ToTable("ProductFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Role", b =>
@@ -361,7 +381,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.ServiceFeedback", b =>
@@ -376,6 +396,9 @@ namespace AutoServiceMVC.Migrations
                         .IsRequired()
                         .HasColumnType("ntext");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -386,7 +409,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ServiceFeedbacks");
+                    b.ToTable("ServiceFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Status", b =>
@@ -403,7 +426,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("StatusId");
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Table", b =>
@@ -416,8 +439,8 @@ namespace AutoServiceMVC.Migrations
 
                     b.Property<string>("TableCode")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("TableName")
                         .IsRequired()
@@ -425,7 +448,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("TableId");
 
-                    b.ToTable("Tables");
+                    b.ToTable("Tables", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.User", b =>
@@ -451,6 +474,9 @@ namespace AutoServiceMVC.Migrations
                     b.Property<int>("Point")
                         .HasColumnType("int");
 
+                    b.Property<long>("TotalAmount")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
@@ -462,7 +488,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("UserTypeId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.UserCoupon", b =>
@@ -473,9 +499,6 @@ namespace AutoServiceMVC.Migrations
                     b.Property<int>("CouponId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ExpireAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
@@ -483,7 +506,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasIndex("CouponId");
 
-                    b.ToTable("UserCoupons");
+                    b.ToTable("UserCoupons", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.UserType", b =>
@@ -503,7 +526,7 @@ namespace AutoServiceMVC.Migrations
 
                     b.HasKey("UserTypeId");
 
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserTypes", (string)null);
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.Coupon", b =>
@@ -553,8 +576,7 @@ namespace AutoServiceMVC.Migrations
                     b.HasOne("AutoServiceMVC.Models.Table", "Table")
                         .WithMany("Orders")
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoServiceMVC.Models.User", "User")
                         .WithMany("Orders")
@@ -631,14 +653,19 @@ namespace AutoServiceMVC.Migrations
                     b.HasOne("AutoServiceMVC.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.ProductFeedback", b =>
                 {
+                    b.HasOne("AutoServiceMVC.Models.Order", "Order")
+                        .WithMany("ProductFeedbacks")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AutoServiceMVC.Models.Product", "Product")
                         .WithMany("ProductFeedbacks")
                         .HasForeignKey("ProductId")
@@ -650,6 +677,8 @@ namespace AutoServiceMVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
 
@@ -719,6 +748,8 @@ namespace AutoServiceMVC.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("OrderStatuses");
+
+                    b.Navigation("ProductFeedbacks");
                 });
 
             modelBuilder.Entity("AutoServiceMVC.Models.PaymentMethod", b =>

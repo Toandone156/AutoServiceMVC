@@ -1,0 +1,36 @@
+:root {
+    --main-color-1: rgb(196, 155, 99);
+	--main-color-2: rgb(176, 137, 81);
+}
+
+/* Feedback modal section */
+#feedbackModal {
+	z-index: 10;
+}
+
+#product-feedback-img {
+	--size: 80px!important;
+	width: var(--size);
+	height: var(--size);
+}
+
+.feedback-background {
+	background-color: var(--main-color-1) !important;
+}
+
+.feedback-border {
+	border-color: var(--main-color-1) !important;
+	border-width: 2px!important;
+	border-style: dashed !important;
+}
+
+.feedback-text,
+.feedback-text::placeholder {
+	color: var(--main-color-2) !important;
+}
+
+/* Override border for uploader label */
+.uploader label {
+    border-style: dashed;
+    border-width: 2px!important;
+}

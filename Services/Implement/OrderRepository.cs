@@ -30,7 +30,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            await _context.AddAsync<Order>(entity);
+            await _context.AddAsync<Order>(entity);  
             await _context.SaveChangesAsync();
 
             return new StatusMessage()
@@ -132,6 +132,32 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
+        public async Task<StatusMessage> GetByUserIdAsync(int? userId)
+        {
+            if (userId == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.INPUT_EMPTY
+                };
+            }
+
+            var orders = await _context.Orders.Where(o => o.UserId == userId).ToListAsync();
+
+            foreach (var order in orders)
+            {
+                order.Status = await GetRecentOrderStatus(order.OrderId);
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = orders
+            };
+        }
+
         public async Task<StatusMessage> UpdateAsync(Order? entity)
         {
             if (entity == null)
@@ -154,7 +180,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            //order.Note = entity.Note;
+            order.UserId = entity.UserId;
             await _context.SaveChangesAsync();
 
             return new StatusMessage()

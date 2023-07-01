@@ -65,14 +65,24 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return new StatusMessage()
+            try
             {
-                IsSuccess = true,
-                Message = Message.DELETE_SUCCESS
-            };
+                _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
+
+                return new StatusMessage()
+                {
+                    IsSuccess = true,
+                    Message = Message.DELETE_SUCCESS
+                };
+            }catch(Exception ex)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = "Can not delete this category"
+                };
+            }
         }
 
         public async Task<StatusMessage> GetWithPaginatedAsync(string? search, int page)

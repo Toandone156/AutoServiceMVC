@@ -3,6 +3,7 @@ using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -35,7 +36,7 @@ namespace AutoServiceMVC.Controllers
                 feedback.Image = imageLink;
             }
 
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             feedback.UserId = userId;
 
             await _serviceFeedbackRepo.CreateAsync(feedback);

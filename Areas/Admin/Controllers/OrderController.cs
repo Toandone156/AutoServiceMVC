@@ -1,9 +1,12 @@
-﻿using AutoServiceMVC.Models;
+﻿using AutoServiceMVC.Hubs;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -18,6 +21,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         private readonly ICommonRepository<OrderDetail> _detailRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly ICommonRepository<Status> _statusRepo;
+        private readonly ICommonRepository<Table> _tableRepo;
+        private readonly IPointService _pointService;
+        private readonly IHubContext<HubServer> _hub;
         private readonly ISessionCustom _session;
 
         public OrderController(ICommonRepository<Product> productRepo,
@@ -25,6 +31,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                                 ICommonRepository<OrderDetail> detailRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 ICommonRepository<Status> statusRepo,
+                                ICommonRepository<Table> tableRepo,
+                                IPointService pointService,
+                                IHubContext<HubServer> hub,
                                 ISessionCustom session)
         {
             _productRepo = productRepo;
@@ -32,6 +41,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             _detailRepo = detailRepo;
             _orderStatusRepo = orderStatusRepo;
             _statusRepo = statusRepo;
+            _tableRepo = tableRepo;
+            _pointService = pointService;
+            _hub = hub;
             _session = session;
         }
 
@@ -58,6 +70,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return View(data);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 
@@ -70,6 +83,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var newDetail = new OrderDetail()
             {
                 ProductId = productId,
+                Price = product.Price,
                 Quantity = quantity
             };
 
@@ -109,6 +123,9 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         {
             int employeeId = Convert.ToInt32(User.FindFirstValue("Id"));
             var tableId = 8; //Table for employee order
+            var table = (await _tableRepo.GetByIdAsync(tableId)).Data as Table;
+
+
             var paymentMethodId = 2; //Cash
 
             //Order details
@@ -125,6 +142,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             {
                 EmployeeId = employeeId,
                 TableId = tableId,
+                TableName = table.TableName,
                 Note = Note,
                 PaymentMethodId = paymentMethodId
             };
@@ -157,7 +175,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<JsonResult> UpdateStatus(int orderId)
         {
             var orderResult = await _orderRepo.GetByIdAsync(orderId);
-            var recentStatusId = (orderResult.Data as Order).Status.StatusId;
+            var order = orderResult.Data as Order;
+            var recentStatusId = order.Status.StatusId;
 
             OrderStatus newStatus = new OrderStatus()
             {
@@ -170,6 +189,21 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
             var newStatusObject = await _statusRepo.GetByIdAsync(recentStatusId + 1);
             var status = newStatusObject.Data as Status;
+
+            if(status.StatusId == 4 && order.UserId != null && order.UserId != 2)
+            {
+                //Add point
+                var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, Convert.ToInt32(order.Amount / 1_000), $"Receive point from order {order.OrderId}.");
+            }
+
+            if(newStatus.Order.UserId == 2)
+            {
+                await _hub.Clients.Group(newStatus.OrderId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
+            }
+            else
+            {
+                await _hub.Clients.Group(newStatus.Order.UserId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
+            }
 
             return Json(new { success = true, statusId = status.StatusId, statusName = status.StatusName });
         }

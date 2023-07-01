@@ -1,5 +1,6 @@
 ﻿using AutoServiceMVC.Models.System;
 using MailKit.Security;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -9,20 +10,38 @@ namespace AutoServiceMVC.Services.System
     public interface IMailService
     {
         public Task SendMailAsync(MailContent content);
+        public string GetMailFromContent(string username, string mailType, string link);
     }
 
     public class MailService : IMailService
     {
         private readonly MailSettings _mailSettings;
-        private readonly ILogger<IMailService> _logger;
+        //private readonly ILogger<IMailService> _logger;
+		private readonly IWebHostEnvironment _hostEnvironment;
 
-        public MailService(IOptions<MailSettings> mailSettings, ILogger<IMailService> logger) 
+		public MailService(IOptions<MailSettings> mailSettings,
+            //ILogger<IMailService> logger,
+            IWebHostEnvironment hostEnvironment) 
         {
             _mailSettings = mailSettings.Value;
-            _logger = logger;
-        }
+            //_logger = logger;
+            _hostEnvironment = hostEnvironment;
 
-        public async Task SendMailAsync(MailContent mailContent)
+		}
+
+		public string GetMailFromContent(string username, string mailType, string link)
+		{
+            string path = _hostEnvironment.WebRootPath + "\\mailContent\\index.html";
+			string mailTemplate = File.ReadAllText(path);
+            mailTemplate = mailTemplate.Replace("[username]", username);
+			mailTemplate = mailTemplate.Replace("[mailtype]", mailType);
+			mailTemplate = mailTemplate.Replace("[mailbutton]", mailType.ToUpper());
+			mailTemplate = mailTemplate.Replace("[resetlink]", link);
+
+            return mailTemplate;
+		}
+
+		public async Task SendMailAsync(MailContent mailContent)
         {
             var email = new MimeMessage();
             email.Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail);
@@ -46,8 +65,8 @@ namespace AutoServiceMVC.Services.System
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("Send mail fail");
-                _logger.LogError(ex.Message);
+                //_logger.LogInformation("Send mail fail");
+                //_logger.LogError(ex.Message);
             }
 
             await smtp.DisconnectAsync(true);

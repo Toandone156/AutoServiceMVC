@@ -1,11 +1,17 @@
 ﻿using AutoServiceMVC.Data;
+using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
+using AutoServiceMVC.Utils;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+using System.Net;
 using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
@@ -17,26 +23,43 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<OrderDetail> _detailRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly ICommonRepository<Product> _productRepo;
+		private readonly ICommonRepository<User> _userRepo;
+        private readonly ICommonRepository<UserCoupon> _userCouponRepo;
+        private readonly IHubContext<HubServer> _hub;
+        private readonly IPointService _pointService;
         private readonly ISessionCustom _session;
+        private readonly ICookieService _cookie;
+        private readonly IPaymentService _payment;
 
-        public OrderController(AppDbContext dbContext,
+		public OrderController(AppDbContext dbContext,
                                 ICommonRepository<Order> orderRepo,
                                 ICommonRepository<OrderDetail> detailRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 ICommonRepository<Product> productRepo,
-                                ISessionCustom session)
+                                ICommonRepository<User> userRepo,
+                                ICommonRepository<UserCoupon> userCouponRepo,
+                                IHubContext<HubServer> hub,
+                                ISessionCustom session,
+                                ICookieService cookie,
+                                IPaymentService payment)
         {
             _dbContext = dbContext;
             _orderRepo = orderRepo;
             _detailRepo = detailRepo;
             _orderStatusRepo = orderStatusRepo;
             _productRepo = productRepo;
+            _userRepo = userRepo;
+            _userCouponRepo = userCouponRepo;
+            _hub = hub;
             _session = session;
-        }   
+            _cookie = cookie;
+            _payment = payment;
+
+		}   
         
         public IActionResult Index()
         {
-            return View();
+			return View();
         }
 
         public async Task<IActionResult> AccessTable([FromQuery] string tablecode)
@@ -48,10 +71,35 @@ namespace AutoServiceMVC.Controllers
             {
                 _session.AddToSession(HttpContext, "table", result);
 
+                TempData["Message"] = "Add table success";
                 return View("Index");
             }
 
-            return View("Index", "Home");
+			TempData["Message"] = "Table code is wrong";
+			return View("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AccessTableApi(string tablecode)
+        {
+            _dbContext.ChangeTracker.LazyLoadingEnabled = false;
+            var result = await _dbContext.Tables.FirstOrDefaultAsync(x => x.TableCode == tablecode);
+
+            if (result != null)
+            {
+                _session.AddToSession(HttpContext, "table", result);
+
+                return Json(new {success = true, message = "Add table success", name = result.TableName });
+            }
+
+            return Json(new { success = false, message = "Table code is wrong" });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ExitTableApi()
+        {
+            _session.DeleteSession(HttpContext, "table");
+            return Json(new {success = true});
         }
 
         public async Task<IActionResult> Payment()
@@ -70,8 +118,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Payment([Bind("PaymentMethodId,Note")] Order order, string CouponCode) 
-            //Check coupon using api and save in input for apply coupon
+        public async Task<IActionResult> Payment([Bind("PaymentMethodId,Note,ApplyCouponId")] Order order, string Total)
         {
             string strUserId = User.FindFirstValue("Id");
             int userId = strUserId.IsNullOrEmpty() ? 2 : Convert.ToInt32(strUserId); // 2 is Guest
@@ -81,48 +128,91 @@ namespace AutoServiceMVC.Controllers
 
             if(table == null)
             {
-                TempData["Message"] = "Please enter order before payment";
+                TempData["Message"] = "Please enter TABLECODE before payment";
                 return RedirectToAction("Payment");
             }
 
-            var tableId = table.TableId;
-            order.TableId = tableId;
+            order.TableId = table.TableId;
+            order.TableName = table.TableName;
 
             //Order details
             var detailsList = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart");
 
             if (detailsList == null)
             {
-                TempData["Message"] = "Please select some product first";
+                TempData["Message"] = "Please select some product";
                 return RedirectToAction("Index");
             }
 
-            var result = await _orderRepo.CreateAsync(order);
-            var orderId = (result.Data as Order).OrderId;
+            _session.AddToSession(HttpContext, "doing_order", order);
 
-            //Create Order Detail
-            foreach (var detail in detailsList)
-            {
-                detail.OrderId = orderId;
-                await _detailRepo.CreateAsync(detail);
-            }
-
-            //Create Order Status
-            await _orderStatusRepo.CreateAsync(new OrderStatus()
-            {
-                OrderId = orderId,
-                StatusId = 1 //Sended
-            });
-
-            //Payment by Momo or VNPay
-
-            _session.DeleteSession(HttpContext, "cart");
-
-            //Receive point
-
-            TempData["Message"] = "Send order success";
-            return RedirectToAction("Index");
+            string redirectUrl = _payment.GetVnpayPaymentUrl(HttpContext, Convert.ToInt32(Total));
+            return Redirect(redirectUrl);
         }
+
+        public async Task<IActionResult> ConfirmVnpayPayment()
+        {
+            var paymentResult = _payment.CheckResponseVnpayPayment(HttpContext);
+
+            if(paymentResult.status == true && paymentResult.responseCode == "00")
+            {
+                var order = _session.GetSessionValue<Order>(HttpContext, "doing_order");
+                var detailsList = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart");
+
+				var result = await _orderRepo.CreateAsync(order);
+                var orderid = (result.Data as Order).OrderId;
+
+                //create order detail
+                foreach (var detail in detailsList)
+                {
+                    detail.OrderId = orderid;
+                    await _detailRepo.CreateAsync(detail);
+                }
+
+                //create order status
+                await _orderStatusRepo.CreateAsync(new OrderStatus()
+                {
+                    OrderId = orderid,
+                    StatusId = 1 //sent
+                });
+
+                var applyCouponId = order.ApplyCouponId;
+
+                if(applyCouponId != null)
+                {
+                    var userId = Convert.ToInt32(User.FindFirstValue("Id"));
+                    var userCoupons = (await ((UserCouponRepository)_userCouponRepo).GetByUserIdAsync(userId)).Data as List<UserCoupon>;
+                    var usedCoupon = userCoupons.Find(c => c.CouponId == applyCouponId);
+
+                    usedCoupon.IsUsed = true;
+                    await _userCouponRepo.UpdateAsync(usedCoupon);
+                }
+
+                if(order.UserId == 2) //Guest
+                {
+                    var guestOrder = _cookie.GetCookie(HttpContext, "guest_order");
+                    var orderIdList = guestOrder.IsNullOrEmpty() ? new List<string>() : guestOrder.Split(",").ToList();
+
+                    orderIdList.Add(orderid.ToString());
+                    _cookie.AddCookie(HttpContext, 1, "guest_order", String.Join(",", orderIdList));
+                }
+
+                _session.DeleteSession(HttpContext, "order_cart");
+                _session.DeleteSession(HttpContext, "doing_cart");
+
+                await _hub.Clients.Group("Employee").SendAsync("ReceiveOrder", $"New order at table {order.TableId}", orderid);
+
+                TempData["Message"] = "Order successfully";
+				return RedirectToAction("Index");
+			}
+            else
+            {
+				_session.DeleteSession(HttpContext, "doing_cart");
+
+				TempData["Message"] = $"Payment fail";
+				return RedirectToAction("Payment");
+			}
+		}
 
         [HttpPost]
         public async Task<JsonResult> AddToCart(int productId, int quantity)
@@ -133,6 +223,7 @@ namespace AutoServiceMVC.Controllers
             var newDetail = new OrderDetail()
             {
                 ProductId = productId,
+                Price = product.Price,
                 Quantity = quantity
             };
 

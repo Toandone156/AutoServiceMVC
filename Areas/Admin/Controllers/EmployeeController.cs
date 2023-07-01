@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Areas.Admin.Controllers
 {
@@ -20,12 +21,18 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var EmplId = Convert.ToInt32(User.FindFirstValue("Id"));
             var result = await _employeeRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                return View(result.Data);
+                var emplList = (result.Data as List<Employee>)
+                    .Where(e => e.EmployeeId != EmplId)
+                    .OrderBy(e => e.EndDate)
+                    .ThenByDescending(e => e.StartDate);
+                return View(emplList);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 
@@ -44,21 +51,27 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
-            [Bind("EmployeeId,FullName,Email,RoleId")] Employee employee)
+            [Bind("EmployeeId,FullName,RoleId")] Employee employee)
         {
-            var result = await _employeeRepo.UpdateAsync(employee);
-            if (result.IsSuccess)
+            var emplRs = await _employeeRepo.GetByIdAsync(employee.EmployeeId);
+            if (emplRs.IsSuccess)
             {
-                return RedirectToAction("Index");
+                var updateEmpl = emplRs.Data as Employee;
+
+                updateEmpl.FullName = employee.FullName;
+                updateEmpl.RoleId = employee.RoleId;
+
+                await _employeeRepo.UpdateAsync(updateEmpl);
+
+				TempData["Message"] = "Update successful";
+				return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError(String.Empty, result.Message);
+            TempData["Message"] = emplRs.Message;
 
             return View("Details", employee.EmployeeId);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LayOff(int id)
         {
             var result = await _employeeRepo.GetByIdAsync(id);

@@ -1,95 +1,75 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.Employee>
 @{
-    ViewData["Title"] = "Employee";
+    ViewData["Title"] = "Employee Management";
 }
 
-<div class="row tm-content-row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-        <div class="tm-bg-primary-dark tm-block tm-block-products">
-            <div class="form-group mb-3">
-                <label for="statusDropdown">Status</label>
-                <select id="statusDropdown"
-                        class="custom-select tm-select-accounts">
-                    <option value="All">All employee</option>
-                    <option value="working">On working</option>
-                    <option value="ended">Ended</option>
-                </select>
-            </div>
-            <div class="tm-product-table-container">
-                <table class="table table-hover tm-table-small tm-product-table">
-                    <thead>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between">
+        <div class="h6 font-weight-bold text-primary align-self-center">Employee List</div>
+        <a asp-area="Admin" asp-controller="Auth" asp-action="Register" class="d-flex justify-content-between btn btn-success btn-icon-split">
+            <span class="text">Create</span>
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FullName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Role)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.StartDate)
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
                         <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.FullName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Email)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.StartDate)
-                            </th>
-                            <th>
-                                Status
-                            </th>
+                            <td scope="col">
+                                <a asp-action="Details" asp-route-id="@item.EmployeeId"
+                                   class="text-reset text-decoration-none">
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </a>
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Role.RoleName)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td scope="col">
+                                @if (item.EndDate < DateTime.Now)
+                                {
+                                    <div class="tm-status-circle ended"></div>
+                                    <span class="text-danger">Ended</span>
+                                }
+                                else
+                                {
+                                    <div class="tm-status-circle working"></div>
+                                    <span class="text-success">Working</span>
+                                }
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr class="item" data-status="@((item.EndDate < DateTime.Now) ? "ended" : "working")">
-                                <td scope="col">
-                                    <a asp-action="Details" asp-route-id="@item.EmployeeId"
-                                       class="text-reset text-decoration-none">
-                                        @Html.DisplayFor(modelItem => item.FullName)
-                                    </a>
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                                <td scope="col">
-                                    @Html.DisplayFor(modelItem => item.StartDate)
-                                </td>
-                                <td scope="col">
-                                    @if (item.EndDate < DateTime.Now)
-                                    {
-                                        <div class="tm-status-circle ended"></div>
-                                        <span>Ended</span>
-                                    }else{
-                                        <div class="tm-status-circle working"></div>
-                                        <span>On Working</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <!-- table container -->
-            <a asp-area="Admin" asp-controller="Auth" asp-action="Register"
-               class="btn btn-primary btn-block text-uppercase mb-3">Add new employee</a>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-@section scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var dropdown = document.getElementById("statusDropdown");
-            dropdown.addEventListener("change", function () {
-                var selected = dropdown.value;
-                var productRows = document.getElementsByClassName("item");
-
-                for (var i = 0; i < productRows.length; i++) {
-                    var row = productRows[i];
-                    var rowdata = row.getAttribute("data-status");
-
-                    if (selected === "All" || rowdata === selected) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                }
-            });
-        });
-    </script>
-}

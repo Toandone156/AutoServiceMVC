@@ -1,4 +1,5 @@
 using AutoServiceMVC.Data;
+using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
@@ -24,10 +25,7 @@ services.AddRouting(options =>
 });
 
 #region Session
-services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.MaxValue;
-});
+services.AddSession();
 
 services.AddSingleton<ISessionCustom, SessionCustom>();
 #endregion
@@ -46,12 +44,12 @@ services.AddDbContext<AppDbContext>(options =>
 {
     options.UseLazyLoadingProxies()
             .UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
-    options.UseLoggerFactory(LoggerFactory.Create(builder =>
-    {
-        builder
-        .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
-        .AddConsole();
-    }));
+    //options.UseLoggerFactory(LoggerFactory.Create(builder =>
+    //{
+    //    builder
+    //    .AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information)
+    //    .AddConsole();
+    //}));
 });
 #endregion
 
@@ -66,25 +64,22 @@ services.AddAuthentication(options =>
         options.LoginPath = "/auth/login";
         options.AccessDeniedPath = "/";
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.Cookie.MaxAge = options.ExpireTimeSpan;
+        options.SlidingExpiration = true;
     })
     .AddCookie("Admin_Scheme", options =>
     {
         options.LoginPath = "/admin/auth/login";
         options.AccessDeniedPath = "/admin/";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
-    })
+		options.Cookie.MaxAge = options.ExpireTimeSpan;
+	})
     .AddGoogle(options =>
     {
         var googleConfig = builder.Configuration.GetSection("ExtenalLogin:Google");
         options.ClientId = googleConfig["ClientID"];
         options.ClientSecret = googleConfig["ClientSecret"];
-    })
-    .AddFacebook(options =>
-    {
-        var facebookConfig = builder.Configuration.GetSection("ExtenalLogin:Facebook");
-		options.AppId = facebookConfig["ClientID"];
-		options.AppSecret = facebookConfig["ClientSecret"];
-	});
+    });
 
 services.AddSingleton<ICookieAuthentication, CookieAuthentication>();
 #endregion
@@ -97,7 +92,7 @@ services.Configure<RequestLocalizationOptions>(options =>
         .AddSupportedUICultures(supportedCultures);
 });
 
-//Add service
+#region AddService
 services.AddScoped<IAuthenticateService<User>, UserRepository>();
 services.AddScoped<IAuthenticateService<Employee>, EmployeeRepository>();
 services.AddScoped<ICommonRepository<Category>, CategoryRepository>();
@@ -124,7 +119,17 @@ services.AddScoped<IJWTAuthentication, JWTAuthentication>();
 services.AddHttpContextAccessor();
 services.AddScoped<IImageUploadService, ImageUploadService>();
 
-// Add services to the container.
+services.AddScoped<IPaymentService, PaymentService>();
+services.AddScoped<IPointService, PointService>();
+services.AddSingleton<ICookieService, CookieService>();
+
+services.AddSingleton<IChatbotService, ChatbotService>();
+#endregion
+
+services.AddSignalR(e => {
+    e.MaximumReceiveMessageSize = 102400000;
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -137,12 +142,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseSession();
-
 app.UseRouting();
+
+app.UseSession();
 
 #region currency
 var supportedCultures = new[] { "vi-VN" };
@@ -155,6 +160,8 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<HubServer>("/noti");
 
 app.UseEndpoints(endpoints =>
 {

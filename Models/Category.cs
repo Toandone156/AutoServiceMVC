@@ -10,7 +10,8 @@ namespace AutoServiceMVC.Models
         public int CategoryId { get; set; }
         [StringLength(100)]
         [DisplayName("Category")]
-        public string CategoryName { get; set; }
+		[RegularExpression("^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+(?:\\s+[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư]+)*$", ErrorMessage = "Category is not valid")]
+		public string CategoryName { get; set; }
 
         //Relations
         public virtual ICollection<Product>? Products { get; set; }

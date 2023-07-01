@@ -1,0 +1,49 @@
+﻿@model AutoServiceMVC.Models.User
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-action="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">User Management</span>
+    </a>
+</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        Employee Details
+    </div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FullName"></label>
+                    <input asp-for="FullName" class="form-control" disabled>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control" disabled>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="UserType.UserTypeName"></label>
+                    <input asp-for="UserType.UserTypeName" class="form-control" disabled>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Point"></label>
+                    <input asp-for="Point" class="form-control" disabled>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TotalAmount"></label>
+                    <input asp-for="TotalAmount" class="form-control" disabled>
+                </div>
+            </div>
+        </div>
+</div>

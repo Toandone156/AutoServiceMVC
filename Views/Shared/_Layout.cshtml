@@ -7,7 +7,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AutoServiceMVC</title>
+    <meta title="Self Coffee - QR to Coffee" content="Contactless ordering and payment experience" />
+    <meta name="description" content="Contactless ordering and payment experience. Go to voucher to get all of your promotion now. Let's login and get up to 50% discount for you."/>
+    <title>@ViewData["Title"] - SelfCoffee</title>
+    <link rel="icon" href="~/icon.png"/>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
@@ -25,16 +28,21 @@
     <link rel="stylesheet" href="~/css/user/ionicons.min.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 
     <link rel="stylesheet" href="~/css/user/flaticon.css">
     <link rel="stylesheet" href="~/css/user/icomoon.css">
-    <link rel="stylesheet" href="~/css/user/style.css">
+    <link rel="stylesheet" href="~/css/user/main.css">
+    <link rel="stylesheet" href="~/css/user/cart.css">
     <link rel="stylesheet" href="~/css/user/upload.css">
+
+    @await RenderSectionAsync("Styles", required: false)
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Coffee<small>Blend</small></a>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">SELF<small>Coffee</small></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
@@ -42,16 +50,17 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item @(ViewData["Title"].ToString() == "Home" ? "active" : "")"><a asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
                     <li class="nav-item @(ViewData["Title"].ToString() == "Menu" ? "active" : "")"><a asp-controller="Order" asp-action="Index" class="nav-link">Menu</a></li>
+                    <li class="nav-item @(ViewData["Title"].ToString() == "My Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
 
                     @if (IsLogin)
                     {
                         <li class="nav-item @(ViewData["Title"].ToString() == "Coupon" ? "active" : "")"><a asp-controller="Coupon" asp-action="Index" class="nav-link">Coupon</a></li>
-                        <li class="nav-item @(ViewData["Title"].ToString() == "Order" ? "active" : "")"><a asp-controller="Bill" asp-action="Index" class="nav-link">My Order</a></li>
                         <li class="nav-item @(ViewData["Title"].ToString() == "Feedback" ? "active" : "")"><a asp-controller="ServiceFeedback" asp-action="Index" class="nav-link">Feedback</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, @User.Identity.Name</a>
+                            <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, @User.Identity.Name</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown04">
                                 <a asp-controller="Profile" asp-action="Index" class="dropdown-item">View profile</a>
+                                <a asp-controller="Point" asp-action="Index" class="dropdown-item">Trade history</a>
                                 <a asp-controller="Coupon" asp-action="MyCoupon" class="dropdown-item">My coupon</a>
                                 <a asp-controller="Auth" asp-action="Logout" class="dropdown-item">Logout</a>
                             </div>
@@ -61,11 +70,23 @@
                     {
                         <li class="nav-item"><a asp-controller="Auth" asp-action="Login" class="nav-link">Login</a></li>
                     }
-                    <li class="nav-item cart"><a asp-controller="Order" asp-action="Payment" class="nav-link"><span class="icon icon-shopping_cart" data-value="0"></span></a></li>
                 </ul>
+                
             </div>
+            @if(ViewData["Title"] != "Payment")
+            {
+                <ul class="navbar-nav justify-content-center">
+                    <li class="nav-item cart">
+                        <a id="cartButton" href="#" class="nav-link" data-toggle="modal" data-target="#cartModal">
+                        <span class="icon icon-shopping_cart" data-value="0"></span>
+                        </a>
+                    </li>
+                </ul>
+            }
         </div>
     </nav>
+
+    @await Component.InvokeAsync("CartComponent")
 
     @RenderBody()
 
@@ -78,9 +99,11 @@
                 <div class="col-lg-6 col-md-12 mb-5 mb-md-5 small-text-center">
                     <div class="ftco-footer-widget mb-4">
                         <h2 class="ftco-heading-2">About Us</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <p>
+                            A place where passion meets perfection. With dedication, attentive service, and a philosophy that places customer satisfaction above all else, we believe in delivering the finest experience to our customers through every product.
+                        </p>
                         <ul class="ftco-footer-social list-unstyled float-lft mt-5">
-                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="https://www.facebook.com/profile.php?id=100093150445395"><span class="icon-facebook"></span></a></li>
                             <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
                         </ul>
                     </div>
@@ -100,7 +123,6 @@
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-
                     <p>
                         Copyright &copy;2023 All rights reserved 
                     </p>
@@ -120,21 +142,41 @@
     <script src="~/js/user/jquery.stellar.min.js"></script>
     <script src="~/js/user/owl.carousel.min.js"></script>
     <script src="~/js/user/jquery.magnific-popup.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/user/aos.js"></script>
-    <script src="~/js/user/jquery.animateNumber.min.js"></script>
     <script src="~/js/user/scrollax.min.js"></script>
+    <script src="https://unpkg.com/diacritic"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="~/js/user/main.js"></script>
-    <script src="~/js/user/addition.js"></script>
     <script src="~/js/user/upload.js"></script>
     <script src="~/js/user/api.js"></script>
+    <script src="~/js/user/table.js"></script>
+    <script src="~/js/user/notification.js"></script>
+    @if (ViewData["Title"] != "Payment")
+    {
+        <script src="~/js/user/cart.js"></script>
+    }
 
     @if (TempData["Message"] != null)
     {
         <script>
-            showToast("@TempData["Message"]")
+            showToast("@TempData["Message"]");
         </script>
     }
+    <script>
+        $('input[type=text]').each(function () {
+            var req = $(this).attr('data-val-required');
+            if (undefined != req) {
+                var label = $('label[for="' + $(this).attr('id') + '"]');
+                var text = label.text();
+                if (text.length > 0) {
+                    label.append('<span style="color:red"> *</span>');
+                }
+            }
+        });
+    </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>

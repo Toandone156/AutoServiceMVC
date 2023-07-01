@@ -2,9 +2,11 @@
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.System;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
 {
@@ -12,22 +14,25 @@ namespace AutoServiceMVC.Controllers
     public class ProductFeedbackController : Controller
     {
         private readonly ICommonRepository<ProductFeedback> _productFeedbackRepo;
+        private readonly IPointService _pointService;
         private readonly IImageUploadService _uploadService;
         private readonly AppDbContext _context;
 
         public ProductFeedbackController(
             AppDbContext context,
             ICommonRepository<ProductFeedback> productFeedbackRepo, 
+            IPointService pointService,
             IImageUploadService uploadService)
         {
             _productFeedbackRepo = productFeedbackRepo;
+            _pointService = pointService;
             _uploadService = uploadService;
             _context = context;
         }
 
         public async Task<IActionResult> Index(int id) //ProductId
         {
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
 
             var orderProducts = _context.Users
                 .Where(x => x.UserId == userId)
@@ -47,7 +52,7 @@ namespace AutoServiceMVC.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SendProductFeedback(
-            [Bind("ProductId,Comment,Rating")] ProductFeedback feedback,
+            [Bind("ProductId,OrderId,Comment,Rating")] ProductFeedback feedback,
             IFormFile imageFile)
         {
             if(imageFile != null)
@@ -56,13 +61,16 @@ namespace AutoServiceMVC.Controllers
                 feedback.Image = imageLink;
             }
 
-            var userId = Convert.ToInt32(User.FindFirst("Id"));
+            var userId = Convert.ToInt32(User.FindFirstValue("Id"));
             feedback.UserId = userId;
 
             await _productFeedbackRepo.CreateAsync(feedback);
 
+            //Get point
+            var tradeRs = await _pointService.ChangePointAsync(userId, 50 , "Receive point from your feedback.");
+
             TempData["Message"] = "Thanks for your feedback!";
-            return RedirectToAction("Detail", "Product", feedback.ProductId);
+            return RedirectToAction("Details", "Bill", new {id = feedback.OrderId});
         }
     }
 }

@@ -1,141 +1,156 @@
 ﻿@model AutoServiceMVC.Models.Order
 
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewData["Title"] = "Order Details";
 }
 
-<div class="row mb-5">
-    <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
-        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="tm-block-title d-inline-block">Product Detail</h2>
-                </div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        Order Details
+    </div>
+    <div class="card-body row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="OrderId"></label>
+                <input asp-for="OrderId" class="form-control validate" disabled>
             </div>
-            <form asp-action="Edit" class="tm-edit-product-form" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-white"></div>
-                    <div class="row tm-edit-product-row">
-                        <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="form-group mb-3">
-                                    <label asp-for="OrderId"></label>
-                                    <input asp-for="OrderId" class="form-control validate" disabled>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="CreatedAt"></label>
-                                    <input type="text" asp-for="CreatedAt" class="form-control validate" disabled>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="Note"></label>
-                                    <textarea asp-for="Note" class="form-control validate" rows="5" disabled></textarea>
-                                </div>
-                                @if(Model.UserId == null)
-                                {
-                                    <div class="form-group mb-3">
-                                        <label asp-for="Employee.FullName">Created employee</label>
-                                        <input asp-for="Employee.FullName" class="form-control validate" disabled>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="form-group mb-3">
-                                        <label asp-for="User.FullName">Created user</label>
-                                        <input asp-for="User.FullName" class="form-control validate" disabled>
-                                    </div>
-                                }
-                                <div class="form-group mb-3">
-                                    <label asp-for="Table.TableName"></label>
-                                    <input asp-for="Table.TableName" class="form-control validate" disabled>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="ApplyCoupon.CouponCode"></label>
-                                    <input asp-for="ApplyCoupon.CouponCode" class="form-control validate" disabled>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="PaymentMethod.PaymentMethodName"></label>
-                                    <input asp-for="PaymentMethod.PaymentMethodName" class="form-control validate" disabled>
-                                </div>
-                        </div>     
-                        <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
-                        <div class="tm-product-table-container">
-                            <table class="table table-hover tm-table-small tm-product-table">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            Date
-                                        </th>
-                                        <th>
-                                            Status
-                                        </th>
-                                        <th>
-                                            Employee
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.OrderStatuses)
-                                    {
-                                        <tr>
-                                            <td scope="col">
-                                                @item.CreatedAt
-                                            </td>
-                                            <td scope="col">
-                                                @item.Status.StatusName
-                                            </td>
-                                            <td scope="col">
-                                                @item.Employee.FullName
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tm-product-table-container">
-                            <table class="table table-hover tm-table-small tm-product-table">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            Product name
-                                        </th>
-                                        <th>
-                                            Price
-                                        </th>
-                                        <th>
-                                            Quantity
-                                        </th>
-                                        <th>
-                                            Total
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach(var item in Model.OrderDetails)
-                                    {
-                                        <tr>
-                                            <td scope="col">
-                                                @item.Product.ProductName
-                                            </td>
-                                            <td scope="col">
-                                                @item.Product.Price
-                                            </td>
-                                            <td scope="col">
-                                                @item.Quantity
-                                            </td>
-                                            <td scope="col">
-                                                @(item.Product.Price * item.Quantity)
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label asp-for="Amount"></label>
-                            <input asp-for="Amount" class="form-control validate" disabled>
-                        </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt"></label>
+                <input asp-for="CreatedAt" class="form-control validate" disabled>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note"></label>
+                <textarea asp-for="Note" class="form-control validate" rows="5" disabled></textarea>
+            </div>
+            @if (Model.UserId == null)
+            {
+                <div class="form-group">
+                    <label asp-for="Employee.FullName">Created employee</label>
+                    <input asp-for="Employee.FullName" class="form-control validate" disabled>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="User.FullName">Created user</label>
+                    <input asp-for="User.FullName" class="form-control validate" disabled>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Table.TableName"></label>
+                <input asp-for="Table.TableName" class="form-control validate" disabled>
+            </div>
+            @if(Model.ApplyCoupon?.DiscountValue != null)
+            {
+                <div class="form-group">
+                    <label asp-for="ApplyCoupon.DiscountValue"></label>
+                    <div class="input-group">
+                        <input asp-for="ApplyCoupon.DiscountValue" class="form-control validate" disabled>
+                        <div class="input-group-append">
+                            <span class="input-group-text"> VND </span>
                         </div>
                     </div>
-                </form>
+                    <span asp-validation-for="ApplyCoupon.DiscountValue" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="ApplyCoupon.DiscountPercentage"></label>
+                    <div class="input-group">
+                        <input asp-for="ApplyCoupon.DiscountPercentage" class="form-control validate" disabled>
+                        <div class="input-group-append">
+                            <span class="input-group-text"> VND </span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="ApplyCoupon.DiscountPercentage" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="PaymentMethod.PaymentMethodName"></label>
+                <input asp-for="PaymentMethod.PaymentMethodName" class="form-control validate" disabled>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderStatuses.OrderBy(p => p.StatusId))
+                        {
+                            <tr>
+                                <td scope="col">
+                                    @item.CreatedAt
+                                </td>
+                                <td scope="col">
+                                    @item.Status.StatusName
+                                </td>
+                                <td scope="col">
+                                    @(item.Employee?.FullName ?? @Model.User.FullName)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="productTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Product name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Total</th>
+                    <th>@Model.Amount.ToString("N0") ₫</th>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model.OrderDetails)
+                        {
+                            <tr>
+                                <td scope="col">
+                                    @item.Product.ProductName
+                                </td>
+                                <td scope="col">
+                                    @item.Price.ToString("N0") ₫
+                                </td>
+                                <td scope="col">
+                                    @item.Quantity
+                                </td>
+                                <td scope="col">
+                                    @((item.Price * item.Quantity).ToString("N0")) ₫
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                lengthMenu: [
+                    [5, 10, -1],
+                    [5, 10, 'All'],
+                ],
+                searching: false,
+                ordering: false
+            });
+        });
+    </script>
+}

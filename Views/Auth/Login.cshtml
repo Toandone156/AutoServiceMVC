@@ -10,7 +10,6 @@
 			<div class="col-md-7 heading-section text-center ftco-animate">
 				<span class="subheading">Login</span>
 				<h2 class="mb-4">Become Coffeer</h2>
-				<h5 class="mb-4">@TempData["Message"]</h5>
 			</div>
 		</div>
 
@@ -24,15 +23,16 @@
 					<div class="col-md-12 mb-3">
 						<ul class="ftco-footer-social list-unstyled float-lft">
 							<li class="ftco-animate"><a asp-controller="Auth" asp-action="LoginGoogle"><span class="icon-google"></span></a></li>
+							@*<li class="ftco-animate"><a asp-controller="Auth" asp-action="LoginFacebook"><span class="icon-facebook"></span></a></li>*@
 						</ul>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-1"></div>
 			<div class="col-md-4 ftco-animate">
-				<form asp-controller="Auth" asp-action="Login" class="contact-form">
+				<form asp-controller="Auth" asp-action="Login" method="post" class="contact-form">
 					<div class="form-group">
-						<input asp-for="Username" type="text" class="form-control" placeholder="Username">
+						<input asp-for="Username" type="text" class="form-control" placeholder="Username or Email">
 						<span asp-validation-for="Username" class="text-white"></span>
 					</div>
 					<div class="form-group">
@@ -45,7 +45,7 @@
 							<a asp-controller="Auth" asp-action="IdentityMail">Forgot password?</a>
 						</div>
 						<div class="col-md-6">
-							<a asp-controller="Auth" asp-action="Register">Become coffeer</a>
+							<a asp-controller="Auth" asp-action="Register">Register account</a>
 						</div>
 					</div>
 

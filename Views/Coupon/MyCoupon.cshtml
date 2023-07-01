@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.UserCoupon>
+
+@{
+	ViewData["Title"] = "My Coupon";
+}
+
+<section class="ftco-section">
+	<div class="container mt-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-7 heading-section ftco-animate text-center">
+				<span class="subheading">Coupon</span>
+				<h2 class="mb-4">Discount order</h2>
+				<p>Your order will be approximately <b>FREE</b>. Use it now.</p>
+			</div>
+		</div>
+		<div class=" row coupon-section">
+			@foreach (var item in Model)
+			{
+				<div class="col col-5 container">
+					<div class="row coupon-card" data-type="@(item.Coupon.UserType?.UserTypeId ?? 0)">
+						<div class="col col-md-5 discount">
+							<div class="heading-section ftco-animate fadeInUp ftco-animated discount-maininfo">
+								<span class="subheading heading-discount">Discount</span>
+								<h2>
+									@(item.Coupon.DiscountValue == null ? item.Coupon.DiscountPercentage + "%" : item.Coupon.DiscountValue?.ToString("N0") + " ₫")
+								</h2>
+								<h5 class="member-type">
+									@(item.Coupon.UserType?.UserTypeName ?? "All member")
+								</h5>
+							</div>
+						</div>
+						<div class="col col-7 condition">
+							<div class="condition-title">
+								<h3>@((item.Coupon.MinimumOrderAmount != null) ? "Order from " + item.Coupon.MinimumOrderAmount?.ToString("N0") + " ₫" : "")</h3>
+								<p>@((item.Coupon.MaximumDiscountAmount != null) ? "Max discount " + item.Coupon.MaximumDiscountAmount?.ToString("N0") + " ₫" : "")</p>
+							</div>
+							<div class="coupon-row">
+								<span id="cpnCode"class="coupon-code">@item.Coupon.CouponCode</span>
+								<a href="" class="btn btn-primary btn-outline-primary copy-button"
+								   id="cpnBtn">Copy code</a>
+							</div>
+							<div class="date-valid">
+								<p>@(item.Coupon.EndAt == null ? "" : "Expired at " + @item.Coupon.EndAt?.ToString("dd/MM/yyyy HH:mm:ss"))</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</section>
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/user/coupon.css">
+}
+
+@section Scripts {
+	<script>
+		debugger
+
+		var copyButton = document.querySelectorAll(".copy-button");
+
+		copyButton.forEach(button => {
+			button.addEventListener("click", e => {
+				e.preventDefault();
+
+				var code = button.previousElementSibling;
+				navigator.clipboard.writeText(code.innerHTML);
+
+				showToast("Code was copy successfully");
+			})
+		})
+	</script>
+}
+

@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.16" />
@@ -85,6 +84,7 @@
     <None Include="wwwroot\images\person_2.jpg" />
     <None Include="wwwroot\images\person_3.jpg" />
     <None Include="wwwroot\images\person_4.jpg" />
+    <None Include="wwwroot\js\admin\datatables.js" />
     <None Include="wwwroot\scss\bootstrap\bootstrap-grid.scss" />
     <None Include="wwwroot\scss\bootstrap\bootstrap-reboot.scss" />
     <None Include="wwwroot\scss\bootstrap\bootstrap.scss" />

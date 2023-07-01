@@ -13,14 +13,15 @@ namespace AutoServiceMVC.Models
         [Key]
 		[JsonProperty]
 		public int CouponId { get; set; }
-        [RegularExpression("^[a-zA-Z0-9]{6,}$", ErrorMessage = "Coupon Code is not valid")]
-        [StringLength(12)]
+        [RegularExpression("^[a-zA-Z0-9]{6,30}$", ErrorMessage = "Coupon Code is not valid")]
+        [StringLength(30)]
         [DisplayName("Coupon code")]
 		[JsonProperty]
 		public string CouponCode { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Discount value")]
-		[JsonProperty]
+        [RegularExpression("^\\d+$", ErrorMessage = "Discount value must a unsign number")]
+        [JsonProperty]
 		public int? DiscountValue { get; set; }
         [RegularExpression("^(?:100(?:\\.0{1,2})?|\\d{1,2}(?:\\.\\d{1,2})?)$", ErrorMessage = "Percentage is not valid")]
         [DisplayName("Discount percentage")]
@@ -28,14 +29,19 @@ namespace AutoServiceMVC.Models
 		public int? DiscountPercentage { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Minimum order")]
-		[JsonProperty]
+        [RegularExpression("^\\d+$", ErrorMessage = "Min Order must a unsign number")]
+        [JsonProperty]
 		public int? MinimumOrderAmount { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Maximum discount")]
-		[JsonProperty]
+        [RegularExpression("^\\d+$", ErrorMessage = "Max Discount must a unsign number")]
+        [JsonProperty]
 		public int? MaximumDiscountAmount { get; set; }
-        public int? Quantity { get; set; }
-        [RegularExpression("^\\d+$", ErrorMessage = "PointAmount must a unsign number")]
+		[RegularExpression("^\\d+$", ErrorMessage = "Quantity must a unsign number")]
+		public int? Quantity { get; set; }
+		[RegularExpression("^\\d+$", ErrorMessage = "Remain must a unsign number")]
+		public int? Remain { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "Point must a unsign number")]
         [DisplayName("Point amount")]
         public int PointAmount { get; set; }
         [DataType(DataType.DateTime)]

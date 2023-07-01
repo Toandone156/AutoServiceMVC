@@ -9,19 +9,37 @@
             <div class="col-md-7 heading-section ftco-animate text-center">
                 <span class="subheading">Discover</span>
                 <h2 class="mb-4">Best Coffee Sellers</h2>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
             </div>
         </div>
         <div class="row">
             @foreach(var item in Model)
             {
-                <div class="col-md-3">
+                <div class="col-md-3 col-6">
                     <div class="menu-wrap">
-                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="menu-img img mb-4" style="background-image: url(@item.ProductImage);"></a>
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" class="menu-img img mb-4" style="background-image: url(@item.ProductImage);"></a>
                         <div class="text text-center">
-                            <h3><a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">@item.ProductName</a></h3>
-                            <p class="price"><span>@item.Price.ToString("C")</span></p>
-                            <p><a id="addtocart" class="btn btn-primary btn-outline-primary" data-id="@item.ProductId">Add to Cart</a></p>
+                            <h3><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" class="product-name">@item.ProductName</a></h3>
+                            <div class="star-rating">
+                                <div class="back-stars">
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+                                    <span class="star" aria-hidden="true"></span>
+
+                                    <div class="front-stars" style="width: @(Convert.ToInt32(item.ProductRating/5*100))%">
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                        <span class="star" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+
+                                <small class="pl-2" style="font-size: 60%;"> @item.ProductRating</small>
+                            </div>
+                            <p class="price"><span class="product-price">@item.Price.ToString("N0") ₫</span></p>
+                            <p><a id="addtocart" href="#" class="btn btn-primary btn-outline-primary add-to-cart" data-id="@item.ProductId">Add to Cart</a></p>
                         </div>
                     </div>
                 </div>
