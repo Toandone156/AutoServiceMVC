@@ -25,10 +25,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _employeeRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                var emplList = (result.Data as List<Employee>).Where(e => e.EmployeeId != EmplId);
+                var emplList = (result.Data as List<Employee>)
+                    .Where(e => e.EmployeeId != EmplId)
+                    .OrderBy(e => e.EndDate)
+                    .ThenByDescending(e => e.StartDate);
                 return View(emplList);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 

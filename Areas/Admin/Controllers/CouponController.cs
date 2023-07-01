@@ -23,9 +23,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _couponRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                return View(result.Data);
+                var coupons = (result.Data as List<Coupon>)
+                    .OrderBy(c => c.EndAt)
+                    .ThenByDescending(c => c.StartAt);
+
+                return View(coupons);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 

@@ -24,10 +24,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _categoryRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                //ViewBag.Message = TempData["Message"];
                 return View(result.Data);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 

@@ -23,9 +23,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _userRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                return View(result.Data);
+                var users = (result.Data as List<User>).OrderByDescending(u => u.UserId);
+                return View(users);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 

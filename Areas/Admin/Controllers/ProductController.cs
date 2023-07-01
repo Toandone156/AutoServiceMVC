@@ -34,7 +34,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _productRepo.GetAllAsync();
-            return View(result.Data);
+
+            if (result.IsSuccess)
+            {
+                var products = (result.Data as List<Product>).OrderByDescending(o => o.ProductId);
+                return View(products);
+            }
+
+            TempData["Message"] = "Get data fail";
+            return View();
         }
 
         public async Task<IActionResult> Details([FromRoute]int id)

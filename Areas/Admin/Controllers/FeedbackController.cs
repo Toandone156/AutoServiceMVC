@@ -23,9 +23,12 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await _feedbackRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                return View(result.Data);
+                var sfeedbacks = (result.Data as List<ServiceFeedback>).OrderByDescending(f => f.CreatedAt);
+
+                return View(sfeedbacks);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
     }

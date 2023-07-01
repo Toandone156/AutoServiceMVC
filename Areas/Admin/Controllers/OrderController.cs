@@ -70,6 +70,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 return View(data);
             }
 
+            TempData["Message"] = "Get data fail";
             return View();
         }
 
