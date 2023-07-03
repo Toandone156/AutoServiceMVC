@@ -163,7 +163,16 @@ namespace AutoServiceMVC.Services.Implement
                     IsSuccess = false,
                     Message = Message.INPUT_EMPTY
                 };
-            } 
+            }
+
+            if (entity.EndAt != null && entity.EndAt > entity.StartAt)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = "End date must large than Start date"
+                };
+            }
 
             var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponId == entity.CouponId);
             if(coupon == null)

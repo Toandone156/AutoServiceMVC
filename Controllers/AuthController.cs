@@ -64,6 +64,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("Username, Password")] Login login)
         {
             if (ModelState.IsValid)
@@ -102,6 +103,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("Username,Password,AgainPassword,FullName,Email")]
                                 Register register)
         {
@@ -147,6 +149,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> IdentityMail(string mail)
         {
             if (!mail.IsNullOrEmpty())
@@ -304,6 +307,7 @@ namespace AutoServiceMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword([Bind("UserId,Password,AgainPassword")] ResetPassword resetPassword)
         {
             if(ModelState.IsValid)

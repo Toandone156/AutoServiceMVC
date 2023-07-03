@@ -61,6 +61,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(string email)
         {
             if (!email.IsNullOrEmpty())
@@ -126,6 +127,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword([Bind("UserId,Password,AgainPassword")] ResetPassword resetPassword)
         {
             if (ModelState.IsValid)
@@ -175,6 +177,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> Register([Bind("Username,Password,AgainPassword,FullName,Email,RoleId")]
                                 Register register)
@@ -229,6 +232,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(AuthenticationSchemes = "Admin_Scheme")]
         public async Task<IActionResult> ChangePassword([Bind("UserId,OldPassword,Password,AgainPassword")] ChangePassword changePassword)
         {

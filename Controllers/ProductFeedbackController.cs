@@ -30,7 +30,7 @@ namespace AutoServiceMVC.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int id) //ProductId
+        public async Task<IActionResult> Index(int id)
         {
             var userId = Convert.ToInt32(User.FindFirstValue("Id"));
 
