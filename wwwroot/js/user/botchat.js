@@ -74,21 +74,26 @@ connection.on("ChatbotAnswer", async answer => {
 
             let orderdetails = arguments.orderdetails;
             for (let detail of orderdetails) {
-                let response;
 
-                $.ajax({
-                    url: '/Product/DetailApi',
-                    type: 'GET',
-                    data: { id: detail.id },
-                    success: function (res) {
-                        response = res
-                        botContent.push(AddItemToCart(detail.id, response.name, response.price, response.image, detail.quantity));
-                    },
-                    error: function (xhr, status, error) {
-                        showToast("Fail to send api")
-                    },
-                    async: false
-                });
+                if (detail.quantity == 0) {
+                    botContent.push(RemoveProductFromCart(detail.id));
+                } else {
+                    let response;
+
+                    $.ajax({
+                        url: '/Product/DetailApi',
+                        type: 'GET',
+                        data: { id: detail.id },
+                        success: function (res) {
+                            response = res
+                            botContent.push(AddItemToCart(detail.id, response.name, response.price, response.image, detail.quantity));
+                        },
+                        error: function (xhr, status, error) {
+                            showToast("Fail to send api")
+                        },
+                        async: false
+                    });
+                }
 
                 await sleep(500);
             }
@@ -100,7 +105,23 @@ connection.on("ChatbotAnswer", async answer => {
     }
 })
 
+function RemoveProductFromCart(id) {
+    let cartItems = document.querySelector('.cart-item[data-id="' + id + '"]')
 
+    if (cartItems) {
+        updateCartAjax(id, 0);
+        cartItems.remove();
+
+        showToast("Remove product success");
+
+        CheckCartIfEmpty();
+        UpdateCartTotalPrice();
+        return true;
+    }
+
+    showToast("Product was not exist");
+    return "Product is not exist in cart"
+}
 
 function responseText(e) {
 

@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="col-12 view-comment d-flex justify-content-end">
                                     @{
-                                        var OrderDays = (DateTime.Now - item.CreatedAt).Days;
+                                        var OrderDays = (DateTime.Now - item.OrderStatuses.Last().CreatedAt).Days;
                                         var CanFeedback = (item.Status.StatusId == 4) && (OrderDays <= 2) && ((item.ProductFeedbacks?.Count ?? 0) < item.OrderDetails.Count);
                                     }
 

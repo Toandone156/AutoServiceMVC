@@ -44,7 +44,7 @@
 
 								<div class="productTotal">@((item.Quantity * item.Product.Price).ToString("N0")) ₫</div>
 							</div>
-							@if (IsLogin && Model.Status.StatusId == 4 && ((DateTime.Now - Model.CreatedAt).Days) <= 2 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
+							@if (IsLogin && Model.Status.StatusId == 4 && ((DateTime.Now - Model.OrderStatuses.Last().CreatedAt).Days) <= 2 && (!Model.ProductFeedbacks?.Any(pf => pf.ProductId == item.ProductId) ?? true))
 							{
 								<div class="col-md-12 py-3 text-right">
 									<button type="button" data-toggle="modal" data-target="#feedbackModal"

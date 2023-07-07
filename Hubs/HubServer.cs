@@ -50,5 +50,10 @@ namespace AutoServiceMVC.Hubs
             string answer = await _chatbot.AskMessage(message);
             await Clients.Caller.SendAsync("ChatbotAnswer", answer);
         }
+
+        public async Task CallStaff(string tablename)
+        {
+            await Clients.Group("Employee").SendAsync("ReceiveNoti", $"Customer call at {tablename}");
+        }
     }
 }

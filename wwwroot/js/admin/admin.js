@@ -58,6 +58,8 @@
 function showToast(message) {
     Toastify({
         text: message,
-        duration: 3000
+        duration: -1,
+        close: true,
+        position: "center"
     }).showToast();
 }

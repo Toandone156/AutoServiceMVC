@@ -48,6 +48,8 @@ namespace AutoServiceMVC.Data
                 });
             });
 
+            
+
             modelBuilder
                 .Entity<Product>()
                 .HasOne(e => e.Category)

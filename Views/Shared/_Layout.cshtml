@@ -36,6 +36,76 @@
     <link rel="stylesheet" href="~/css/user/cart.css">
     <link rel="stylesheet" href="~/css/user/upload.css">
 
+    <style>
+        .Btn {
+            position: fixed;
+            left: 15px;
+            bottom: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            overflow: hidden;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+            background-color: #c49b63;
+        }
+
+        /* plus sign */
+        .sign {
+            width: 100%;
+            transition-duration: .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .sign i {
+                font-size: 30px;
+                color: white;
+            }
+
+        /* text */
+        .Btn .text {
+            position: absolute;
+            right: 0%;
+            width: 0%;
+            opacity: 0;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition-duration: .3s;
+        }
+        /* hover effect on button width */
+        .Btn:hover {
+            width: 150px;
+            border-radius: 40px;
+            transition-duration: .3s;
+        }
+
+            .Btn:hover .sign {
+                width: 30%;
+                transition-duration: .3s;
+                padding-left: 5px;
+            }
+            /* hover effect button's text */
+            .Btn:hover .text {
+                opacity: 1;
+                width: 70%;
+                transition-duration: .3s;
+                padding-right: 5px;
+            }
+        /* button click effect*/
+        .Btn:active {
+            transform: translate(2px,2px);
+        }
+    </style>
+
     @await RenderSectionAsync("Styles", required: false)
 
 </head>
@@ -89,6 +159,13 @@
     @await Component.InvokeAsync("CartComponent")
 
     @RenderBody()
+
+    <button id="call_staff" class="Btn">
+
+        <div class="sign"><i class="icon icon-contact_phone"></i></div>
+
+        <div class="text">Staff</div>
+    </button>
 
     @await Html.PartialAsync("_TableSection")
 
@@ -151,7 +228,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="~/js/user/main.js"></script>
     <script src="~/js/user/upload.js"></script>
-    <script src="~/js/user/api.js"></script>
+    <script src="~/js/user/userapi.js"></script>
     <script src="~/js/user/table.js"></script>
     <script src="~/js/user/notification.js"></script>
     @if (ViewData["Title"] != "Payment")
@@ -176,6 +253,42 @@
                 }
             }
         });
+
+        document.getElementById("call_staff").addEventListener('click', e => {
+            $.confirm({
+                title: 'Call staff',
+                content: 'Do you need the help from our staff?<br>Press "Call staff" below, our staff will go to your table in minutes.',
+                buttons: {
+                    confirm: {
+                        text: "Call now",
+                        btnClass: 'btn-orange',
+                        keys: ['enter'],
+                        action: function () {
+                            debugger
+
+                            let tablename = document.getElementById("table_name").innerText
+
+                            if(!tablename){
+                                showToast("Enter TABLECODE before call staff");
+                                return;
+                            }
+
+                            connection.invoke("CallStaff", tablename)
+
+                            $.alert({
+                                title: 'Staff',
+                                icon: 'fa fa-rocket',
+                                type: 'green',
+                                content: 'Staff will go to your table now.' +
+                                    '<br>' +
+                                    'Please wait in minutes.',
+                            });
+                        }
+                    },
+                    cancel: function (){}
+                }
+            });
+        })
     </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)

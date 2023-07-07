@@ -39,6 +39,7 @@ function updateCartAjax(id, quantity) {
 			//Handle
 		},
 		error: function (xhr, status, error) {
+			showToast("Send api fail");
 			status = false;
 		}
 	});
@@ -173,6 +174,7 @@ function changePasswordApi(mail) {
 function accessTableAjax(tablecode) {
 	let notebookElement = document.querySelector(".notbooktable");
 	let bookElement = document.querySelector(".booktable");
+	let tablename = document.getElementById("table_name");
 
 	$.ajax({
 		url: '/Order/AccessTableApi',
@@ -184,7 +186,7 @@ function accessTableAjax(tablecode) {
 				showToast(response.message);
 
 				notebookElement.classList.add('d-none');
-				bookElement.innerHTML = `Your table: ${response.name} <a href="#" class="exit-table text-white" onclick="event.preventDefault(); exitTableAjax();"><i class="ion-ios-log-out"></i></a>`
+				tablename.innerHTML = response.name;
 				bookElement.classList.remove('d-none');
 			} else {
 				showToast(response.message);

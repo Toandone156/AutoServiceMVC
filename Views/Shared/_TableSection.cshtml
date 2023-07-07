@@ -36,7 +36,7 @@
                 </div>
             </div>
             <h3 class="booktable @(table == null ? "d-none" : "")">
-                    Your table: @table?.TableName
+                    Table: <span id="table_name" class="text-white font-weight-bold" >@table?.TableName</span>
                     <a href="#" class="exit-table text-white" onclick="event.preventDefault(); exitTableAjax();"><i class="ion-ios-log-out"></i></a>
             </h3>
         </div>

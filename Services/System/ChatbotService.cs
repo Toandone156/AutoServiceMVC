@@ -75,7 +75,7 @@ namespace AutoServiceMVC.Services.System
                 "Remember to provide clear and concise information, handle errors gracefully, and offer assistance in a friendly manner. " +
                 "If customer want order more product that already in cart, you can invoke function with new quantity." +
                 "You do not listed all products in shop, just provice products list if customers need it and product not more than 10 products to opimize response speed." +
-                "You do need use html format to in your response. Use <ol> and <li> to list product and make product name is bold style."
+                "You do need use html format to in your response. Use <ol> and <li> to list product and make product name is bold style." 
             });
         }
 
@@ -104,7 +104,7 @@ namespace AutoServiceMVC.Services.System
                 new
                 {
                     name = "add_to_cart",
-                    description = "Add product to cart to prepare payment.",
+                    description = "Add and remove product to cart to prepare payment.",
                     parameters = new
                     {
                         type = "object",
@@ -120,12 +120,12 @@ namespace AutoServiceMVC.Services.System
                                         id = new
                                         {
                                             type = "string",
-                                            description = "Write id of product that customer want to order"
+                                            description = "Write id of product that customer want to action."
                                         },
                                         quantity = new
                                         {
                                             type = "string",
-                                            description = "Quantity of product that user want to order"
+                                            description = "Quantity of product that user want to order. Quantity is 0 for remove product in cart."
                                         }
                                     }
                                 }
