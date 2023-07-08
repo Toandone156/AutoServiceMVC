@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoServiceMVC.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -23,8 +25,8 @@ namespace AutoServiceMVC.Models
         [RegularExpression("^\\d+$", ErrorMessage = "Discount value must a unsign number")]
         [JsonProperty]
 		public int? DiscountValue { get; set; }
-        [RegularExpression("^(?:100(?:\\.0{1,2})?|\\d{1,2}(?:\\.\\d{1,2})?)$", ErrorMessage = "Percentage is not valid")]
         [DisplayName("Discount percentage")]
+        [RegularExpression("^(?:100(?:\\.0{1,2})?|\\d{1,2}(?:\\.\\d{1,2})?)$", ErrorMessage = "Percentage value is not valid")]
 		[JsonProperty]
 		public int? DiscountPercentage { get; set; }
         [DataType(DataType.Currency)]

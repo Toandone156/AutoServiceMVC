@@ -5,6 +5,7 @@
     var result = await userTypeService.GetAllAsync();
     var dropdownlist = new SelectList((IEnumerable<UserType>)result.Data, "UserTypeId", "UserTypeName");
     var isEnded = Model.EndAt < DateTime.Now;
+    var isDiscountValue = Model.DiscountValue != null;
 }
 
 <h1 class="h3 mb-4 text-gray-800">
@@ -57,7 +58,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="StartAt"></label>
-                    <input asp-for="StartAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")">
+                    <input asp-for="StartAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd HH:mm")">
                     <span asp-validation-for="StartAt" class="text-danger"></span>
                 </div>
             </div>
@@ -73,6 +74,22 @@
                     <span asp-validation-for="MinimumOrderAmount" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label>Discount type</label>
+                    <div class="mydict">
+                        <div>
+                            <label class="m-0">
+                                <input type="radio" name="discounttype" value="1" checked="@isDiscountValue">
+                                <span>VND</span>
+                            </label>
+                            <label class="m-0">
+                                <input type="radio" name="discounttype" value="2" checked="@(!isDiscountValue)">
+                                <span>Percent</span>
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group discount-value">
                     <label asp-for="DiscountValue"></label>
                     <div class="input-group">
                         <input asp-for="DiscountValue" class="form-control validate">
@@ -82,7 +99,7 @@
                     </div>
                     <span asp-validation-for="DiscountValue" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group discount-percent">
                     <label asp-for="DiscountPercentage"></label>
                     <div class="input-group">
                         <input asp-for="DiscountPercentage" class="form-control validate">
@@ -92,7 +109,7 @@
                     </div>
                     <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group discount-percent">
                     <label asp-for="MaximumDiscountAmount"></label>
                     <div class="input-group">
                         <input asp-for="MaximumDiscountAmount" class="form-control validate">
@@ -104,7 +121,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="EndAt"></label>
-                    <input asp-for="EndAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")">
+                    <input asp-for="EndAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd HH:mm")">
                     <span asp-validation-for="EndAt" class="text-danger"></span>
                 </div>
             </div>
@@ -138,3 +155,12 @@
         </div>
     </div>
 </div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin/coupon.css" />
+}
+
+@section Scripts {
+    <script src="~/js/admin/couponm.js"></script>
+}

@@ -20,7 +20,7 @@
     <div class="card-header py-3">
         Coupon Details
     </div>
-    <form asp-action="Create" class="tm-edit-product-form" method="post">
+    <form asp-action="Create" class="tm-edit-product-form" method="post" id="coupon-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="CreatorId" value="@accountId"/>
         <div class="card-body row">
@@ -49,7 +49,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="StartAt"></label>
-                    <input asp-for="StartAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")">
+                    <input asp-for="StartAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd HH:mm")">
                     <span asp-validation-for="StartAt" class="text-danger"></span>
                 </div>
             </div>
@@ -65,6 +65,22 @@
                     <span asp-validation-for="MinimumOrderAmount" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label>Discount type</label>
+                    <div class="mydict">
+                        <div>
+                            <label class="m-0">
+                                <input type="radio" name="discounttype" value="1" checked>
+                                <span>VND</span>
+                            </label>
+                            <label class="m-0">
+                                <input type="radio" name="discounttype" value="2">
+                                <span>Percent</span>
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group discount-value">
                     <label asp-for="DiscountValue"></label>
                     <div class="input-group">
                         <input asp-for="DiscountValue" class="form-control validate">
@@ -74,7 +90,7 @@
                     </div>
                     <span asp-validation-for="DiscountValue" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group discount-percent">
                     <label asp-for="DiscountPercentage"></label>
                     <div class="input-group">
                         <input asp-for="DiscountPercentage" class="form-control validate">
@@ -84,7 +100,7 @@
                     </div>
                     <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group discount-percent">
                     <label asp-for="MaximumDiscountAmount"></label>
                     <div class="input-group">
                         <input asp-for="MaximumDiscountAmount" class="form-control validate">
@@ -96,7 +112,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="EndAt"></label>
-                    <input asp-for="EndAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")">
+                    <input asp-for="EndAt" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd HH:mm")" data-rule-checkenddate="true">
                     <span asp-validation-for="EndAt" class="text-danger"></span>
                 </div>
             </div>
@@ -106,3 +122,11 @@
         </div>
     </form>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin/coupon.css" />
+}
+
+@section Scripts {
+    <script src="~/js/admin/couponm.js"></script>
+}
