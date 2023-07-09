@@ -17,9 +17,8 @@ namespace AutoServiceMVC.ViewComponents
         {
             var rs = await _productRepo.GetAllAsync();
             var products = rs.Data as List<Product>;
-            var data = products.Where(p => p.IsInStock);
 
-            return View(data);
+            return View(products);
         }
     }
 }

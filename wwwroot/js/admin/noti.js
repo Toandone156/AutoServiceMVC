@@ -1,3 +1,5 @@
+document.body.click();
+
 var connection = new signalR.HubConnectionBuilder()
     .withUrl("/noti")
     .build();

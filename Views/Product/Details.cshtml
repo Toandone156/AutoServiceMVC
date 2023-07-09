@@ -55,7 +55,7 @@
 						</span>
 					</div>
 					<div class="col-md-6">
-						<p><a id="addtocartButton" href="#" class="btn btn-primary py-3 px-5">Add to Cart</a></p>
+						<p><a id="addtocartButton" href="#" class="btn btn-primary py-3 px-5 @(Model.IsInStock ? "" : "disabled")">@(Model.IsInStock ? "Add to Cart" : "Sold Out")</a></p>
 					</div>
 				</div>
 			</div>

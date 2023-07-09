@@ -18,8 +18,7 @@ namespace AutoServiceMVC.ViewComponents
             var rs = await _productRepo.GetAllAsync();
             var products = rs.Data as List<Product>;
 
-            var data = products.Where(x => x.IsInStock)
-                                .OrderByDescending(x => x.SellerQuantity)
+            var data = products.OrderByDescending(x => x.SellerQuantity)
                                 .ThenByDescending(x => x.Price)
                                 .Take(4)
                                 .ToList();
