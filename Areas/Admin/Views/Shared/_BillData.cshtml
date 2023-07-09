@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AutoServiceMVC.Models.Order>
+
+@{
+    var statusid = Convert.ToInt16(ViewData["StatusId"]);
+}
+
+@foreach (var item in Model)
+{
+    <tr class="item">
+        <td>
+            <a asp-action="Details" asp-route-id="@item.OrderId"
+               class="font-weight-bold">
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </a>
+        </td>
+        <td scope="col">
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td scope="col">
+            @Html.DisplayFor(modelItem => item.TableName)
+        </td>
+        <td scope="col">
+            @Html.DisplayFor(modelItem => item.User.FullName)
+        </td>
+        <td scope="col">
+            @Html.DisplayFor(modelItem => item.Employee.FullName)
+        </td>
+        <td scope="col">
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td scope="col">
+            <span class="@item.Status.StatusName.ToLower()">@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
+        </td>
+        @if (statusid < 4)
+        {
+            <td class="text-center">
+                <button class="btn btn-circle btn-secondary tm-product-delete-link" @((item.Status.StatusId > 3) ? "disabled" : "")
+                        title="Update status" onclick="updatestatus(@item.OrderId, this);">
+                    <i class="fas fa-arrow-up tm-product-delete-icon"></i>
+                </button>
+            </td>
+        }
+    </tr>
+}

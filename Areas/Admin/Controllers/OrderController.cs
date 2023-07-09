@@ -196,13 +196,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                 var tradeRs = await _pointService.ChangePointAsync(order.UserId ?? 0, Convert.ToInt32(order.Amount / 1_000), $"Receive point from order {order.OrderId}.");
             }
 
-            if(newStatus.Order.UserId == 2)
+            _hub.Clients.Group("Employee").SendAsync("ReceiveNoti", "", recentStatusId + 1);
+
+            if (newStatus.Order.UserId == 2)
             {
-                await _hub.Clients.Group(newStatus.OrderId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
+                _hub.Clients.Group(newStatus.OrderId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
             }
             else
             {
-                await _hub.Clients.Group(newStatus.Order.UserId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
+                _hub.Clients.Group(newStatus.Order.UserId.ToString()).SendAsync("ReceiveStatus", $"Order {newStatus.OrderId} get {newStatus.Status.StatusName}.");
             }
 
             return Json(new { success = true, statusId = status.StatusId, statusName = status.StatusName });

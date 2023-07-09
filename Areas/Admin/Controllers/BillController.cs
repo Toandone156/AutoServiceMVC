@@ -47,15 +47,26 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> GetBillData()
+        public async Task<IActionResult> GetBillData(int? id)
         {
+            int statusId = id ?? 1;
+
+            var statusRs = await _statusRepo.GetByIdAsync(id);
+            var status = statusRs.Data as Status;
+
             var result = await _orderRepo.GetAllAsync();
             if (result.IsSuccess)
             {
-                var data = (result.Data as List<Order>).OrderByDescending(o => o.CreatedAt);
+                var data = (result.Data as List<Order>)
+                    .Where(o => o.Status.StatusId == statusId)
+                    .OrderByDescending(o => o.CreatedAt);
+
+                ViewData["StatusId"] = status.StatusId;
+                ViewData["StatusName"] = status.StatusName;
                 return PartialView("_BillData", data);
             }
 
+            TempData["Message"] = "Fail to get data";
             return RedirectToAction("Index");
         }
 

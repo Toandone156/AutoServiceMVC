@@ -200,7 +200,7 @@ namespace AutoServiceMVC.Controllers
                 _session.DeleteSession(HttpContext, "order_cart");
                 _session.DeleteSession(HttpContext, "doing_cart");
 
-                await _hub.Clients.Group("Employee").SendAsync("ReceiveNoti", $"New order at table {order.TableId}");
+                _hub.Clients.Group("Employee").SendAsync("ReceiveNoti", $"New order at table {order.TableId}", 1);
 
                 TempData["Message"] = "Order successfully";
 				return RedirectToAction("Index");

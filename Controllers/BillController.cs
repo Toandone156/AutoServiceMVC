@@ -1,10 +1,12 @@
-﻿using AutoServiceMVC.Models;
+﻿using AutoServiceMVC.Hubs;
+using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
 using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace AutoServiceMVC.Controllers
@@ -13,14 +15,17 @@ namespace AutoServiceMVC.Controllers
     {
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
+        private readonly IHubContext<HubServer> _hub;
         private readonly ICookieService _cookie;
 
         public BillController(ICommonRepository<Order> orderRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
+                                IHubContext<HubServer> hub,
                                 ICookieService cookie)
         {
             _orderRepo = orderRepo;
             _orderStatusRepo = orderStatusRepo;
+            _hub = hub;
             _cookie = cookie;
         }
         public async Task<IActionResult> Index()
@@ -122,6 +127,8 @@ namespace AutoServiceMVC.Controllers
                         OrderId = id,
                         StatusId = 5
                     });
+
+                    _hub.Clients.Group("Employee").SendAsync("ReceiveNoti", $"Order {id} has been canceled", 5);
 
                     TempData["Message"] = "Cancel order success";
                     return RedirectToAction("Index");
