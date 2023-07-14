@@ -65,9 +65,7 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
                     ViewBag.Cart = cart;
                 }
 
-                var data = (result.Data as List<Product>).Where(p => p.IsInStock);
-
-                return View(data);
+                return View(result.Data);
             }
 
             TempData["Message"] = "Get data fail";

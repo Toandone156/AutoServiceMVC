@@ -105,8 +105,15 @@
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <span class="add-to-cart btn btn-warning font-weight-bold">
-                                    Add <i class="fas fa-plus-circle"></i>
+                                <span class="add-to-cart btn btn-warning font-weight-bold @(product.IsInStock ? "" : "disabled")">
+                                    @if (product.IsInStock)
+                                    {
+                                        @:Add <i class="fas fa-plus-circle"></i>
+                                    }
+                                    else
+                                    {
+                                        @:Sold Out
+                                    }
                                 </span>
                             </div>
                         </div>
