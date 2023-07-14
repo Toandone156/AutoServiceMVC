@@ -140,21 +140,10 @@
             <!-- Nav Item - Product Collapse Menu -->
             <!-- Nav Item - Order -->
             <li class="nav-item @(title.Contains("Order") ? "active" : "")">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
-                   aria-expanded="true" aria-controls="collapseOrder">
+                <a class="nav-link" asp-controller="Bill" asp-action="Index" asp-route-id="1">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Order</span>
                 </a>
-                <div id="collapseOrder" class="collapse" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Orders</h6>
-                        <a class="collapse-item @(title.Contains("Sent Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="1">Sent</a>
-                        <a class="collapse-item @(title.Contains("Received Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="2">Received</a>
-                        <a class="collapse-item @(title.Contains("Processing Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="3">Processing</a>
-                        <a class="collapse-item @(title.Contains("Done Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="4">Done</a>
-                        <a class="collapse-item @(title.Contains("Cancelled Orders") ? "active" : "")" asp-controller="Bill" asp-action="Index" asp-route-id="5">Cancelled</a>
-                    </div>
-                </div>
             </li>
 
             <!-- Nav Item - Product -->
