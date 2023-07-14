@@ -107,9 +107,13 @@
 						<span class="total">@Model.Amount.ToString("N0") ₫</span>
 					</p>
 				</div>
-				@if (Model.Status.StatusId < 3)
+				@if (Model.Status.StatusId < 4)
 				{
-					<p class="text-center"><a href="#" id="cancelButton" class="btn btn-danger py-3 px-4">Cancel order</a></p>
+					<p class="text-center"><a href="#" id="cancelButton" class="btn btn-danger py-3 px-4 @(Model.Status.StatusId > 2 ? "disabled" : "")">Cancel order</a></p>
+				}
+				else
+				{
+					<p class="text-center"><a asp-action="OrderAgain" asp-route-id="@Model.OrderId" id="againButton" class="btn btn-primary py-3 px-4">Order again</a></p>
 				}
 			</div>
 		</div>

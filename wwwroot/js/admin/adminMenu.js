@@ -102,7 +102,6 @@ function ChangeQuantity(event) {
 	let isPlus = actionBtn.classList.contains(plus);
 	let isMinus = actionBtn.classList.contains(minus);
 	// Increase/Decrease quantity
-	debugger
 
 	if (isPlus) {
 		currentQuantity++;

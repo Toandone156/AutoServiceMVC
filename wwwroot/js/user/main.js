@@ -315,7 +315,9 @@ function loadProduct(thisitem) {
 
 		var productName = row.querySelector(".product-name").innerHTML;
 
-		if ((categoryId == 0 || category == categoryId)
+		if ((categoryId == 0 || category == null
+			|| (categoryId == -1 && row.getAttribute("data-favorite").toLowerCase() == "true")
+			|| category == categoryId)
 			&& Diacritics.clean(productName).toLowerCase().includes(Diacritics.clean(searchbar.value).toLowerCase())) {
 			row.style.display = "";
 		} else {

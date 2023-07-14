@@ -1,5 +1,5 @@
 /*!
-/*!
+/*!.btn.btn-danger
  * Bootstrap v4.1.0 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
  * Copyright 2011-2018 Twitter, Inc.
@@ -10631,7 +10631,7 @@ h5,
         right: 10px;
         display: inline-block;
         text-align: center;
-        background: #f8b500;
+        background: #dc3545;
         color: #fff;
         font-size: 12px;
         font-weight: bold;

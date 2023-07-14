@@ -79,7 +79,7 @@
 							<div class="col-md-6">
 								<div class="form-group text-left">
 									<label>Note for order</label>
-									<textarea name="Note" class="form-control" rows="5"></textarea>
+									<textarea name="Note" class="form-control" rows="5">@TempData["Note"]</textarea>
 								</div>
 							</div>
 						@if(User.Identity.IsAuthenticated && User.Identity.AuthenticationType == "User_Scheme")

@@ -25,7 +25,7 @@ namespace AutoServiceMVC.Hubs
             {
                 if (Context.User.Identity.IsAuthenticated && Context.User.Identity.AuthenticationType == "User_Scheme")
                 {
-                    await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.FindFirstValue("Id"));
+                    Groups.AddToGroupAsync(Context.ConnectionId, Context.User.FindFirstValue("Id"));
                 }
                 else
                 {
@@ -34,13 +34,13 @@ namespace AutoServiceMVC.Hubs
 
                     foreach (var orderId in orderIdList)
                     {
-                        await Groups.AddToGroupAsync(Context.ConnectionId, orderId);
+                        Groups.AddToGroupAsync(Context.ConnectionId, orderId);
                     }
                 }
             }
             else if (type == "employee")
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, "Employee");
+                 Groups.AddToGroupAsync(Context.ConnectionId, "Employee");
             }
             
         }
@@ -48,12 +48,12 @@ namespace AutoServiceMVC.Hubs
         public async Task AskChatbot(string message)
         {
             string answer = await _chatbot.AskMessage(message);
-            await Clients.Caller.SendAsync("ChatbotAnswer", answer);
+            Clients.Caller.SendAsync("ChatbotAnswer", answer);
         }
 
         public async Task CallStaff(string tablename)
         {
-            await Clients.Group("Employee").SendAsync("ReceiveNoti", $"Customer call at {tablename}");
+            Clients.Group("Employee").SendAsync("ReceiveNoti", $"Customer call at {tablename}");
         }
     }
 }

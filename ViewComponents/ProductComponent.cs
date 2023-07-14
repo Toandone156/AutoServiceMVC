@@ -13,10 +13,15 @@ namespace AutoServiceMVC.ViewComponents
             _productRepo = productRepo;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(List<int> favoriteIds)
         {
             var rs = await _productRepo.GetAllAsync();
             var products = rs.Data as List<Product>;
+
+            foreach (var product in products)
+            {
+                product.Favorite = favoriteIds.Any(id => id == product.ProductId);
+            }
 
             return View(products);
         }

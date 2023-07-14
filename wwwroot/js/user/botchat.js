@@ -63,7 +63,6 @@ var createBubble = function (input) {
 connection.on("ChatbotAnswer", async answer => {
     let message = JSON.parse(answer);
 
-    debugger
 
     if (message.function_call) {
         let name = message.function_call.name;

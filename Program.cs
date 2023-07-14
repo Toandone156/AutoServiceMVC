@@ -112,6 +112,7 @@ services.AddScoped<ICommonRepository<UserCoupon>, UserCouponRepository>();
 services.AddScoped<ICommonRepository<UserType>, UserTypeRepository>();
 services.AddScoped<ICommonRepository<Employee>, EmployeeRepository>();
 services.AddScoped<ICommonRepository<User>, UserRepository>();
+services.AddScoped<ICommonRepository<FavoriteProduct>, FavoriteProductRepository>();
 
 services.AddScoped<IHashPassword, HashPassword>();
 services.AddScoped<IJWTAuthentication, JWTAuthentication>();

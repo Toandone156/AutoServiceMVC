@@ -23,5 +23,6 @@ namespace AutoServiceMVC.Models
         public virtual ICollection<ProductFeedback>? ProductFeedbacks { get; set; }
         public virtual ICollection<UserCoupon>? UserCoupons { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
+        public virtual ICollection<FavoriteProduct>? FavoriteProducts { get; set; }
     }
 }

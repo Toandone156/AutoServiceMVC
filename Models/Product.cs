@@ -35,5 +35,10 @@ namespace AutoServiceMVC.Models
         public virtual Category? Category { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
         public virtual ICollection<ProductFeedback>? ProductFeedbacks { get; set; }
+        public virtual ICollection<FavoriteProduct>? FavoriteProducts { get; set; }
+
+        //Not map attributes
+        [NotMapped]
+        public bool? Favorite { get; set; }
     }
 }
