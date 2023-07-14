@@ -9,12 +9,15 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between">
         <div class="h5 font-weight-bold text-primary align-self-center">Coupon Management</div>
-        <a asp-action="Create" class="d-flex justify-content-between btn btn-success btn-icon-split mt-2">
-            <span class="text">Create</span>
-            <span class="icon text-white-50">
-                <i class="fas fa-plus"></i>
-            </span>
-        </a>
+        @if (role == "Admin")
+        {
+            <a asp-action="Create" class="d-flex justify-content-between btn btn-success btn-icon-split mt-2">
+                <span class="text">Create</span>
+                <span class="icon text-white-50">
+                    <i class="fas fa-plus"></i>
+                </span>
+            </a>
+        }
     </div>
     <div class="card-body">
         <div class="table-responsive">
