@@ -187,7 +187,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             if (orderRs.IsSuccess)
             {
                 var orders = orderRs.Data as IEnumerable<Order>;
-                amount = orders.Sum(o => o.Amount);
+                amount = orders
+                            .Where(o => o.Status.StatusId == 4)
+                            .Sum(o => o.Amount);
+
                 totalOrder = orders.Count();
                 processOrder = orders.Count(o => o.Status.StatusId < 4);
                 var doneOrder = orders.Count(o => o.Status.StatusId == 4);
