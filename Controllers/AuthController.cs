@@ -3,6 +3,7 @@ using AutoServiceMVC.Hubs;
 using AutoServiceMVC.Models;
 using AutoServiceMVC.Models.System;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authentication;
@@ -25,7 +26,9 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<User> _userService;
         private readonly ICookieAuthentication _auth;
         private readonly ICommonRepository<Order> _orderRepo;
-        private readonly ICookieService _cookie;
+		private readonly ICommonRepository<Product> _productRepo;
+		private readonly ICommonRepository<FavoriteProduct> _favRepo;
+		private readonly ICookieService _cookie;
         private readonly ISessionCustom _session;
         private readonly AppDbContext _dbContext;
         private readonly IMailService _mail;
@@ -37,6 +40,8 @@ namespace AutoServiceMVC.Controllers
                                 IAuthenticateService<User> userAuth,
                                 ICommonRepository<User> userService,
                                 ICommonRepository<Order> orderRepo,
+                                ICommonRepository<Product> productRepo,
+                                ICommonRepository<FavoriteProduct> favRepo,
                                 ICookieAuthentication auth,
                                 ICookieService cookie,
                                 ISessionCustom session,
@@ -50,7 +55,9 @@ namespace AutoServiceMVC.Controllers
             _userService = userService;
             _auth = auth;
             _orderRepo = orderRepo;
-            _cookie = cookie;
+            _productRepo = productRepo;
+            _favRepo = favRepo;
+			_cookie = cookie;
             _session = session;
             _mail = mail;
             _hub = hub;
@@ -78,6 +85,7 @@ namespace AutoServiceMVC.Controllers
                     var result = await HttpContext.AuthenticateAsync("User_Scheme");
 
                     await AddGuestOrder((status.Data as User));
+                    await AddFavoriteProduct(status.Data as User);
 
 					TempData["Message"] = "Login successfully";
 					return RedirectToAction("Index", "Home");
@@ -386,8 +394,9 @@ namespace AutoServiceMVC.Controllers
             await _auth.SignInAsync(user, HttpContext);
 
             await AddGuestOrder(user);
+			await AddFavoriteProduct(user);
 
-            return RedirectToAction("Index", "Home");
+			return RedirectToAction("Index", "Home");
 		}
 
         public IActionResult VerifyEmail()
@@ -448,5 +457,35 @@ namespace AutoServiceMVC.Controllers
                 }
             }
         }
+
+        public async Task AddFavoriteProduct(User user)
+        {
+			var favIdCookie = _cookie.GetCookie(HttpContext, "fav_product");
+			if (!favIdCookie.IsNullOrEmpty())
+			{
+				var favIdList = favIdCookie.Split(",").ToList();
+
+
+				foreach (var favId in favIdList)
+				{
+					int productId = Convert.ToInt32(favId ?? "0");
+					var productRs = await _productRepo.GetByIdAsync(productId);
+
+					if (productRs.IsSuccess)
+					{
+						var userId = user.UserId;
+
+                        var status = await ((FavoriteProductRepository)_favRepo).GetByConditions(fv => fv.UserId == userId && fv.ProductId == productId);
+
+                        if (!status.IsSuccess)
+                        {
+                            await _favRepo.CreateAsync(new FavoriteProduct { ProductId = productId, UserId = userId });
+                        }
+					}
+				}
+
+				_cookie.RemoveCookie(HttpContext, "fav_product");
+			}
+		}
 	}
 }

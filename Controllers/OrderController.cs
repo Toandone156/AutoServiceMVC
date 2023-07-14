@@ -25,6 +25,7 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<Product> _productRepo;
 		private readonly ICommonRepository<User> _userRepo;
         private readonly ICommonRepository<UserCoupon> _userCouponRepo;
+        private readonly ICommonRepository<FavoriteProduct> _favRepo;
         private readonly IHubContext<HubServer> _hub;
         private readonly IPointService _pointService;
         private readonly ISessionCustom _session;
@@ -38,6 +39,7 @@ namespace AutoServiceMVC.Controllers
                                 ICommonRepository<Product> productRepo,
                                 ICommonRepository<User> userRepo,
                                 ICommonRepository<UserCoupon> userCouponRepo,
+                                ICommonRepository<FavoriteProduct> favRepo,
                                 IHubContext<HubServer> hub,
                                 ISessionCustom session,
                                 ICookieService cookie,
@@ -50,6 +52,7 @@ namespace AutoServiceMVC.Controllers
             _productRepo = productRepo;
             _userRepo = userRepo;
             _userCouponRepo = userCouponRepo;
+            _favRepo = favRepo;
             _hub = hub;
             _session = session;
             _cookie = cookie;
@@ -57,8 +60,29 @@ namespace AutoServiceMVC.Controllers
 
 		}   
         
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            int userId = Convert.ToInt32(User.FindFirstValue("Id") ?? "0");
+            List<int> favIds = new List<int>();
+
+            if(userId == 0)
+            {
+                var favProducts = _cookie.GetCookie(HttpContext, "fav_product");
+                var favProductsList = favProducts.IsNullOrEmpty() ? new List<string>() : favProducts.Split(",").ToList();
+                favIds = favProductsList.ConvertAll(int.Parse);
+            }
+            else
+            {
+                var status = await ((FavoriteProductRepository) _favRepo).GetByConditions(f => f.UserId == userId);
+
+                if (status.IsSuccess)
+                {
+                    favIds = (status.Data as IEnumerable<FavoriteProduct>).Select(f => f.ProductId).ToList();
+                }
+            }
+
+            ViewBag.favIds = favIds;
+
 			return View();
         }
 

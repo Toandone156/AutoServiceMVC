@@ -4,6 +4,6 @@
 
 @*@await Html.PartialAsync("_SlideSection", new {Name = "Our Menu", Page = "Menu"})*@
 
-@await Component.InvokeAsync("BestSellerComponent")
+@await Component.InvokeAsync("BestSellerComponent", ViewBag.favIds)
 
-@await Component.InvokeAsync("ProductComponent")
+@await Component.InvokeAsync("ProductComponent", ViewBag.favIds)

@@ -5,6 +5,7 @@ using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
@@ -16,16 +17,19 @@ namespace AutoServiceMVC.Controllers
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICommonRepository<OrderStatus> _orderStatusRepo;
         private readonly IHubContext<HubServer> _hub;
-        private readonly ICookieService _cookie;
+		private readonly ISessionCustom _session;
+		private readonly ICookieService _cookie;
 
         public BillController(ICommonRepository<Order> orderRepo,
                                 ICommonRepository<OrderStatus> orderStatusRepo,
                                 IHubContext<HubServer> hub,
+                                ISessionCustom session,
                                 ICookieService cookie)
         {
             _orderRepo = orderRepo;
             _orderStatusRepo = orderStatusRepo;
             _hub = hub;
+            _session = session;
             _cookie = cookie;
         }
         public async Task<IActionResult> Index()
@@ -139,5 +143,38 @@ namespace AutoServiceMVC.Controllers
 
             return RedirectToAction("Details", new {id = id });
         }
+
+        public async Task<IActionResult> OrderAgain(int id)
+        {
+			var result = await _orderRepo.GetByIdAsync(id);
+
+            if(result.IsSuccess)
+            {
+                var order = result.Data as Order;
+
+                if(order.Status.StatusId < 4)
+                {
+                    TempData["Message"] = "Order in process. Order again later,";
+					return RedirectToAction("Details", new { id = id });
+				}
+
+				List<OrderDetail> cart = _session.GetSessionValue<List<OrderDetail>>(HttpContext, "order_cart") ?? new List<OrderDetail>();
+                
+                foreach(var item in order.OrderDetails)
+                {
+                    if(!cart.Any(od => od.ProductId == item.ProductId)) 
+                        cart.Add(item);
+                }
+
+                TempData["Note"] = order.Note;
+
+
+				_session.AddToSession(HttpContext, "order_cart", cart);
+				return RedirectToAction("Payment", "Order");
+			}
+
+            TempData["Message"] = "Get data fail";
+			return RedirectToAction("Details", new { id = id });
+		}
     }
 }

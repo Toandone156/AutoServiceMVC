@@ -122,7 +122,7 @@
 	</div>
 </section>
 
-@await Component.InvokeAsync("BestSellerComponent")
+@await Component.InvokeAsync("BestSellerComponent", ViewBag.favIds)
 
 @section Scripts {
 	<script>

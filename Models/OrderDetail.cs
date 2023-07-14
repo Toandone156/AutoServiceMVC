@@ -1,15 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace AutoServiceMVC.Models
 {
-    public class OrderDetail
+	[JsonObject(MemberSerialization.OptIn)]
+	public class OrderDetail
     {
         //Attributes
+        [JsonProperty]
         public int OrderId { get; set; }
-        public int ProductId { get; set; }
+		[JsonProperty]
+		public int ProductId { get; set; }
         [DataType(DataType.Currency)]
-        public int Price { get; set; }
-        public int Quantity { get; set; }
+		[JsonProperty]
+		public int Price { get; set; }
+		[JsonProperty]
+		public int Quantity { get; set; }
 
         //Relations
         public virtual Order? Order { get; set; }

@@ -25,6 +25,7 @@ namespace AutoServiceMVC.Data
         public DbSet<User> Users { get; set; }
         public DbSet<UserCoupon> UserCoupons { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,7 +49,14 @@ namespace AutoServiceMVC.Data
                 });
             });
 
-            
+            modelBuilder.Entity<FavoriteProduct>(e =>
+            {
+                e.HasKey(p => new
+                {
+                    p.ProductId,
+                    p.UserId
+                });
+            });
 
             modelBuilder
                 .Entity<Product>()
