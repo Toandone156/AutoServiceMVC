@@ -24,8 +24,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             if (result.IsSuccess)
             {
                 var coupons = (result.Data as List<Coupon>)
-                    .OrderBy(c => c.EndAt)
-                    .ThenByDescending(c => c.StartAt);
+                    .OrderByDescending(c => DateTime.Compare(c.EndAt ?? DateTime.Now, DateTime.Now))
+                    .ThenBy(c => c.EndAt);
 
                 return View(coupons);
             }
