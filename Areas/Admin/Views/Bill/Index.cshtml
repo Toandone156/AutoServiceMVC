@@ -1,13 +1,50 @@
 ﻿@model IEnumerable<AutoServiceMVC.Models.Order>
 @{
-    var statusid = Convert.ToInt16(ViewData["StatusId"]);
+    var statusId = Convert.ToInt16(ViewData["StatusId"]);
     var statusname = ViewData["StatusName"];
     ViewData["Title"] = $"{statusname} Orders";
 }
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">@statusname Orders List</h6>
+    <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between ">
+        <h6 class="align-self-center m-0 font-weight-bold text-primary">@statusname Orders List</h6>
+        <div class="text-center text-md-right">
+            <a class="btn btn-primary my-1" asp-controller="Bill" asp-action="Index" asp-route-id="1">
+                Sent
+                @if(statusId == 1)
+                {
+                   <span class="badge badge-light">@Model.Count()</span>
+                }
+            </a>
+            <a class="btn btn-primary my-1" asp-controller="Bill" asp-action="Index" asp-route-id="2">
+                Received
+                @if(statusId == 2)
+                {
+                   <span class="badge badge-light">@Model.Count()</span>
+                }
+            </a>
+            <a class="btn btn-primary my-1" asp-controller="Bill" asp-action="Index" asp-route-id="3">
+                Processing
+                @if(statusId == 3)
+                {
+                   <span class="badge badge-light">@Model.Count()</span>
+                }
+            </a>
+            <a class="btn btn-primary my-1" asp-controller="Bill" asp-action="Index" asp-route-id="4">
+                Done
+                @if(statusId == 4)
+                {
+                   <span class="badge badge-light">@Model.Count()</span>
+                }
+            </a>
+            <a class="btn btn-primary my-1" asp-controller="Bill" asp-action="Index" asp-route-id="5">
+                Cancelled
+                @if(statusId == 5)
+                {
+                   <span class="badge badge-light">@Model.Count()</span>
+                }
+            </a>
+        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -35,7 +72,7 @@
                         <th>
                             Status
                         </th>
-                        @if(statusid < 4)
+                        @if(statusId < 4)
                         {
                             <th class="text-center">
                                 Action
@@ -71,7 +108,7 @@
                             <td scope="col">
                                 <span class="@item.Status.StatusName.ToLower()">@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
                             </td>
-                            @if (statusid < 4)
+                            @if (statusId < 4)
                             {
                                 <td class="text-center">
                                     <button class="btn btn-circle btn-secondary tm-product-delete-link" @((item.Status.StatusId > 3) ? "disabled" : "")
