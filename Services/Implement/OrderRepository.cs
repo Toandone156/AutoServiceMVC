@@ -217,6 +217,32 @@ namespace AutoServiceMVC.Services.Implement
             };
         }
 
+        public async Task<StatusMessage> GetOrderByStatusId(int id)
+        {
+            var result = await _context.Orders.Where(o => o.OrderStatuses.OrderByDescending(os => os.StatusId).First().StatusId == id).ToListAsync();
+
+            foreach(var order in result)
+            {
+                order.Status = await GetRecentOrderStatus(order.OrderId);
+            }
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
+            };
+        }
+
         async Task<Status?> GetRecentOrderStatus(int orderId)
         {
             var recentStatus = await _context.OrderStatus

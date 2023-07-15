@@ -1,5 +1,6 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,12 +31,15 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var statusRs = await _statusRepo.GetByIdAsync(id);
             var status = statusRs.Data as Status;
 
-            var result = await _orderRepo.GetAllAsync();
+            //var result = await _orderRepo.GetAllAsync();
+            var result = await ((OrderRepository)_orderRepo).GetOrderByStatusId(statusId);
             if (result.IsSuccess)
             {
-                var data = (result.Data as List<Order>)
-                    .Where(o => o.Status.StatusId == statusId)
-                    .OrderByDescending(o => o.CreatedAt);
+                //var data = (result.Data as List<Order>)
+                //    .Where(o => o.Status.StatusId == statusId)
+                //    .OrderByDescending(o => o.CreatedAt);
+
+                var data = result.Data;
 
                 ViewData["StatusId"] = status.StatusId;
                 ViewData["StatusName"] = status.StatusName;
