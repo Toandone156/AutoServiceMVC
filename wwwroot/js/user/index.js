@@ -336,3 +336,103 @@ function showToast(message) {
 		},
 	}).showToast();
 }
+
+document.getElementById("call_staff").addEventListener('click', e => {
+	$.confirm({
+		title: 'Call staff',
+		content: 'Do you need the help from our staff?<br>Press "Call staff" below, our staff will go to your table in minutes.',
+		buttons: {
+			confirm: {
+				text: "Call now",
+				btnClass: 'btn-orange',
+				keys: ['enter'],
+				action: function () {
+
+					let tablename = document.getElementById("table_name").innerText
+
+					if (!tablename) {
+						showToast("Enter TABLECODE before call staff");
+						return;
+					}
+
+					if (getCookie("call_staff") == "false") {
+						$.alert({
+							title: 'Staff',
+							icon: 'fa fa-rocket',
+							type: 'green',
+							content: 'Staff is going to your table.' +
+								'<br>' +
+								'Please wait and call again after a minute.',
+						});
+						return;
+					}
+
+					CallStaff(tablename);
+					setCookie("call_staff", "false");
+				}
+			},
+			cancel: function () { }
+		}
+	});
+})
+
+function CallStaff(tablename) {
+	connection.invoke("CallStaff", tablename)
+
+	$.alert({
+		title: 'Staff',
+		icon: 'fa fa-rocket',
+		type: 'green',
+		content: 'Staff will go to your table now.' +
+			'<br>' +
+			'Please wait in minutes.',
+	});
+}
+
+function setCookie(cname, cvalue) {
+	const d = new Date();
+	d.setTime(d.getTime() + (60 * 1000));
+	let expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+	let name = cname + "=";
+	let decodedCookie = decodeURIComponent(document.cookie);
+	let ca = decodedCookie.split(';');
+	for (let i = 0; i < ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+}
+
+//Call api to update favorite product
+let favCheckboxes = document.querySelectorAll(".favcheckbox");
+
+for (let favCheckbox of favCheckboxes) {
+	favCheckbox.addEventListener("change", e => {
+		let productitem = favCheckbox.closest(".product-item");
+		let productId = productitem.getAttribute("data-product-id");
+		let favorite = favCheckbox.checked;
+		$.ajax({
+			url: '/Product/ToggleFavorite',
+			type: 'POST',
+			data: { productId: productId, favorite: favorite },
+			success: function (response) {
+				if (response.success) {
+					productitem.setAttribute("data-favorite", favorite);
+				}
+			},
+			error: function (xhr, status, error) {
+				showToast("Fail to send api")
+			},
+			async: false
+		});
+	})
+}
