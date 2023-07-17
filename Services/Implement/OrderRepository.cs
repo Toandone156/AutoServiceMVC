@@ -5,6 +5,7 @@ using AutoServiceMVC.Models.System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Linq.Expressions;
 
 namespace AutoServiceMVC.Services.Implement
 {
@@ -220,6 +221,32 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetOrderByStatusId(int id)
         {
             var result = await _context.Orders.Where(o => o.OrderStatuses.OrderByDescending(os => os.StatusId).First().StatusId == id).ToListAsync();
+
+            foreach(var order in result)
+            {
+                order.Status = await GetRecentOrderStatus(order.OrderId);
+            }
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
+            };
+        }
+
+        public async Task<StatusMessage> GetByCondition(Expression<Func<Order, bool>> condition)
+        {
+            var result = await _context.Orders.Where(condition).ToListAsync();
 
             foreach(var order in result)
             {

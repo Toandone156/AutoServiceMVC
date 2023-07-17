@@ -1,5 +1,6 @@
 ﻿using AutoServiceMVC.Models;
 using AutoServiceMVC.Services;
+using AutoServiceMVC.Services.Implement;
 using AutoServiceMVC.Services.System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -16,17 +17,14 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
     {
         private readonly ICommonRepository<Order> _orderRepo;
         private readonly ICommonRepository<Product> _productRepo;
-        private readonly IMemoryCache _cache;
 
         public HomeController(
             ICommonRepository<Order> orderRepo,
-            ICommonRepository<Product> productRepo,
-            IMemoryCache cache
+            ICommonRepository<Product> productRepo
             )
         {
             _orderRepo = orderRepo;
             _productRepo = productRepo;
-            _cache = cache;
         }
 
         public async Task<IActionResult> Index()
@@ -45,12 +43,11 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             List<int> dataNum = new List<int>();
             List<int> cancelNum = new List<int>();
 
-            var orderRs = await _orderRepo.GetAllAsync();
+            //var orderRs = await _orderRepo.GetAllAsync();
+            var orderRs = await ((OrderRepository)_orderRepo).GetByCondition(o => o.CreatedAt.Month == month);
             if (orderRs.IsSuccess)
             {
-                var orders = orderRs.Data as IEnumerable<Order>;
-
-                var ordersByMoth = orders.Where(o => o.CreatedAt.Month == month);
+                var ordersByMoth = orderRs.Data as List<Order>;
 
                 var numOfDayPerMonth = DateTime.DaysInMonth(DateTime.Now.Year, month);
 
@@ -140,15 +137,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
         {
             List<int> statusData = new List<int>();
 
-            var orderRs = await _orderRepo.GetAllAsync();
-            if (orderRs.IsSuccess)
+            for(int statusId = 1; statusId <= 5; statusId++)
             {
-                var orders = orderRs.Data as IEnumerable<Order>;
-
-                for(int statusId = 1; statusId <= 5; statusId++)
-                {
-                    statusData.Add(orders.Where(o => o.Status.StatusId == statusId).Count());
-                }
+                var orderByStatusRs = await ((OrderRepository)_orderRepo).GetOrderByStatusId(statusId);
+                statusData.Add((orderByStatusRs.Data as List<Order>).Count());
             }
 
             var data = new

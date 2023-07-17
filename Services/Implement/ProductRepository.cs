@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
+using System.Linq.Expressions;
 using static Humanizer.On;
 
 namespace AutoServiceMVC.Services.Implement
@@ -183,6 +184,30 @@ namespace AutoServiceMVC.Services.Implement
         public async Task<StatusMessage> GetAllAsync()
         {
             var result = await _context.Products
+                    .Where(p => p.IsAvailable)
+                    .ToListAsync();
+
+            if (result == null)
+            {
+                return new StatusMessage()
+                {
+                    IsSuccess = false,
+                    Message = Message.LIST_EMPTY
+                };
+            }
+
+            return new StatusMessage()
+            {
+                IsSuccess = true,
+                Message = Message.GET_SUCCESS,
+                Data = result
+            };
+        }
+
+        public async Task<StatusMessage> GetByCondition(Expression<Func<Product, bool>> condition)
+        {
+            var result = await _context.Products
+                    .Where(condition)
                     .Where(p => p.IsAvailable)
                     .ToListAsync();
 

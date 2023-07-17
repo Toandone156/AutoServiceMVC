@@ -96,11 +96,11 @@ namespace AutoServiceMVC.Controllers
                 _session.AddToSession(HttpContext, "table", result);
 
                 TempData["Message"] = "Add table success";
-                return View("Index");
+                return RedirectToAction("Index");
             }
 
 			TempData["Message"] = "Table code is wrong";
-			return View("Index", "Home");
+			return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
