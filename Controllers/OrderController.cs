@@ -170,7 +170,10 @@ namespace AutoServiceMVC.Controllers
 
             _session.AddToSession(HttpContext, "doing_order", order);
 
-            string redirectUrl = _payment.GetVnpayPaymentUrl(HttpContext, Convert.ToInt32(Total));
+            var location = new Uri($"{Request.Scheme}://{Request.Host}");
+            var url = location.AbsoluteUri + "order/ConfirmVnpayPayment";
+
+            string redirectUrl = _payment.GetVnpayPaymentUrl(HttpContext, url, Convert.ToInt32(Total));
             return Redirect(redirectUrl);
         }
 

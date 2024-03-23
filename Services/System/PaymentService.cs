@@ -7,7 +7,7 @@ namespace AutoServiceMVC.Services.System
 {
 	public interface IPaymentService
 	{
-		public string GetVnpayPaymentUrl(HttpContext context, int amount);
+		public string GetVnpayPaymentUrl(HttpContext context, string returnUrl, int amount);
 		public (bool status, string? responseCode) CheckResponseVnpayPayment(HttpContext context);
 	}
 
@@ -52,11 +52,10 @@ namespace AutoServiceMVC.Services.System
 			return value;
 		}
 
-		public string GetVnpayPaymentUrl(HttpContext context,int amount)
+		public string GetVnpayPaymentUrl(HttpContext context, string returnUrl,int amount)
 		{
 			var section = _config.GetSection("Payment");
 			var url = section["Vnpay:Url"];
-			var returnUrl = section["Vnpay:ReturnUrl"];
 			var tmnCode = section["Vnpay:TmnCode"];
 			var hashSecret = section["Vnpay:HashSecret"];
 

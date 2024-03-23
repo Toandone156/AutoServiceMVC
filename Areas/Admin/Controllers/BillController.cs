@@ -35,11 +35,8 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var result = await ((OrderRepository)_orderRepo).GetOrderByStatusId(statusId);
             if (result.IsSuccess)
             {
-                //var data = (result.Data as List<Order>)
-                //    .Where(o => o.Status.StatusId == statusId)
-                //    .OrderByDescending(o => o.CreatedAt);
-
-                var data = result.Data;
+                var data = (result.Data as List<Order>)
+                    .OrderByDescending(o => o.CreatedAt);
 
                 ViewData["StatusId"] = status.StatusId;
                 ViewData["StatusName"] = status.StatusName;
@@ -58,11 +55,10 @@ namespace AutoServiceMVC.Areas.Admin.Controllers
             var statusRs = await _statusRepo.GetByIdAsync(id);
             var status = statusRs.Data as Status;
 
-            var result = await _orderRepo.GetAllAsync();
+            var result = await ((OrderRepository)_orderRepo).GetOrderByStatusId(statusId);
             if (result.IsSuccess)
             {
                 var data = (result.Data as List<Order>)
-                    .Where(o => o.Status.StatusId == statusId)
                     .OrderByDescending(o => o.CreatedAt);
 
                 ViewData["StatusId"] = status.StatusId;

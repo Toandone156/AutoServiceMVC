@@ -11,5 +11,6 @@
         public const string ADD_SUCCESS = "Add success";
         public const string DELETE_SUCCESS = "Delete success";
         public const string METHOD_NOT_DEFINED = "Method was not defined";
+        public const string UNKNOW_ERROR_PREFIX = "Unknow error: ";
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoServiceMVC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230714024726_AddFavProduct")]
+    [Migration("20240323045907_AddFavProduct")]
     partial class AddFavProduct
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

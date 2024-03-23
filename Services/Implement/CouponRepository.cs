@@ -32,7 +32,7 @@ namespace AutoServiceMVC.Services.Implement
                 };
             }
 
-            if(entity.EndAt != null && entity.EndAt > entity.StartAt)
+            if(entity.EndAt != null && entity.EndAt < entity.StartAt)
             {
                 return new StatusMessage()
                 {
